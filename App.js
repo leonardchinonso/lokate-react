@@ -1,20 +1,26 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, View } from "react-native";
+import PrimaryButton from "./components/ui/PrimaryButton";
+import Colors from "./styles/colors";
+import SplashScreen from "./screens/SplashScreen";
+import LoginScreen from "./screens/LoginScreen";
+import { useEffect } from "react";
 
 export default function App() {
+  useEffect(() => {});
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
+    <View style={styles.rootContainer}>
+      <SafeAreaView style={styles.rootContainer}>
+        {/*<SplashScreen />*/}
+        <LoginScreen />
+      </SafeAreaView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  rootContainer: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: Colors.primaryLightBlue,
   },
 });
