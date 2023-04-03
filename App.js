@@ -5,6 +5,7 @@ import LoginScreen from "./screens/LoginScreen";
 import { useEffect } from "react";
 import SignupScreen from "./screens/SignupScreen";
 import HomepageScreen from "./screens/HomepageScreen";
+import PickStartLocationScreen from "./screens/PickStartLocationScreen";
 
 export default function App() {
   useEffect(() => {});
@@ -12,9 +13,10 @@ export default function App() {
   return (
     <View style={styles.rootContainer}>
       {/*<SplashScreen />*/}
-      {/*<SignupScreen />*/}
-      <HomepageScreen />
       {/*<LoginScreen />*/}
+      {/*<SignupScreen />*/}
+      {/*<HomepageScreen />*/}
+      <PickStartLocationScreen />
     </View>
   );
 }

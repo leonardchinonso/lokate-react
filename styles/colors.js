@@ -3,6 +3,7 @@ const Colors = {
   primaryDarkBlue: "#00516A",
   primaryWhite: "#FFFFFF",
   primaryGrey: "#C7C7C7",
+  primaryBlack: "#000000",
 
   // secondary colours
   secondaryDarkGrey: "#919191",
