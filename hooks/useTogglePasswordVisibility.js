@@ -1,10 +1,8 @@
 import { useState } from "react";
 
-const useTogglePasswordVisibility = () => {
+export const useTogglePasswordVisibility = () => {
   const [showPassword, setShowPassword] = useState(true);
   const [rightIcon, setRightIcon] = useState("eye");
-
-  console.log(showPassword, rightIcon);
 
   const handlePasswordVisibility = () => {
     if (rightIcon === "eye") {
@@ -18,5 +16,3 @@ const useTogglePasswordVisibility = () => {
 
   return { showPassword, rightIcon, handlePasswordVisibility };
 };
-
-export default useTogglePasswordVisibility;
