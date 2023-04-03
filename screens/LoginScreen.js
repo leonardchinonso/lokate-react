@@ -1,4 +1,13 @@
-import { Image, StyleSheet, Text, View } from "react-native";
+import {
+  Dimensions,
+  Image,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import PrimaryButton from "../components/ui/PrimaryButton";
 import Card from "../components/ui/Card";
 import PrimaryButtonLink from "../components/ui/PrimaryButtonLink";
@@ -17,8 +26,11 @@ function LoginScreen() {
   }
 
   return (
-    <View style={rootStyles.container}>
-      <Logo />
+    <KeyboardAvoidingView
+      style={rootStyles.container}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
+      <Logo customContainerStyles={{ top: "10%" }} />
 
       <View style={cardStyles.container}>
         <Card>
@@ -54,7 +66,7 @@ function LoginScreen() {
           </View>
         </Card>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -70,8 +82,9 @@ const rootStyles = StyleSheet.create({
 
 const cardStyles = StyleSheet.create({
   container: {
-    width: "100%",
-    height: "70%",
+    // width: "100%",
+    width: Dimensions.get("window").width,
+    height: "65%",
   },
 });
 
