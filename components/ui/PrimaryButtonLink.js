@@ -25,9 +25,8 @@ const styles = StyleSheet.create({
     fontStyle: "normal",
     fontWeight: "800",
     fontSize: 14,
-    lineHeight: 16,
   },
   pressed: {
-    opacity: 0.75,
+    opacity: 0.5,
   },
 });

@@ -1,4 +1,11 @@
-import { Image, StyleSheet, Text, View } from "react-native";
+import {
+  Image,
+  KeyboardAvoidingView,
+  Platform,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import PrimaryButton from "../components/ui/PrimaryButton";
 import Card from "../components/ui/Card";
 import PrimaryButtonLink from "../components/ui/PrimaryButtonLink";
@@ -27,13 +34,16 @@ function SignupScreen() {
   }
 
   return (
-    <View style={rootStyles.container}>
+    <KeyboardAvoidingView
+      style={rootStyles.container}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
       <Logo />
 
       <View style={cardStyles.container}>
         <Card>
-          <View style={textStyles.getStartedContainer}>
-            <TextString textStyle={textStyles.getStartedText}>
+          <View style={textStyles.needDirectionsContainer}>
+            <TextString textStyle={textStyles.needDirectionsText}>
               Get Started
             </TextString>
           </View>
@@ -77,7 +87,7 @@ function SignupScreen() {
           </View>
         </Card>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -94,17 +104,17 @@ const rootStyles = StyleSheet.create({
 const cardStyles = StyleSheet.create({
   container: {
     width: "100%",
-    height: "70%",
+    height: "60%",
   },
 });
 
 const textStyles = StyleSheet.create({
-  getStartedText: {
+  needDirectionsText: {
     color: Colors.primaryDarkBlue,
     fontWeight: "bold",
     fontSize: 50,
   },
-  getStartedContainer: {
+  needDirectionsContainer: {
     position: "absolute",
     top: "10%",
   },

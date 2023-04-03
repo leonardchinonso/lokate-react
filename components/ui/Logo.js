@@ -1,8 +1,8 @@
 import { Image, StyleSheet, View } from "react-native";
 
-function Logo() {
+function Logo({ customContainerStyles }) {
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, customContainerStyles]}>
       <Image
         style={styles.image}
         source={require("../../assets/images/logo.png")}
@@ -15,14 +15,14 @@ export default Logo;
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: "center",
-    alignItems: "center",
-    flex: 1,
-    width: "100%",
+    position: "absolute",
+    top: "15%",
+    height: "20%",
+    width: "80%",
   },
   image: {
-    width: "60%",
-    height: "60%",
+    width: "100%",
+    height: "100%",
     resizeMode: "contain",
   },
 });
