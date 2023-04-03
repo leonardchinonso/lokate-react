@@ -7,6 +7,7 @@ import TextString from "../components/ui/TextString";
 import TextInputBox from "../components/ui/TextInputBox";
 import { useState } from "react";
 import PasswordInputBox from "../components/ui/PasswordInputBox";
+import Logo from "../components/ui/Logo";
 
 function LoginScreen() {
   const [enteredEmail, setEnteredEmail] = useState("");
@@ -17,12 +18,7 @@ function LoginScreen() {
 
   return (
     <View style={rootStyles.container}>
-      <View style={logoStyles.container}>
-        <Image
-          style={logoStyles.image}
-          source={require("../assets/images/logo.png")}
-        />
-      </View>
+      <Logo />
 
       <View style={cardStyles.container}>
         <Card>
@@ -40,7 +36,7 @@ function LoginScreen() {
               onChange={emailInputHandler}
               keyboardType={"email-address"}
             ></TextInputBox>
-            <PasswordInputBox></PasswordInputBox>
+            <PasswordInputBox placeholder={"Password"}></PasswordInputBox>
           </View>
 
           <View style={buttonGroupStyles.container}>
@@ -101,20 +97,6 @@ const textStyles = StyleSheet.create({
   },
 });
 
-const logoStyles = StyleSheet.create({
-  container: {
-    justifyContent: "center",
-    alignItems: "center",
-    flex: 1,
-    width: "100%",
-  },
-  image: {
-    width: "60%",
-    height: "60%",
-    resizeMode: "contain",
-  },
-});
-
 const buttonGroupStyles = StyleSheet.create({
   container: {
     position: "absolute",
@@ -149,13 +131,5 @@ const textInputGroupStyles = StyleSheet.create({
     top: "35%",
     width: "80%",
     height: "25%",
-  },
-});
-
-const passwordGroupStyles = StyleSheet.create({
-  container: {
-    position: "absolute",
-    top: "50%",
-    width: "100%",
   },
 });

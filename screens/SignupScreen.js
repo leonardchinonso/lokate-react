@@ -7,22 +7,28 @@ import TextString from "../components/ui/TextString";
 import TextInputBox from "../components/ui/TextInputBox";
 import { useState } from "react";
 import PasswordInputBox from "../components/ui/PasswordInputBox";
+import Logo from "../components/ui/Logo";
 
 function SignupScreen() {
   const [enteredEmail, setEnteredEmail] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
 
   function emailInputHandler(enteredText) {
     setEnteredEmail(enteredText);
   }
 
+  function firstNameInputHandler(enteredText) {
+    setFirstName(enteredText);
+  }
+
+  function lastNameInputHandler(enteredText) {
+    setLastName(enteredText);
+  }
+
   return (
     <View style={rootStyles.container}>
-      <View style={logoStyles.container}>
-        <Image
-          style={logoStyles.image}
-          source={require("../assets/images/logo.png")}
-        />
-      </View>
+      <Logo />
 
       <View style={cardStyles.container}>
         <Card>
@@ -31,30 +37,41 @@ function SignupScreen() {
               Get Started
             </TextString>
           </View>
-          <View style={textStyles.loginForExperienceContainer}>
-            <TextString>Login for the best experience...</TextString>
-          </View>
 
           <View style={textInputGroupStyles.container}>
+            <View style={textInputGroupStyles.nameContainer}>
+              <TextInputBox
+                placeholder={"First Name"}
+                contentType={"name"}
+                onChange={firstNameInputHandler}
+                keyboardType={"default"}
+                containerStyle={{ width: "45%" }}
+              ></TextInputBox>
+              <TextInputBox
+                placeholder={"Last Name"}
+                contentType={"name"}
+                onChange={lastNameInputHandler}
+                keyboardType={"default"}
+                containerStyle={{ width: "45%" }}
+              ></TextInputBox>
+            </View>
             <TextInputBox
               placeholder={"Email"}
               contentType={"emailAddress"}
               onChange={emailInputHandler}
               keyboardType={"email-address"}
             ></TextInputBox>
-            <PasswordInputBox></PasswordInputBox>
+            <PasswordInputBox placeholder={"Password"}></PasswordInputBox>
+            <PasswordInputBox
+              placeholder={"Confirm Password"}
+            ></PasswordInputBox>
           </View>
 
           <View style={buttonGroupStyles.container}>
-            <PrimaryButton>LOGIN</PrimaryButton>
-            <View style={buttonLinkStyles.forgotPassword}>
-              <PrimaryButtonLink textStyle={textStyles.forgotPassword}>
-                Forgot password?
-              </PrimaryButtonLink>
-            </View>
-            <View style={buttonLinkStyles.signup}>
-              <PrimaryButtonLink textStyle={textStyles.signup}>
-                Signup
+            <PrimaryButton>SIGN UP</PrimaryButton>
+            <View style={buttonLinkStyles.login}>
+              <PrimaryButtonLink textStyle={textStyles.login}>
+                Already have an account? Login
               </PrimaryButtonLink>
             </View>
           </View>
@@ -91,29 +108,8 @@ const textStyles = StyleSheet.create({
     position: "absolute",
     top: "10%",
   },
-  loginForExperienceContainer: {
-    position: "absolute",
-    top: "23%",
-  },
-  forgotPassword: {
-    color: Colors.secondaryDarkGrey,
-  },
-  signup: {
+  login: {
     color: Colors.primaryDarkBlue,
-  },
-});
-
-const logoStyles = StyleSheet.create({
-  container: {
-    justifyContent: "center",
-    alignItems: "center",
-    flex: 1,
-    width: "100%",
-  },
-  image: {
-    width: "60%",
-    height: "60%",
-    resizeMode: "contain",
   },
 });
 
@@ -136,28 +132,21 @@ const buttonLinkStyles = StyleSheet.create({
     position: "absolute",
     top: "90%",
   },
-  signup: {
-    marginRight: "15%",
-    position: "absolute",
-    top: "90%",
-    left: "75%",
+  login: {
+    marginTop: "15%",
   },
 });
 
 const textInputGroupStyles = StyleSheet.create({
+  nameContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
   container: {
     justifyContent: "space-around",
     position: "absolute",
-    top: "35%",
+    top: "20%",
     width: "80%",
-    height: "25%",
-  },
-});
-
-const passwordGroupStyles = StyleSheet.create({
-  container: {
-    position: "absolute",
-    top: "50%",
-    width: "100%",
+    height: "50%",
   },
 });
