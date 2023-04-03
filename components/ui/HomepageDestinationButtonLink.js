@@ -4,19 +4,22 @@ import Constants from "../../models/constants";
 
 function HomepageDestinationButtonLink({ name, children }) {
   function getIconPath(name) {
-    if (name === Constants.GoSomewhere) {
-      return require("../../assets/images/navigator_icon.png");
+    switch (name) {
+      case Constants.GoSomewhere:
+        return require("../../assets/images/navigator_icon.png");
+      case Constants.GoHome:
+        return require("../../assets/images/home_icon.png");
+      case Constants.GoToWork:
+        return require("../../assets/images/work_icon.png");
+      case Constants.SavedPlaces:
+        return require("../../assets/images/pin_icon.png");
+      case Constants.CurrentLocation:
+        return require("../../assets/images/current_location_icon.png");
+      case Constants.Location:
+        return require("../../assets/images/location_icon.png");
+      default:
+        return null;
     }
-    if (name === Constants.GoHome) {
-      return require("../../assets/images/home_icon.png");
-    }
-    if (name === Constants.GoToWork) {
-      return require("../../assets/images/work_icon.png");
-    }
-    if (name === Constants.SavedPlaces) {
-      return require("../../assets/images/pin_icon.png");
-    }
-    return null;
   }
 
   return (
