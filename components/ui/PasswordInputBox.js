@@ -2,14 +2,12 @@ import React, { useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import TextInputBox from "./TextInputBox";
-import useTogglePasswordVisibility from "../../hooks/useTogglePasswordVisibility";
+import { useTogglePasswordVisibility } from "../../hooks/useTogglePasswordVisibility";
 import Colors from "../../styles/colors";
 
-function PasswordInputBox() {
+function PasswordInputBox({ placeholder }) {
   const { showPassword, rightIcon, handlePasswordVisibility } =
-    useTogglePasswordVisibility;
-
-  // console.log(showPassword, rightIcon);
+    useTogglePasswordVisibility();
 
   const [password, setPassword] = useState("");
 
@@ -21,20 +19,17 @@ function PasswordInputBox() {
     <View style={styles.inputContainer}>
       <TextInputBox
         name={"password"}
-        placeholder={"Password"}
+        placeholder={placeholder}
         contentType={"newPassword"}
         secureTextEntry={showPassword}
         value={password}
         onChange={onChange}
       />
-      <Pressable
-        style={{ backgroundColor: "black" }}
-        onPress={handlePasswordVisibility}
-      >
+      <Pressable style={styles.eye} onPress={handlePasswordVisibility}>
         <MaterialCommunityIcons
           name={rightIcon}
           size={22}
-          color={Colors.primaryLightBlue}
+          color={Colors.secondaryDarkGrey}
         />
       </Pressable>
     </View>
@@ -45,8 +40,12 @@ export default PasswordInputBox;
 
 const styles = StyleSheet.create({
   inputContainer: {
-    // backgroundColor: "black",
     width: "100%",
     flexDirection: "row",
+  },
+  eye: {
+    position: "absolute",
+    top: "30%",
+    left: "90%",
   },
 });

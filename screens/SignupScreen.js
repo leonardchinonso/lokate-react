@@ -9,11 +9,21 @@ import { useState } from "react";
 import PasswordInputBox from "../components/ui/PasswordInputBox";
 import Logo from "../components/ui/Logo";
 
-function LoginScreen() {
+function SignupScreen() {
   const [enteredEmail, setEnteredEmail] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
 
   function emailInputHandler(enteredText) {
     setEnteredEmail(enteredText);
+  }
+
+  function firstNameInputHandler(enteredText) {
+    setFirstName(enteredText);
+  }
+
+  function lastNameInputHandler(enteredText) {
+    setLastName(enteredText);
   }
 
   return (
@@ -22,14 +32,29 @@ function LoginScreen() {
 
       <View style={cardStyles.container}>
         <Card>
-          <View style={textStyles.welcomeContainer}>
-            <TextString textStyle={textStyles.welcomeText}>Welcome</TextString>
-          </View>
-          <View style={textStyles.loginForExperienceContainer}>
-            <TextString>Login for the best experience...</TextString>
+          <View style={textStyles.getStartedContainer}>
+            <TextString textStyle={textStyles.getStartedText}>
+              Get Started
+            </TextString>
           </View>
 
           <View style={textInputGroupStyles.container}>
+            <View style={textInputGroupStyles.nameContainer}>
+              <TextInputBox
+                placeholder={"First Name"}
+                contentType={"name"}
+                onChange={firstNameInputHandler}
+                keyboardType={"default"}
+                containerStyle={{ width: "45%" }}
+              ></TextInputBox>
+              <TextInputBox
+                placeholder={"Last Name"}
+                contentType={"name"}
+                onChange={lastNameInputHandler}
+                keyboardType={"default"}
+                containerStyle={{ width: "45%" }}
+              ></TextInputBox>
+            </View>
             <TextInputBox
               placeholder={"Email"}
               contentType={"emailAddress"}
@@ -37,18 +62,16 @@ function LoginScreen() {
               keyboardType={"email-address"}
             ></TextInputBox>
             <PasswordInputBox placeholder={"Password"}></PasswordInputBox>
+            <PasswordInputBox
+              placeholder={"Confirm Password"}
+            ></PasswordInputBox>
           </View>
 
           <View style={buttonGroupStyles.container}>
-            <PrimaryButton>LOGIN</PrimaryButton>
-            <View style={buttonLinkStyles.forgotPassword}>
-              <PrimaryButtonLink textStyle={textStyles.forgotPassword}>
-                Forgot password?
-              </PrimaryButtonLink>
-            </View>
-            <View style={buttonLinkStyles.signup}>
-              <PrimaryButtonLink textStyle={textStyles.signup}>
-                Signup
+            <PrimaryButton>SIGN UP</PrimaryButton>
+            <View style={buttonLinkStyles.login}>
+              <PrimaryButtonLink textStyle={textStyles.login}>
+                Already have an account? Login
               </PrimaryButtonLink>
             </View>
           </View>
@@ -58,7 +81,7 @@ function LoginScreen() {
   );
 }
 
-export default LoginScreen;
+export default SignupScreen;
 
 const rootStyles = StyleSheet.create({
   container: {
@@ -76,23 +99,16 @@ const cardStyles = StyleSheet.create({
 });
 
 const textStyles = StyleSheet.create({
-  welcomeText: {
+  getStartedText: {
     color: Colors.primaryDarkBlue,
     fontWeight: "bold",
     fontSize: 50,
   },
-  welcomeContainer: {
+  getStartedContainer: {
     position: "absolute",
     top: "10%",
   },
-  loginForExperienceContainer: {
-    position: "absolute",
-    top: "23%",
-  },
-  forgotPassword: {
-    color: Colors.secondaryDarkGrey,
-  },
-  signup: {
+  login: {
     color: Colors.primaryDarkBlue,
   },
 });
@@ -116,20 +132,21 @@ const buttonLinkStyles = StyleSheet.create({
     position: "absolute",
     top: "90%",
   },
-  signup: {
-    marginRight: "15%",
-    position: "absolute",
-    top: "90%",
-    left: "75%",
+  login: {
+    marginTop: "15%",
   },
 });
 
 const textInputGroupStyles = StyleSheet.create({
+  nameContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
   container: {
     justifyContent: "space-around",
     position: "absolute",
-    top: "35%",
+    top: "20%",
     width: "80%",
-    height: "25%",
+    height: "50%",
   },
 });
