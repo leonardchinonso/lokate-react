@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import SignupScreen from "./screens/SignupScreen";
 import HomepageScreen from "./screens/HomepageScreen";
 import PickStartLocationScreen from "./screens/PickStartLocationScreen";
+import SavedPlacesScreen from "./screens/SavedPlacesScreen";
 
 export default function App() {
   useEffect(() => {});
@@ -16,7 +17,8 @@ export default function App() {
       {/*<LoginScreen />*/}
       {/*<SignupScreen />*/}
       {/*<HomepageScreen />*/}
-      <PickStartLocationScreen />
+      {/*<PickStartLocationScreen />*/}
+      <SavedPlacesScreen />
     </View>
   );
 }
