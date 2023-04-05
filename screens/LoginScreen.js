@@ -82,7 +82,6 @@ const rootStyles = StyleSheet.create({
 
 const cardStyles = StyleSheet.create({
   container: {
-    // width: "100%",
     width: Dimensions.get("window").width,
     height: "65%",
   },

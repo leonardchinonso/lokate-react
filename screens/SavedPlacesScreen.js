@@ -12,10 +12,6 @@ function SavedPlacesScreen() {
     setSavedPlaces(["Abbey Road", "Curzon Building", "Dale's End"]);
   }, []);
 
-  function savedPlacesHandler(retrievedSavedPlaces) {
-    setSavedPlaces(retrievedSavedPlaces);
-  }
-
   return (
     <View style={rootStyles.root}>
       <View style={textStyles.savedPlacesContainer}>
