@@ -8,6 +8,7 @@ import HomepageScreen from "./screens/HomepageScreen";
 import PickStartLocationScreen from "./screens/PickStartLocationScreen";
 import SavedPlacesScreen from "./screens/SavedPlacesScreen";
 import EditPlaceScreen from "./screens/EditPlaceScreen";
+import AddPlaceScreen from "./screens/AddPlaceScreen";
 
 export default function App() {
   useEffect(() => {});
@@ -20,7 +21,8 @@ export default function App() {
       {/*<HomepageScreen />*/}
       {/*<PickStartLocationScreen />*/}
       {/*<SavedPlacesScreen />*/}
-      <EditPlaceScreen />
+      {/*<EditPlaceScreen />*/}
+      <AddPlaceScreen />
     </View>
   );
 }
