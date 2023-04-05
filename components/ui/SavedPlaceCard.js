@@ -2,12 +2,12 @@ import { Image, Pressable, StyleSheet, View } from "react-native";
 import ItemCard from "./ItemCard";
 import TextString from "./TextString";
 
-function SavedPlaceCard({ onEdit, onDelete }) {
+function SavedPlaceCard({ onEdit, onDelete, children }) {
   return (
     <View>
       <ItemCard customStyles={itemCardCustomStyles.container}>
         <View style={textStyles.container}>
-          <TextString textStyle={{ fontSize: 20 }}>Abbey Road</TextString>
+          <TextString textStyle={{ fontSize: 20 }}>{children}</TextString>
         </View>
         <View style={imageGroupStyles.container}>
           <Pressable

@@ -1,9 +1,21 @@
-import { StyleSheet, Text, View } from "react-native";
+import { FlatList, StyleSheet, Text, View } from "react-native";
 import Colors from "../styles/colors";
 import TextString from "../components/ui/TextString";
 import SavedPlaceCard from "../components/ui/SavedPlaceCard";
+import { useEffect, useState } from "react";
+import savedPlaceCard from "../components/ui/SavedPlaceCard";
 
 function SavedPlacesScreen() {
+  const [savedPlaces, setSavedPlaces] = useState();
+
+  useEffect(() => {
+    setSavedPlaces(["Abbey Road", "Curzon Building", "Dale's End"]);
+  }, []);
+
+  function savedPlacesHandler(retrievedSavedPlaces) {
+    setSavedPlaces(retrievedSavedPlaces);
+  }
+
   return (
     <View style={rootStyles.root}>
       <View style={textStyles.savedPlacesContainer}>
@@ -11,8 +23,15 @@ function SavedPlacesScreen() {
           Saved Places
         </TextString>
       </View>
-      <View style={cardGroupStyles.container}>
-        <SavedPlaceCard />
+      <View style={savedPlacesStyles.container}>
+        <FlatList
+          data={savedPlaces}
+          renderItem={(itemData) => (
+            <View style={savedPlacesStyles.singleSavedPlace}>
+              <SavedPlaceCard>{itemData.item}</SavedPlaceCard>
+            </View>
+          )}
+        />
       </View>
     </View>
   );
@@ -41,10 +60,14 @@ const textStyles = StyleSheet.create({
   },
 });
 
-const cardGroupStyles = StyleSheet.create({
+const savedPlacesStyles = StyleSheet.create({
   container: {
+    justifyContent: "space-between",
     position: "absolute",
-    top: "30%",
+    top: "20%",
     width: "80%",
+  },
+  singleSavedPlace: {
+    marginVertical: "3%",
   },
 });
