@@ -4,7 +4,7 @@ import TextInputBox from "../components/ui/TextInputBox";
 import { useState } from "react";
 import Card from "../components/ui/Card";
 import TextString from "../components/ui/TextString";
-import Constants from "../models/constants";
+import { HomepageDestinationConstants } from "../models/constants";
 import HomepageDestinationButtonLink from "../components/ui/HomepageDestinationButtonLink";
 import { SelectList } from "react-native-dropdown-select-list/index";
 import PrimaryButton from "../components/ui/PrimaryButton";
@@ -46,15 +46,15 @@ function PickStartLocationScreen() {
 
       <View style={startLocationGroupStyles.topContainer}>
         <HomepageDestinationButtonLink
-          name={Constants.CurrentLocation}
+          name={HomepageDestinationConstants.CurrentLocation}
           children={"Current Location"}
         />
         <HomepageDestinationButtonLink
-          name={Constants.GoHome}
+          name={HomepageDestinationConstants.GoHome}
           children={"Home"}
         />
         <HomepageDestinationButtonLink
-          name={Constants.GoToWork}
+          name={HomepageDestinationConstants.GoToWork}
           children={"Work"}
         />
       </View>
@@ -72,15 +72,15 @@ function PickStartLocationScreen() {
 
       <View style={startLocationGroupStyles.bottomContainer}>
         <HomepageDestinationButtonLink
-          name={Constants.Location}
+          name={HomepageDestinationConstants.Location}
           children={"Bull ring"}
         />
         <HomepageDestinationButtonLink
-          name={Constants.Location}
+          name={HomepageDestinationConstants.Location}
           children={"Birmingham New Street"}
         />
         <HomepageDestinationButtonLink
-          name={Constants.Location}
+          name={HomepageDestinationConstants.Location}
           children={"Curzon Building"}
         />
       </View>

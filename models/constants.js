@@ -1,4 +1,4 @@
-const Constants = {
+export const HomepageDestinationConstants = {
   GoSomewhere: "go_somewhere",
   GoHome: "go_home",
   GoToWork: "go_to_work",
@@ -7,4 +7,8 @@ const Constants = {
   Location: "location",
 };
 
-export default Constants;
+export const UseAsConstants = {
+  None: "None (default)",
+  Home: "Home",
+  Work: "Work",
+};

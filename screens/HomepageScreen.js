@@ -12,7 +12,7 @@ import TextString from "../components/ui/TextString";
 import PrimaryButtonLink from "../components/ui/PrimaryButtonLink";
 import Colors from "../styles/colors";
 import HomepageDestinationButtonLink from "../components/ui/HomepageDestinationButtonLink";
-import Constants from "../models/constants";
+import { HomepageDestinationConstants } from "../models/constants";
 
 function HomepageScreen() {
   function fetchRecentlyVisited() {
@@ -41,19 +41,19 @@ function HomepageScreen() {
 
           <View style={destinationGroupStyles.container}>
             <HomepageDestinationButtonLink
-              name={Constants.GoSomewhere}
+              name={HomepageDestinationConstants.GoSomewhere}
               children={"Go Somewhere"}
             />
             <HomepageDestinationButtonLink
-              name={Constants.GoHome}
+              name={HomepageDestinationConstants.GoHome}
               children={"Go Home"}
             />
             <HomepageDestinationButtonLink
-              name={Constants.GoToWork}
+              name={HomepageDestinationConstants.GoToWork}
               children={"Go To Work"}
             />
             <HomepageDestinationButtonLink
-              name={Constants.SavedPlaces}
+              name={HomepageDestinationConstants.SavedPlaces}
               children={"Saved Places"}
             />
           </View>

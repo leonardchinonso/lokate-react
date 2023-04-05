@@ -1,21 +1,21 @@
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import Colors from "../../styles/colors";
-import Constants from "../../models/constants";
+import { HomepageDestinationConstants } from "../../models/constants";
 
 function HomepageDestinationButtonLink({ name, children }) {
   function getIconPath(name) {
     switch (name) {
-      case Constants.GoSomewhere:
+      case HomepageDestinationConstants.GoSomewhere:
         return require("../../assets/images/navigator_icon.png");
-      case Constants.GoHome:
+      case HomepageDestinationConstants.GoHome:
         return require("../../assets/images/home_icon.png");
-      case Constants.GoToWork:
+      case HomepageDestinationConstants.GoToWork:
         return require("../../assets/images/work_icon.png");
-      case Constants.SavedPlaces:
+      case HomepageDestinationConstants.SavedPlaces:
         return require("../../assets/images/pin_icon.png");
-      case Constants.CurrentLocation:
+      case HomepageDestinationConstants.CurrentLocation:
         return require("../../assets/images/current_location_icon.png");
-      case Constants.Location:
+      case HomepageDestinationConstants.Location:
         return require("../../assets/images/location_icon.png");
       default:
         return null;
