@@ -10,6 +10,7 @@ import SavedPlacesScreen from "./screens/SavedPlacesScreen";
 import EditPlaceScreen from "./screens/EditPlaceScreen";
 import AddPlaceScreen from "./screens/AddPlaceScreen";
 import ProfileScreen from "./screens/ProfileScreen";
+import EditProfileScreen from "./screens/EditProfileScreen";
 
 export default function App() {
   useEffect(() => {});
@@ -24,7 +25,8 @@ export default function App() {
       {/*<SavedPlacesScreen />*/}
       {/*<EditPlaceScreen />*/}
       {/*<AddPlaceScreen />*/}
-      <ProfileScreen />
+      {/*<ProfileScreen />*/}
+      <EditProfileScreen />
     </View>
   );
 }
