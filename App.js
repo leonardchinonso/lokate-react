@@ -11,6 +11,8 @@ import EditPlaceScreen from "./screens/EditPlaceScreen";
 import AddPlaceScreen from "./screens/AddPlaceScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import EditProfileScreen from "./screens/EditProfileScreen";
+import SettingsScreen from "./screens/SettingsScreen";
+import PickEndLocationScreen from "./screens/PickEndLocationScreen";
 
 export default function App() {
   useEffect(() => {});
@@ -22,11 +24,13 @@ export default function App() {
       {/*<SignupScreen />*/}
       {/*<HomepageScreen />*/}
       {/*<PickStartLocationScreen />*/}
+      {/*<PickEndLocationScreen />*/}
       {/*<SavedPlacesScreen />*/}
       {/*<EditPlaceScreen />*/}
       {/*<AddPlaceScreen />*/}
       {/*<ProfileScreen />*/}
-      <EditProfileScreen />
+      {/*<EditProfileScreen />*/}
+      <SettingsScreen />
     </View>
   );
 }

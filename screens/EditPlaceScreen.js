@@ -6,6 +6,7 @@ import { useState } from "react";
 import { SelectList } from "react-native-dropdown-select-list/index";
 import { UseAsConstants } from "../models/constants";
 import PrimaryButton from "../components/ui/PrimaryButton";
+import { Header } from "../styles/text";
 
 function EditPlaceScreen() {
   const [name, setName] = useState("Abbey Road");
@@ -23,10 +24,8 @@ function EditPlaceScreen() {
 
   return (
     <View style={rootStyles.rootContainer}>
-      <View style={textStyles.EditAPlaceContainer}>
-        <TextString textStyle={textStyles.EditAPlaceText}>
-          Edit A Place
-        </TextString>
+      <View style={Header.container}>
+        <TextString textStyle={Header.text}>Edit A Place</TextString>
       </View>
       <View style={nameSectionStyles.container}>
         <TextString textStyle={nameSectionStyles.nameText}>Name</TextString>
@@ -117,18 +116,6 @@ const dropdownStyles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Colors.secondaryDarkGrey,
     backgroundColor: "white",
-  },
-});
-
-const textStyles = StyleSheet.create({
-  EditAPlaceText: {
-    color: Colors.primaryBlack,
-    fontWeight: "bold",
-    fontSize: 50,
-  },
-  EditAPlaceContainer: {
-    position: "absolute",
-    top: "10%",
   },
 });
 

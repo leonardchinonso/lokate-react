@@ -4,6 +4,7 @@ import TextString from "../components/ui/TextString";
 import SavedPlaceCard from "../components/ui/SavedPlaceCard";
 import { useEffect, useState } from "react";
 import savedPlaceCard from "../components/ui/SavedPlaceCard";
+import { Header } from "../styles/text";
 
 function SavedPlacesScreen() {
   const [savedPlaces, setSavedPlaces] = useState();
@@ -14,10 +15,8 @@ function SavedPlacesScreen() {
 
   return (
     <View style={rootStyles.root}>
-      <View style={textStyles.savedPlacesContainer}>
-        <TextString textStyle={textStyles.savedPlacesText}>
-          Saved Places
-        </TextString>
+      <View style={Header.container}>
+        <TextString textStyle={Header.text}>Saved Places</TextString>
       </View>
       <View style={savedPlacesStyles.container}>
         <FlatList
