@@ -11,7 +11,7 @@ import Card from "../components/ui/Card";
 import TextString from "../components/ui/TextString";
 import PrimaryButtonLink from "../components/ui/PrimaryButtonLink";
 import Colors from "../styles/colors";
-import HomepageDestinationButtonLink from "../components/ui/HomepageDestinationButtonLink";
+import IconButtonLink from "../components/ui/IconButtonLink";
 import { HomepageDestinationConstants } from "../models/constants";
 
 function HomepageScreen() {
@@ -40,19 +40,19 @@ function HomepageScreen() {
           </View>
 
           <View style={destinationGroupStyles.container}>
-            <HomepageDestinationButtonLink
+            <IconButtonLink
               name={HomepageDestinationConstants.GoSomewhere}
               children={"Go Somewhere"}
             />
-            <HomepageDestinationButtonLink
+            <IconButtonLink
               name={HomepageDestinationConstants.GoHome}
               children={"Go Home"}
             />
-            <HomepageDestinationButtonLink
+            <IconButtonLink
               name={HomepageDestinationConstants.GoToWork}
               children={"Go To Work"}
             />
-            <HomepageDestinationButtonLink
+            <IconButtonLink
               name={HomepageDestinationConstants.SavedPlaces}
               children={"Saved Places"}
             />

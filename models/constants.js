@@ -7,6 +7,15 @@ export const HomepageDestinationConstants = {
   Location: "location",
 };
 
+export const ProfileConstants = {
+  EditProfile: "edit_profile",
+  SavedPlaces: "saved_places",
+  Settings: "settings",
+  ContactUs: "contact_us",
+  About: "about",
+  Logout: "logout",
+};
+
 export const UseAsConstants = {
   None: "None (default)",
   Home: "Home",
