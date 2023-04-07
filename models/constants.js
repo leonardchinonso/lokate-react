@@ -21,3 +21,13 @@ export const UseAsConstants = {
   Home: "Home",
   Work: "Work",
 };
+
+export const AppearanceConstants = {
+  LightMode: "Light Mode",
+  DarkMode: "Dark Mode",
+};
+
+export const PrecisionConstants = {
+  Approximate: "Approximate",
+  Exact: "Exact",
+};
