@@ -13,6 +13,9 @@ import ProfileScreen from "./screens/ProfileScreen";
 import EditProfileScreen from "./screens/EditProfileScreen";
 import SettingsScreen from "./screens/SettingsScreen";
 import PickEndLocationScreen from "./screens/PickEndLocationScreen";
+import ContactUsScreen from "./screens/ContactUsScreen";
+import AboutScreen from "./screens/AboutScreen";
+import LogoutScreen from "./screens/LogoutScreen";
 
 export default function App() {
   useEffect(() => {});
@@ -30,7 +33,10 @@ export default function App() {
       {/*<AddPlaceScreen />*/}
       {/*<ProfileScreen />*/}
       {/*<EditProfileScreen />*/}
-      <SettingsScreen />
+      {/*<SettingsScreen />*/}
+      {/*<ContactUsScreen />*/}
+      {/*<AboutScreen />*/}
+      <LogoutScreen />
     </View>
   );
 }
