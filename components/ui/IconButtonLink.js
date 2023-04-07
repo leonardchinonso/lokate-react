@@ -1,8 +1,11 @@
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import Colors from "../../styles/colors";
-import { HomepageDestinationConstants } from "../../models/constants";
+import {
+  HomepageDestinationConstants,
+  ProfileConstants,
+} from "../../models/constants";
 
-function HomepageDestinationButtonLink({ name, children }) {
+function IconButtonLink({ name, children }) {
   function getIconPath(name) {
     switch (name) {
       case HomepageDestinationConstants.GoSomewhere:
@@ -17,6 +20,18 @@ function HomepageDestinationButtonLink({ name, children }) {
         return require("../../assets/images/current_location_icon.png");
       case HomepageDestinationConstants.Location:
         return require("../../assets/images/location_icon.png");
+      case ProfileConstants.EditProfile:
+        return require("../../assets/images/edit_icon_2.png");
+      case ProfileConstants.SavedPlaces:
+        return require("../../assets/images/pin_icon.png");
+      case ProfileConstants.Settings:
+        return require("../../assets/images/settings_icon.png");
+      case ProfileConstants.ContactUs:
+        return require("../../assets/images/phone_icon.png");
+      case ProfileConstants.About:
+        return require("../../assets/images/paper_icon.png");
+      case ProfileConstants.Logout:
+        return require("../../assets/images/exit_icon.png");
       default:
         return null;
     }
@@ -34,7 +49,7 @@ function HomepageDestinationButtonLink({ name, children }) {
   );
 }
 
-export default HomepageDestinationButtonLink;
+export default IconButtonLink;
 
 const styles = StyleSheet.create({
   container: {
