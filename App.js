@@ -1,4 +1,4 @@
-import { SafeAreaView, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import Colors from "./styles/colors";
 import SplashScreen from "./screens/SplashScreen";
 import LoginScreen from "./screens/LoginScreen";
@@ -18,8 +18,6 @@ import AboutScreen from "./screens/AboutScreen";
 import LogoutScreen from "./screens/LogoutScreen";
 
 export default function App() {
-  useEffect(() => {});
-
   return (
     <View style={styles.rootContainer}>
       {/*<SplashScreen />*/}
