@@ -30,13 +30,13 @@ export default function App() {
       {/*<PickEndLocationScreen />*/}
       {/*<SavedPlacesScreen />*/}
       {/*<EditPlaceScreen />*/}
-      {/*<AddPlaceScreen />*/}
+      <AddPlaceScreen />
       {/*<ProfileScreen />*/}
       {/*<EditProfileScreen />*/}
       {/*<SettingsScreen />*/}
       {/*<ContactUsScreen />*/}
       {/*<AboutScreen />*/}
-      <LogoutScreen />
+      {/*<LogoutScreen />*/}
     </View>
   );
 }
