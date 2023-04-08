@@ -3,6 +3,7 @@ import Colors from "../../styles/colors";
 import React from "react";
 
 function TextInputBox({
+  editable,
   placeholder,
   onChange,
   containerStyle,
@@ -11,11 +12,13 @@ function TextInputBox({
   name,
   secureTextEntry,
   value,
+  inputStyle,
 }) {
   return (
     <View style={[rootStyles.container, containerStyle]}>
       <TextInput
-        style={rootStyles.input}
+        editable={editable}
+        style={[rootStyles.input, inputStyle]}
         name={name}
         placeholder={placeholder}
         placeholderTextColor={Colors.secondaryDarkGrey}
