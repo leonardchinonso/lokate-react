@@ -31,3 +31,9 @@ export const PrecisionConstants = {
   Approximate: "Approximate",
   Exact: "Exact",
 };
+
+export const TransportModeConstants = {
+  Bus: "bus",
+  Walk: "walking",
+  Train: "train",
+};
