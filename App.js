@@ -1,23 +1,51 @@
-import { StyleSheet, View } from "react-native";
-import Colors from "./styles/colors";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useContext, useEffect, useState } from "react";
+
+import { NavigationContainer } from "@react-navigation/native";
+import AuthenticationStackNavigation from "./navigation/UnauthenticatedScreen";
+import LandingBottomTabNavigator from "./navigation/AuthenticatedScreens";
+import AuthenticationContextProvider, {
+  AuthenticationContext,
+} from "./store/context/AuthenticationContext";
 import SplashScreen from "./screens/SplashScreen";
-import LoginScreen from "./screens/LoginScreen";
-import { useEffect } from "react";
-import SignupScreen from "./screens/SignupScreen";
-import HomepageScreen from "./screens/HomepageScreen";
-import PickStartLocationScreen from "./screens/PickStartLocationScreen";
-import SavedPlacesScreen from "./screens/SavedPlacesScreen";
-import EditPlaceScreen from "./screens/EditPlaceScreen";
-import AddPlaceScreen from "./screens/AddPlaceScreen";
-import ProfileScreen from "./screens/ProfileScreen";
-import EditProfileScreen from "./screens/EditProfileScreen";
-import SettingsScreen from "./screens/SettingsScreen";
-import PickEndLocationScreen from "./screens/PickEndLocationScreen";
-import ContactUsScreen from "./screens/ContactUsScreen";
-import AboutScreen from "./screens/AboutScreen";
-import LogoutScreen from "./screens/LogoutScreen";
-import JourneyResultScreen from "./screens/JourneyResultScreen";
-import RouteResultScreen from "./screens/RouteResultScreen";
+import { ConfigConstants } from "./models/constants";
+
+function Navigation() {
+  const authContext = useContext(AuthenticationContext);
+
+  return (
+    <NavigationContainer>
+      {!authContext.isAuthenticated && <AuthenticationStackNavigation />}
+      {authContext.isAuthenticated && <LandingBottomTabNavigator />}
+    </NavigationContainer>
+  );
+}
+
+function Root() {
+  const [isTryingLogin, setIsTryingLogin] = useState(true);
+  const authContext = useContext(AuthenticationContext);
+
+  useEffect(() => {
+    async function fetchToken() {
+      const storedToken = await AsyncStorage.getItem(
+        ConfigConstants.StorageTokenKey
+      );
+      if (storedToken) {
+        authContext.setAuthToken(storedToken);
+      }
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+      setIsTryingLogin(false);
+    }
+
+    fetchToken().then();
+  }, []);
+
+  if (isTryingLogin) {
+    return <SplashScreen />;
+  }
+
+  return <Navigation />;
+}
 
 export default function App() {
   const routeResult = {
@@ -329,31 +357,8 @@ export default function App() {
   };
 
   return (
-    <View style={styles.rootContainer}>
-      {/*<SplashScreen />*/}
-      {/*<LoginScreen />*/}
-      {/*<SignupScreen />*/}
-      {/*<HomepageScreen />*/}
-      {/*<PickStartLocationScreen />*/}
-      {/*<PickEndLocationScreen />*/}
-      {/*<SavedPlacesScreen />*/}
-      {/*<EditPlaceScreen />*/}
-      {/*<AddPlaceScreen />*/}
-      {/*<ProfileScreen />*/}
-      {/*<EditProfileScreen />*/}
-      {/*<SettingsScreen />*/}
-      {/*<ContactUsScreen />*/}
-      {/*<AboutScreen />*/}
-      {/*<LogoutScreen />*/}
-      {/*<JourneyResultScreen />*/}
-      <RouteResultScreen routeData={routeResult.routes[2]} />
-    </View>
+    <AuthenticationContextProvider>
+      <Root />
+    </AuthenticationContextProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  rootContainer: {
-    flex: 1,
-    backgroundColor: Colors.primaryLightBlue,
-  },
-});

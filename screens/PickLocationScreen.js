@@ -10,7 +10,7 @@ import { SelectList } from "react-native-dropdown-select-list/index";
 import PrimaryButton from "../components/ui/PrimaryButton";
 import { Header } from "../styles/text";
 
-function PickLocation({ position }) {
+function PickLocation({ position, onPress }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [selected, setSelected] = useState("");
 
@@ -26,7 +26,9 @@ function PickLocation({ position }) {
   return (
     <View style={rootStyles.root}>
       <View style={Header.container}>
-        <TextString textStyle={Header.text}>Go Somewhere</TextString>
+        <TextString textStyle={Header.text}>
+          {position === "start" ? "From Where?" : "To Where?"}
+        </TextString>
       </View>
       <View style={textStyles.pickStartLocationContainer}>
         <TextString textStyle={{ fontSize: 17 }}>
@@ -87,7 +89,9 @@ function PickLocation({ position }) {
       </View>
 
       <View style={buttonGroupStyles.container}>
-        <PrimaryButton>{position === "start" ? "NEXT" : "GO"}</PrimaryButton>
+        <PrimaryButton onPress={onPress}>
+          {position === "start" ? "NEXT" : "GO"}
+        </PrimaryButton>
       </View>
     </View>
   );

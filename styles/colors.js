@@ -4,6 +4,7 @@ const Colors = {
   primaryWhite: "#FFFFFF",
   primaryGrey: "#C7C7C7",
   primaryBlack: "#000000",
+  primaryRed: "#fd1010",
 
   // secondary colours
   secondaryDarkGrey: "#919191",

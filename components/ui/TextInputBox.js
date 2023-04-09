@@ -13,6 +13,8 @@ function TextInputBox({
   secureTextEntry,
   value,
   inputStyle,
+  multiline,
+  autoCorrect,
 }) {
   return (
     <View style={[rootStyles.container, containerStyle]}>
@@ -23,12 +25,13 @@ function TextInputBox({
         placeholder={placeholder}
         placeholderTextColor={Colors.secondaryDarkGrey}
         autoCapitalize={"none"}
-        autoCorrect={false}
+        autoCorrect={autoCorrect}
         onChangeText={onChange}
         textContentType={contentType}
         value={value}
         secureTextEntry={secureTextEntry}
         keyboardType={keyboardType === undefined ? "default" : keyboardType}
+        multiline={multiline}
       ></TextInput>
     </View>
   );

@@ -1,7 +1,7 @@
 import { Pressable, Text, StyleSheet } from "react-native";
 import Colors from "../../styles/colors";
 
-function PrimaryButton({ children, onPressStyle, customStyles }) {
+function PrimaryButton({ children, onPressStyle, customStyles, onPress }) {
   return (
     <Pressable
       style={({ pressed }) =>
@@ -9,6 +9,7 @@ function PrimaryButton({ children, onPressStyle, customStyles }) {
           ? [styles.inner, customStyles, styles.pressed, onPressStyle]
           : [styles.inner, customStyles]
       }
+      onPress={onPress}
     >
       <Text style={styles.buttonText}>{children}</Text>
     </Pressable>

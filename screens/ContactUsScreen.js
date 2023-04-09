@@ -48,6 +48,8 @@ function ContactUsScreen() {
           </TextString>
           <View style={{ width: "70%", height: "100%" }}>
             <TextInputBox
+              multiline={true}
+              autoCorrect={false}
               contentType={"organizationName"}
               onChange={messageInputHandler}
               keyboardType={"default"}
