@@ -1,29 +1,33 @@
 import { FlatList, StyleSheet, View } from "react-native";
-
-import Colors from "../styles/colors";
 import TextString from "../components/ui/TextString";
+import { Header } from "../styles/text";
+import Colors from "../styles/colors";
 import SavedPlaceCard from "../components/ui/SavedPlaceCard";
 import { useEffect, useState } from "react";
-import { Header } from "../styles/text";
+import ItemCard from "../components/ui/ItemCard";
 
-function SavedPlacesScreen() {
-  const [savedPlaces, setSavedPlaces] = useState([]);
+function LastVisitedScreen() {
+  const [lastVisitedPlaces, setLastVisitedPlaces] = useState([]);
 
   useEffect(() => {
-    setSavedPlaces(["Abbey Road", "Curzon Building", "Dale's End"]);
+    setLastVisitedPlaces(["Bull Ring", "Birmingham New Street", "Fenty Road"]);
   }, []);
 
   return (
     <View style={rootStyles.root}>
       <View style={Header.container}>
-        <TextString textStyle={Header.text}>Saved Places</TextString>
+        <TextString textStyle={{ ...Header.text, fontSize: 45 }}>
+          Last Visited Places
+        </TextString>
       </View>
-      <View style={savedPlacesStyles.container}>
+      <View style={lastVisitedPlaceStyle.container}>
         <FlatList
-          data={savedPlaces}
+          data={lastVisitedPlaces}
           renderItem={(itemData) => (
-            <View style={savedPlacesStyles.singleSavedPlace}>
-              <SavedPlaceCard>{itemData.item}</SavedPlaceCard>
+            <View style={lastVisitedPlaceStyle.singleLastVisitedPlace}>
+              <ItemCard>
+                <TextString>{itemData.item}</TextString>
+              </ItemCard>
             </View>
           )}
         />
@@ -32,7 +36,7 @@ function SavedPlacesScreen() {
   );
 }
 
-export default SavedPlacesScreen;
+export default LastVisitedScreen;
 
 const rootStyles = StyleSheet.create({
   root: {
@@ -43,14 +47,14 @@ const rootStyles = StyleSheet.create({
   },
 });
 
-const savedPlacesStyles = StyleSheet.create({
+const lastVisitedPlaceStyle = StyleSheet.create({
   container: {
     justifyContent: "space-between",
     position: "absolute",
     top: "20%",
     width: "80%",
   },
-  singleSavedPlace: {
+  singleLastVisitedPlace: {
     marginVertical: "3%",
   },
 });

@@ -5,15 +5,9 @@ import TextInputBox from "./TextInputBox";
 import { useTogglePasswordVisibility } from "../../hooks/useTogglePasswordVisibility";
 import Colors from "../../styles/colors";
 
-function PasswordInputBox({ placeholder }) {
+function PasswordInputBox({ placeholder, onChange, value }) {
   const { showPassword, rightIcon, handlePasswordVisibility } =
     useTogglePasswordVisibility();
-
-  const [password, setPassword] = useState("");
-
-  function onChange(text) {
-    setPassword(text);
-  }
 
   return (
     <View style={styles.inputContainer}>
@@ -22,7 +16,7 @@ function PasswordInputBox({ placeholder }) {
         placeholder={placeholder}
         contentType={"newPassword"}
         secureTextEntry={showPassword}
-        value={password}
+        value={value}
         onChange={onChange}
       />
       <Pressable style={styles.eye} onPress={handlePasswordVisibility}>

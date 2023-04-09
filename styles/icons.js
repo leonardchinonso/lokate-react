@@ -5,7 +5,6 @@ import {
 } from "../models/constants";
 
 export function GetIconPath(name) {
-  console.log("NAME HERE: ", name);
   switch (name) {
     case HomepageDestinationConstants.GoSomewhere:
       return require("../assets/images/navigator_icon.png");

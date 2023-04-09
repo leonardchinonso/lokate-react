@@ -37,3 +37,34 @@ export const TransportModeConstants = {
   Walk: "walking",
   Train: "train",
 };
+
+export const ScreenNameConstants = {
+  HomepageScreenName: "homepage_screen",
+  PickStartLocationScreenName: "pick_start_location_screen",
+  PickEndLocationScreenName: "pick_end_location_screen",
+  SavedPlacesScreenName: "saved_places_screen",
+  LastVisitedScreenName: "last_visited_screen",
+  ProfileScreenName: "profile_screen",
+  LoginScreenName: "login_screen",
+  SignupScreenName: "signup_screen",
+  LogoutScreenName: "logout_screen",
+};
+
+export const NavigatorNameConstants = {
+  PlacesNavigatorName: "places_navigator",
+  HomepageNavigatorName: "homepage_navigator",
+};
+
+export const ServerUrlConstants = {
+  ServerBaseUrl: "http://192.168.0.144:8080/v1",
+  LoginUrl: "/auth/login",
+};
+
+export const HttpStatusCodes = {
+  StatusOk: 200,
+  StatusUnauthorized: 401,
+};
+
+export const ConfigConstants = {
+  StorageTokenKey: "token",
+};

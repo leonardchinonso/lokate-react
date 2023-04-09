@@ -8,11 +8,16 @@ import TextInputBox from "../components/ui/TextInputBox";
 import { useState } from "react";
 import PasswordInputBox from "../components/ui/PasswordInputBox";
 import Logo from "../components/ui/Logo";
+import { ScreenNameConstants } from "../models/constants";
 
-function SignupScreen() {
+function SignupScreen({ navigation }) {
   const [enteredEmail, setEnteredEmail] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+
+  function login() {
+    navigation.goBack();
+  }
 
   function emailInputHandler(enteredText) {
     setEnteredEmail(enteredText);
@@ -73,7 +78,7 @@ function SignupScreen() {
           <View style={buttonGroupStyles.container}>
             <PrimaryButton>SIGN UP</PrimaryButton>
             <View style={buttonLinkStyles.login}>
-              <PrimaryButtonLink textStyle={textStyles.login}>
+              <PrimaryButtonLink onPress={login} textStyle={textStyles.login}>
                 Already have an account? Login
               </PrimaryButtonLink>
             </View>
@@ -91,13 +96,14 @@ const rootStyles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-end",
     alignItems: "center",
+    backgroundColor: Colors.primaryLightBlue,
   },
 });
 
 const cardStyles = StyleSheet.create({
   container: {
     width: "100%",
-    height: "60%",
+    height: "65%",
   },
 });
 

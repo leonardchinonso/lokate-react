@@ -1,12 +1,11 @@
 import { Pressable, Text, StyleSheet, View } from "react-native";
 import Colors from "../../styles/colors";
 
-function PrimaryButtonLink({ children, style, textStyle }) {
+function PrimaryButtonLink({ children, style, textStyle, onPress }) {
   return (
     <Pressable
-      style={({ pressed }) =>
-        pressed ? [styles.inner, styles.pressed, style] : styles.inner
-      }
+      style={({ pressed }) => (pressed ? [styles.pressed, style] : null)}
+      onPress={onPress}
     >
       <Text style={[styles.buttonText, textStyle]}>{children}</Text>
     </Pressable>
@@ -16,9 +15,6 @@ function PrimaryButtonLink({ children, style, textStyle }) {
 export default PrimaryButtonLink;
 
 const styles = StyleSheet.create({
-  inner: {
-    color: Colors.primaryGrey,
-  },
   buttonText: {
     color: Colors.primaryWhite,
     textAlign: "center",

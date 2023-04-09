@@ -12,27 +12,32 @@ import TextString from "../components/ui/TextString";
 import PrimaryButtonLink from "../components/ui/PrimaryButtonLink";
 import Colors from "../styles/colors";
 import IconButtonLink from "../components/ui/IconButtonLink";
-import { HomepageDestinationConstants } from "../models/constants";
+import {
+  HomepageDestinationConstants,
+  NavigatorNameConstants,
+  ScreenNameConstants,
+} from "../models/constants";
+import savedPlacesScreen from "./SavedPlacesScreen";
 
-function HomepageScreen() {
+function HomepageScreen({ navigation }) {
   function fetchRecentlyVisited() {
     return ["Bull Ring", "Birmingham New Street", "Curzon Building"];
   }
 
+  function goSomewhereHandler() {
+    navigation.navigate(ScreenNameConstants.PickStartLocationScreenName);
+  }
+
+  function goToSavedPlacesHandler() {
+    navigation.navigate(NavigatorNameConstants.PlacesNavigatorName);
+  }
+
   return (
     <View style={rootStyles.container}>
-      <View style={profileIconStyles.container}>
-        <Pressable
-          style={({ pressed }) => (pressed ? profileIconStyles.pressed : null)}
-        >
-          <Image source={require("../assets/images/profile_icon.png")} />
-        </Pressable>
-      </View>
-
       <Logo />
 
       <View style={cardStyles.container}>
-        <Card>
+        <Card style={{ backgroundColor: Colors.primaryWhite }}>
           <View style={textStyles.getStartedContainer}>
             <TextString textStyle={textStyles.getStartedText}>
               Need Directions?
@@ -43,6 +48,7 @@ function HomepageScreen() {
             <IconButtonLink
               name={HomepageDestinationConstants.GoSomewhere}
               children={"Go Somewhere"}
+              onPress={goSomewhereHandler}
             />
             <IconButtonLink
               name={HomepageDestinationConstants.GoHome}
@@ -51,10 +57,6 @@ function HomepageScreen() {
             <IconButtonLink
               name={HomepageDestinationConstants.GoToWork}
               children={"Go To Work"}
-            />
-            <IconButtonLink
-              name={HomepageDestinationConstants.SavedPlaces}
-              children={"Saved Places"}
             />
           </View>
 
@@ -96,17 +98,7 @@ const rootStyles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-end",
     alignItems: "center",
-  },
-});
-
-const profileIconStyles = StyleSheet.create({
-  container: {
-    position: "absolute",
-    top: "7%",
-    left: "1%",
-  },
-  pressed: {
-    opacity: 0.5,
+    backgroundColor: Colors.primaryLightBlue,
   },
 });
 

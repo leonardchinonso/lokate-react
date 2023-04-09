@@ -1,11 +1,10 @@
+import { useContext, useState } from "react";
 import {
+  Alert,
   Dimensions,
-  Image,
   KeyboardAvoidingView,
   Platform,
-  ScrollView,
   StyleSheet,
-  Text,
   View,
 } from "react-native";
 import PrimaryButton from "../components/ui/PrimaryButton";
@@ -14,15 +13,115 @@ import PrimaryButtonLink from "../components/ui/PrimaryButtonLink";
 import Colors from "../styles/colors";
 import TextString from "../components/ui/TextString";
 import TextInputBox from "../components/ui/TextInputBox";
-import { useState } from "react";
 import PasswordInputBox from "../components/ui/PasswordInputBox";
 import Logo from "../components/ui/Logo";
+import {
+  HttpStatusCodes,
+  NavigatorNameConstants,
+  ScreenNameConstants,
+} from "../models/constants";
+import { IsValidEmail, IsValidPassword } from "../utils/utils";
+import { MakeLoginRequest } from "../http/Authentication";
+import LoadingOverlay from "../components/ui/LoadingOverlay";
+import ErrorOverlay from "../components/ui/ErrorOverlay";
+import { AuthenticationContext } from "../store/context/AuthenticationContext";
 
-function LoginScreen() {
-  const [enteredEmail, setEnteredEmail] = useState("");
+function LoginScreen({ navigation }) {
+  const [error, setError] = useState("");
+  const [loginDetails, setLoginDetails] = useState({
+    email: {
+      value: "",
+      isValid: true,
+      errorText: "",
+    },
+    password: {
+      value: "",
+      isValid: true,
+      errorText: "",
+    },
+  });
 
-  function emailInputHandler(enteredText) {
-    setEnteredEmail(enteredText);
+  const authContext = useContext(AuthenticationContext);
+
+  function inputHandler(id, val) {
+    setLoginDetails((prevValues) => {
+      return {
+        ...prevValues,
+        [id]: { value: val, isValid: true, errorText: "" },
+      };
+    });
+  }
+
+  function signup() {
+    navigation.navigate(ScreenNameConstants.SignupScreenName);
+  }
+
+  function submitHandler() {
+    const emailIsValid = IsValidEmail(loginDetails.email.value);
+    const passwordIsValid = IsValidPassword(loginDetails.password.value);
+
+    if (emailIsValid && passwordIsValid) {
+      const details = {
+        email: loginDetails.email.value,
+        password: loginDetails.password.value,
+      };
+
+      async function makeLoginRequestHelper() {
+        const response = await MakeLoginRequest(details);
+        if (response.serverError) {
+          setError("Server error, please try again later");
+          return;
+        }
+        if (response.data) {
+          switch (response.data.status) {
+            case HttpStatusCodes.StatusUnauthorized:
+              Alert.alert(
+                "Invalid Login Credentials",
+                "Check that your email and password are both correct"
+              );
+              break;
+            case HttpStatusCodes.StatusOk:
+              const token = response.data["data"]["access_token"];
+              authContext.setAuthToken(token);
+              break;
+            default:
+              setError("Server error, please try again later");
+          }
+        }
+      }
+
+      makeLoginRequestHelper().then();
+
+      return;
+    }
+    // throw error
+    setLoginDetails((prevValues) => {
+      return {
+        email: {
+          value: prevValues.email.value,
+          isValid: emailIsValid,
+          errorText: emailIsValid ? "" : "email format is invalid",
+        },
+        password: {
+          value: prevValues.password.value,
+          isValid: passwordIsValid,
+          errorText: passwordIsValid
+            ? ""
+            : "password must not be less than 6 characters",
+        },
+      };
+    });
+  }
+
+  const hasError =
+    !loginDetails.email.isValid || !loginDetails.password.isValid;
+
+  function dismissError() {
+    setError(null);
+  }
+
+  if (error) {
+    return <ErrorOverlay message={error} onConfirm={dismissError} />;
   }
 
   return (
@@ -45,21 +144,36 @@ function LoginScreen() {
             <TextInputBox
               placeholder={"Email"}
               contentType={"emailAddress"}
-              onChange={emailInputHandler}
+              onChange={inputHandler.bind(this, "email")}
               keyboardType={"email-address"}
+              value={loginDetails.email.value}
             ></TextInputBox>
-            <PasswordInputBox placeholder={"Password"}></PasswordInputBox>
+            <PasswordInputBox
+              placeholder={"Password"}
+              onChange={inputHandler.bind(this, "password")}
+              value={loginDetails.password.value}
+            ></PasswordInputBox>
           </View>
 
+          {hasError ? (
+            <View style={{ position: "absolute", top: "60%" }}>
+              <TextString textStyle={errorsStyle.text}>
+                {loginDetails.email.isValid
+                  ? loginDetails.password.errorText
+                  : loginDetails.email.errorText}
+              </TextString>
+            </View>
+          ) : null}
+
           <View style={buttonGroupStyles.container}>
-            <PrimaryButton>LOGIN</PrimaryButton>
+            <PrimaryButton onPress={submitHandler}>LOGIN</PrimaryButton>
             <View style={buttonLinkStyles.forgotPassword}>
               <PrimaryButtonLink textStyle={textStyles.forgotPassword}>
                 Forgot password?
               </PrimaryButtonLink>
             </View>
             <View style={buttonLinkStyles.signup}>
-              <PrimaryButtonLink textStyle={textStyles.signup}>
+              <PrimaryButtonLink onPress={signup} textStyle={textStyles.signup}>
                 Signup
               </PrimaryButtonLink>
             </View>
@@ -77,6 +191,7 @@ const rootStyles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-end",
     alignItems: "center",
+    backgroundColor: Colors.primaryLightBlue,
   },
 });
 
@@ -143,5 +258,14 @@ const textInputGroupStyles = StyleSheet.create({
     top: "35%",
     width: "80%",
     height: "25%",
+  },
+});
+
+const errorsStyle = StyleSheet.create({
+  text: {
+    textAlign: "center",
+    color: Colors.primaryRed,
+    margin: 8,
+    fontSize: 20,
   },
 });

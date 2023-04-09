@@ -1,11 +1,18 @@
 import { Image, StyleSheet, View } from "react-native";
 import Colors from "../styles/colors";
 import IconButtonLink from "../components/ui/IconButtonLink";
-import { ProfileConstants } from "../models/constants";
+import { ProfileConstants, ScreenNameConstants } from "../models/constants";
 import TextString from "../components/ui/TextString";
 import { useState } from "react";
+import { useNavigation } from "@react-navigation/native";
 
 function ProfileScreen() {
+  const navigation = useNavigation();
+
+  function logout() {
+    navigation.navigate(ScreenNameConstants.LogoutScreenName);
+  }
+
   return (
     <View style={rootStyles.rootContainer}>
       <View style={profileHeaderStyles.container}>
@@ -50,7 +57,11 @@ function ProfileScreen() {
           children={"Contact Us"}
         />
         <IconButtonLink name={ProfileConstants.About} children={"About"} />
-        <IconButtonLink name={ProfileConstants.Logout} children={"Logout"} />
+        <IconButtonLink
+          name={ProfileConstants.Logout}
+          children={"Logout"}
+          onPress={logout}
+        />
       </View>
     </View>
   );

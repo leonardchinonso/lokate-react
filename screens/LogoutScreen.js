@@ -3,8 +3,25 @@ import TextString from "../components/ui/TextString";
 import { StyleSheet, View } from "react-native";
 import Colors from "../styles/colors";
 import PrimaryButton from "../components/ui/PrimaryButton";
+import { useNavigation } from "@react-navigation/native";
+import { useContext } from "react";
+import { AuthenticationContext } from "../store/context/AuthenticationContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ConfigConstants } from "../models/constants";
 
 function LogoutScreen() {
+  const authContext = useContext(AuthenticationContext);
+  const navigation = useNavigation();
+
+  function onClickYes() {
+    authContext.unsetAuthToken();
+    AsyncStorage.removeItem(ConfigConstants.StorageTokenKey).then();
+  }
+
+  function onClickNo() {
+    navigation.goBack();
+  }
+
   return (
     <View style={rootStyles.rootContainer}>
       <View style={Header.container}>
@@ -16,12 +33,18 @@ function LogoutScreen() {
         </TextString>
         <View style={buttonGroupStyles.container}>
           <View style={buttonGroupStyles.button}>
-            <PrimaryButton customStyles={{ paddingVertical: "15%" }}>
+            <PrimaryButton
+              onPress={onClickYes}
+              customStyles={{ paddingVertical: "15%" }}
+            >
               YES
             </PrimaryButton>
           </View>
           <View style={buttonGroupStyles.button}>
-            <PrimaryButton customStyles={{ paddingVertical: "15%" }}>
+            <PrimaryButton
+              onPress={onClickNo}
+              customStyles={{ paddingVertical: "15%" }}
+            >
               NO
             </PrimaryButton>
           </View>
