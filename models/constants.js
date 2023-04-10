@@ -17,9 +17,9 @@ export const ProfileConstants = {
 };
 
 export const UseAsConstants = {
-  None: "None (default)",
-  Home: "Home",
-  Work: "Work",
+  None: "NONE",
+  Home: "HOME",
+  Work: "WORK",
 };
 
 export const AppearanceConstants = {
@@ -43,6 +43,8 @@ export const ScreenNameConstants = {
   PickStartLocationScreenName: "pick_start_location_screen",
   PickEndLocationScreenName: "pick_end_location_screen",
   SavedPlacesScreenName: "saved_places_screen",
+  AddSavedPlaceScreen: "add_saved_place_screen",
+  EditSavedPlaceScreen: "edit_saved_place_screen",
   LastVisitedScreenName: "last_visited_screen",
   ProfileScreenName: "profile_screen",
   LoginScreenName: "login_screen",
@@ -58,10 +60,12 @@ export const NavigatorNameConstants = {
 export const ServerUrlConstants = {
   ServerBaseUrl: "http://192.168.0.144:8080/v1",
   LoginUrl: "/auth/login",
+  SavedPlacesUrl: "/saved-places",
 };
 
 export const HttpStatusCodes = {
   StatusOk: 200,
+  StatusBadRequest: 400,
   StatusUnauthorized: 401,
 };
 

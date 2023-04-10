@@ -1,13 +1,19 @@
-import { FlatList, StyleSheet, View } from "react-native";
+import { FlatList, Pressable, StyleSheet, View } from "react-native";
 import TextString from "../components/ui/TextString";
 import { Header } from "../styles/text";
 import Colors from "../styles/colors";
-import SavedPlaceCard from "../components/ui/SavedPlaceCard";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import ItemCard from "../components/ui/ItemCard";
+import { AntDesign } from "@expo/vector-icons";
+import LastVisitedPlaceCard from "../components/ui/LastVisitedPlaceCard";
+import { AuthenticationContext } from "../store/context/AuthenticationContext";
 
 function LastVisitedScreen() {
+  const authContext = useContext(AuthenticationContext);
+  const token = authContext.authToken;
+
   const [lastVisitedPlaces, setLastVisitedPlaces] = useState([]);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     setLastVisitedPlaces(["Bull Ring", "Birmingham New Street", "Fenty Road"]);
@@ -23,11 +29,9 @@ function LastVisitedScreen() {
       <View style={lastVisitedPlaceStyle.container}>
         <FlatList
           data={lastVisitedPlaces}
-          renderItem={(itemData) => (
+          renderItem={({ item }) => (
             <View style={lastVisitedPlaceStyle.singleLastVisitedPlace}>
-              <ItemCard>
-                <TextString>{itemData.item}</TextString>
-              </ItemCard>
+              <LastVisitedPlaceCard>{item}</LastVisitedPlaceCard>
             </View>
           )}
         />

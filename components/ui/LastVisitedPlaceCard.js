@@ -1,8 +1,9 @@
-import { Image, Pressable, StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 import ItemCard from "./ItemCard";
 import TextString from "./TextString";
 import { useNavigation } from "@react-navigation/native";
 import { ScreenNameConstants } from "../../models/constants";
+import { AntDesign } from "@expo/vector-icons";
 
 function SavedPlaceCard({ children }) {
   const navigation = useNavigation();
@@ -10,31 +11,15 @@ function SavedPlaceCard({ children }) {
   return (
     <View>
       <ItemCard customStyles={itemCardCustomStyles.container}>
-        <View style={textStyles.container}>
-          <TextString textStyle={{ fontSize: 20 }}>{children.name}</TextString>
-        </View>
+        <TextString>{children}</TextString>
         <View style={imageGroupStyles.container}>
           <Pressable
-            style={({ pressed }) => (pressed ? imageGroupStyles.pressed : null)}
+            style={({ pressed }) => pressed && imageGroupStyles.pressed}
             onPress={() =>
-              navigation.navigate(ScreenNameConstants.EditSavedPlaceScreen, {
-                savedPlaceId: children.id,
-              })
+              navigation.navigate(ScreenNameConstants.AddSavedPlaceScreen)
             }
           >
-            <Image
-              style={imageGroupStyles.image}
-              source={require("../../assets/images/edit_icon.png")}
-            />
-          </Pressable>
-          <Pressable
-            style={({ pressed }) => (pressed ? imageGroupStyles.pressed : null)}
-            // onPress={}
-          >
-            <Image
-              style={imageGroupStyles.image}
-              source={require("../../assets/images/delete_icon.png")}
-            />
+            <AntDesign name="pluscircleo" size={24} color="black" />
           </Pressable>
         </View>
       </ItemCard>
@@ -55,8 +40,7 @@ const imageGroupStyles = StyleSheet.create({
   container: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "flex-start",
-    width: "20%",
+    paddingHorizontal: "5%",
   },
   pressed: {
     opacity: 0.5,

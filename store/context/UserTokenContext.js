@@ -6,7 +6,7 @@ const dispatchMethods = {
 };
 
 export const UserTokenContext = createContext({
-  userTokens: "",
+  userToken: "",
   isAuthenticated: false,
   addUserToken: () => {},
   deleteUserToken: () => {},
@@ -26,21 +26,23 @@ function userTokenReducer(state, action) {
 function UserTokenContextProvider({ children }) {
   const [userTokensState, dispatch] = useReducer(
     userTokenReducer,
-    [],
+    { toDo: [] },
     undefined
   );
 
   function addUserToken(userTokenData) {
-    dispatch({ type: dispatchMethods.ADD, payload: userTokenData });
+    dispatch({ type: dispatchMethods.ADD, userTokenData });
   }
 
   function deleteUserToken(userId) {
-    dispatch({ type: dispatchMethods.DELETE, payload: userId });
+    dispatch({ type: dispatchMethods.DELETE, userId });
   }
 
   const value = {
-    userTokens: userTokensState,
-    addUserToken: addUserToken,
+    userToken: userTokensState,
+    addUserToken: (userTokenData) => {
+      dispatch({ type: dispatchMethods.ADD, userTokenData });
+    },
     deleteUserToken: deleteUserToken,
   };
 

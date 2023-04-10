@@ -28,6 +28,9 @@ export function IsValidPassword(password) {
   return password.length >= MIN_PASSWORD_LENGTH;
 }
 
-export function BuildUrl(baseUrl, appender) {
-  return baseUrl + appender;
+export function BuildUrl(baseUrl, sub, id) {
+  if (id !== undefined) {
+    return baseUrl + sub + id;
+  }
+  return baseUrl + sub;
 }

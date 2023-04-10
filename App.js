@@ -9,6 +9,7 @@ import AuthenticationContextProvider, {
 } from "./store/context/AuthenticationContext";
 import SplashScreen from "./screens/SplashScreen";
 import { ConfigConstants } from "./models/constants";
+import SavedPlaceContextProvider from "./store/context/SavedPlaceContext";
 
 function Navigation() {
   const authContext = useContext(AuthenticationContext);
@@ -358,7 +359,9 @@ export default function App() {
 
   return (
     <AuthenticationContextProvider>
-      <Root />
+      <SavedPlaceContextProvider>
+        <Root />
+      </SavedPlaceContextProvider>
     </AuthenticationContextProvider>
   );
 }

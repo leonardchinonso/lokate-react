@@ -9,6 +9,6 @@ export const Header = StyleSheet.create({
   text: {
     color: Colors.primaryBlack,
     fontWeight: "bold",
-    fontSize: 50,
+    fontSize: 30,
   },
 });

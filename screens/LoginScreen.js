@@ -15,16 +15,12 @@ import TextString from "../components/ui/TextString";
 import TextInputBox from "../components/ui/TextInputBox";
 import PasswordInputBox from "../components/ui/PasswordInputBox";
 import Logo from "../components/ui/Logo";
-import {
-  HttpStatusCodes,
-  NavigatorNameConstants,
-  ScreenNameConstants,
-} from "../models/constants";
+import { HttpStatusCodes, ScreenNameConstants } from "../models/constants";
 import { IsValidEmail, IsValidPassword } from "../utils/utils";
 import { MakeLoginRequest } from "../http/Authentication";
-import LoadingOverlay from "../components/ui/LoadingOverlay";
 import ErrorOverlay from "../components/ui/ErrorOverlay";
 import { AuthenticationContext } from "../store/context/AuthenticationContext";
+import { ErrorConstants } from "../models/errors";
 
 function LoginScreen({ navigation }) {
   const [error, setError] = useState("");
@@ -69,7 +65,7 @@ function LoginScreen({ navigation }) {
       async function makeLoginRequestHelper() {
         const response = await MakeLoginRequest(details);
         if (response.serverError) {
-          setError("Server error, please try again later");
+          setError(ErrorConstants.ServerErrMsg);
           return;
         }
         if (response.data) {
@@ -84,8 +80,8 @@ function LoginScreen({ navigation }) {
               const token = response.data["data"]["access_token"];
               authContext.setAuthToken(token);
               break;
-            default:
-              setError("Server error, please try again later");
+            default: // return an error on any other outcome
+              setError(ErrorConstants.ServerErrMsg);
           }
         }
       }

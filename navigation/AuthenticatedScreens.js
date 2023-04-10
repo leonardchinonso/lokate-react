@@ -15,6 +15,8 @@ import HomepageScreen from "../screens/HomepageScreen";
 import PickStartLocationScreen from "../screens/PickStartLocationScreen";
 import PickEndLocationScreen from "../screens/PickEndLocationScreen";
 import LogoutScreen from "../screens/LogoutScreen";
+import AddPlaceScreen from "../screens/AddPlaceScreen";
+import EditPlaceScreen from "../screens/EditPlaceScreen";
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -38,6 +40,14 @@ function HomepageStackNavigator() {
       <Stack.Screen
         name={ScreenNameConstants.LogoutScreenName}
         component={LogoutScreen}
+      />
+      <Stack.Screen
+        name={ScreenNameConstants.AddSavedPlaceScreen}
+        component={AddPlaceScreen}
+      />
+      <Stack.Screen
+        name={ScreenNameConstants.EditSavedPlaceScreen}
+        component={EditPlaceScreen}
       />
     </Stack.Navigator>
   );

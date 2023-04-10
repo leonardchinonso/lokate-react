@@ -20,10 +20,14 @@ export default PrimaryButton;
 
 const styles = StyleSheet.create({
   inner: {
-    borderRadius: 8,
+    borderRadius: 10,
     backgroundColor: Colors.primaryLightBlue,
-    paddingVertical: "9%",
-    paddingHorizontal: "25%",
+    // paddingVertical: "9%",
+    // paddingHorizontal: "25%",
+    height: "100%",
+    marginVertical: 20,
+    alignItems: "center",
+    justifyContent: "center",
     elevation: 3,
     shadowColor: "black",
     shadowOffset: { width: 0, height: 3 },
