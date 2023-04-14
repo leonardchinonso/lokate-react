@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   buttonText: {
-    color: Colors.primaryDarkBlue,
+    color: Colors.primaryDarkPurple,
     textAlign: "center",
     fontStyle: "normal",
     fontWeight: "600",

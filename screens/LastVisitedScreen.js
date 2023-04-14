@@ -1,41 +1,82 @@
-import { FlatList, Pressable, StyleSheet, View } from "react-native";
-import TextString from "../components/ui/TextString";
-import { Header } from "../styles/text";
+import { Alert, FlatList, StyleSheet, View } from "react-native";
 import Colors from "../styles/colors";
 import { useContext, useEffect, useState } from "react";
-import ItemCard from "../components/ui/ItemCard";
-import { AntDesign } from "@expo/vector-icons";
 import LastVisitedPlaceCard from "../components/ui/LastVisitedPlaceCard";
 import { AuthenticationContext } from "../store/context/AuthenticationContext";
+import { getLastVisitedPlaces } from "../services/placeService";
+import { ConfigConstants, HttpStatusCodes } from "../models/constants";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import ErrorOverlay from "../components/ui/ErrorOverlay";
 
 function LastVisitedScreen() {
   const authContext = useContext(AuthenticationContext);
-  const token = authContext.authToken;
 
-  const [lastVisitedPlaces, setLastVisitedPlaces] = useState([]);
+  const [lastVisitedPlaces, setLastVisitedPlaces] = useState({
+    places: [],
+  });
   const [error, setError] = useState("");
 
+  // setLastVisitedPlacesHandler handles the setting of the last visited places state
+  function setLastVisitedPlacesHandler(places) {
+    setLastVisitedPlaces(() => {
+      return {
+        places: places,
+      };
+    });
+  }
+
+  async function retrieveLastVisitedPlaces() {
+    // get the last visited places from the savedPlaces service using the auth token
+    const response = await getLastVisitedPlaces(authContext.authToken, 10);
+
+    // if it comes back with a server error, display the error view
+    if (response.error) {
+      setError(response.error);
+      return;
+    }
+
+    // if the request comes back with a 401, log user out
+    if (response.status === HttpStatusCodes.StatusUnauthorized) {
+      authContext.unsetAuthToken();
+      AsyncStorage.removeItem(ConfigConstants.StorageTokenKey).then();
+      return;
+    }
+
+    // if the request comes back with a 400, show pop up
+    if (response.status === HttpStatusCodes.StatusBadRequest) {
+      Alert.alert("Invalid Request", response.message);
+      return;
+    }
+
+    // if the request comes back with a 200
+    if (response.status === HttpStatusCodes.StatusOk) {
+      setLastVisitedPlacesHandler(response.lastVisitedPlaces);
+    }
+  }
+
   useEffect(() => {
-    setLastVisitedPlaces(["Bull Ring", "Birmingham New Street", "Fenty Road"]);
+    retrieveLastVisitedPlaces();
+
+    // reset the useEffect cache
+    return () => {};
   }, []);
+
+  function dismissError() {
+    setError(null);
+  }
+
+  if (error) {
+    return <ErrorOverlay message={error} onConfirm={dismissError} />;
+  }
 
   return (
     <View style={rootStyles.root}>
-      <View style={Header.container}>
-        <TextString textStyle={{ ...Header.text, fontSize: 45 }}>
-          Last Visited Places
-        </TextString>
-      </View>
-      <View style={lastVisitedPlaceStyle.container}>
-        <FlatList
-          data={lastVisitedPlaces}
-          renderItem={({ item }) => (
-            <View style={lastVisitedPlaceStyle.singleLastVisitedPlace}>
-              <LastVisitedPlaceCard>{item}</LastVisitedPlaceCard>
-            </View>
-          )}
-        />
-      </View>
+      <FlatList
+        data={lastVisitedPlaces.places}
+        renderItem={({ item }) => (
+          <LastVisitedPlaceCard>{item.place}</LastVisitedPlaceCard>
+        )}
+      />
     </View>
   );
 }
@@ -45,20 +86,8 @@ export default LastVisitedScreen;
 const rootStyles = StyleSheet.create({
   root: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: Colors.primaryGrey,
-  },
-});
-
-const lastVisitedPlaceStyle = StyleSheet.create({
-  container: {
-    justifyContent: "space-between",
-    position: "absolute",
-    top: "20%",
-    width: "80%",
-  },
-  singleLastVisitedPlace: {
-    marginVertical: "3%",
+    backgroundColor: Colors.primaryWhite,
+    paddingHorizontal: 14,
+    width: "100%",
   },
 });

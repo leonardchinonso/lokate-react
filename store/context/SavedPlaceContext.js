@@ -16,7 +16,6 @@ const actions = {
 const savedPlaceReducer = (state, action) => {
   switch (action.type) {
     case actions.SET_SAVED_PLACES:
-      console.log(actions.SET_SAVED_PLACES, ": ", action.payload);
       return {
         savedPlaces: action.payload,
       };
@@ -33,14 +32,12 @@ const savedPlaceReducer = (state, action) => {
         ],
       };
     case actions.EDIT_SAVED_PLACE:
-      console.log(actions.EDIT_SAVED_PLACE, ": ", action.payload);
       for (let i in state.savedPlaces) {
         if (state.savedPlaces[i].id === action.payload.id) {
           state.savedPlaces[i].name = action.payload.name;
           state.savedPlaces[i].place_alias = action.payload.place_alias;
         }
       }
-      console.log("NEW STATE: ", state.savedPlaces);
       return state;
     case actions.DELETE_SAVED_PLACE:
       return {

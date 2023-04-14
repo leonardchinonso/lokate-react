@@ -9,8 +9,6 @@ export default ItemCard;
 
 const rootStyles = StyleSheet.create({
   root: {
-    flex: 1,
-    paddingVertical: "10%",
     backgroundColor: Colors.primaryWhite,
     borderRadius: 12,
     elevation: 4,

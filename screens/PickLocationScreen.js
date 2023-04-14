@@ -4,14 +4,20 @@ import TextInputBox from "../components/ui/TextInputBox";
 import { useState } from "react";
 import Card from "../components/ui/Card";
 import TextString from "../components/ui/TextString";
-import { HomepageDestinationConstants } from "../models/constants";
+import {
+  HomepageDestinationConstants,
+  ScreenNameConstants,
+} from "../models/constants";
 import IconButtonLink from "../components/ui/IconButtonLink";
 import { SelectList } from "react-native-dropdown-select-list/index";
 import PrimaryButton from "../components/ui/PrimaryButton";
 import { Header } from "../styles/text";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
-function PickLocation({ position, onPress }) {
+function PickLocation({ action }) {
+  const navigation = useNavigation();
+
   const [searchQuery, setSearchQuery] = useState("");
   const [selected, setSelected] = useState("");
 
@@ -60,6 +66,13 @@ function PickLocation({ position, onPress }) {
     setSearchQuery(enteredText);
   }
 
+  function resolveSubmitButton() {
+    navigation.navigate(ScreenNameConstants.SearchResultScreenName, {
+      searchQuery,
+      action,
+    });
+  }
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView showsVerticalScrollIndicator={false} style={rootStyles.root}>
@@ -72,12 +85,12 @@ function PickLocation({ position, onPress }) {
           }}
         >
           <TextString textStyle={Header.text}>
-            {position === "start" ? "From Where?" : "To Where?"}
+            {action === "start" ? "From Where?" : "To Where?"}
           </TextString>
         </View>
         <View style={textStyles.pickLocationContainer}>
           <TextString textStyle={{ fontSize: 17 }}>
-            {position === "start"
+            {action === "start"
               ? "Pick a start location"
               : "Pick an end location"}
           </TextString>
@@ -130,8 +143,8 @@ function PickLocation({ position, onPress }) {
         </View>
 
         <View style={buttonGroupStyles.container}>
-          <PrimaryButton onPress={onPress}>
-            {position === "start" ? "NEXT" : "GO"}
+          <PrimaryButton onPress={resolveSubmitButton}>
+            {action === "start" ? "NEXT" : "GO"}
           </PrimaryButton>
         </View>
       </ScrollView>
@@ -146,17 +159,12 @@ const rootStyles = StyleSheet.create({
     flex: 1,
     height: "100%",
     paddingHorizontal: 14,
-    // justifyContent: "center",
-    // alignItems: "center",
     backgroundColor: Colors.primaryWhite,
   },
 });
 
 const searchFieldStyles = StyleSheet.create({
   container: {
-    // position: "absolute",
-    // top: "23%",
-    // width: "80%",
     marginBottom: 20,
   },
 });
@@ -167,53 +175,27 @@ const textStyles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 50,
   },
-  goSomewhereContainer: {
-    // position: "absolute",
-    // top: "10%",
-  },
+  goSomewhereContainer: {},
   pickLocationContainer: {
-    // position: "absolute",
-    // top: "16%",
     marginBottom: 10,
   },
 });
 
 const startLocationGroupStyles = StyleSheet.create({
   topContainer: {
-    // position: "absolute",
-    // top: "31%",
-    // width: "80%",
-    // height: "15%",
-    // justifyContent: "space-around",
     marginBottom: 70,
   },
-  bottomContainer: {
-    // position: "absolute",
-    // top: "58%",
-    // width: "80%",
-    // height: "15%",
-    // justifyContent: "space-around",
-  },
+  bottomContainer: {},
 });
 
 const dropdownStyles = StyleSheet.create({
   container: {
-    // position: "absolute",
-    // top: "50%",
-    // width: "80%",
-    // borderRadius: 10,
-    // borderWidth: 1,
-    // borderColor: Colors.secondaryDarkGrey,
-    // backgroundColor: "white",
     marginBottom: 20,
   },
 });
 
 const buttonGroupStyles = StyleSheet.create({
   container: {
-    // position: "absolute",
-    // top: "80%",
-    // height: "20%",
     marginTop: 70,
     height: 50,
     marginBottom: 50,

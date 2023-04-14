@@ -41,7 +41,7 @@ function AboutScreen() {
       <View style={aboutSectionStyles.container}>
         <View style={aboutSectionStyles.lokateText}>
           <TextString
-            textStyle={{ color: Colors.primaryDarkBlue, fontSize: 30 }}
+            textStyle={{ color: Colors.primaryDarkPurple, fontSize: 30 }}
           >
             LOKATE
           </TextString>

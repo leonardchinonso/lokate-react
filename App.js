@@ -10,6 +10,12 @@ import AuthenticationContextProvider, {
 import SplashScreen from "./screens/SplashScreen";
 import { ConfigConstants } from "./models/constants";
 import SavedPlaceContextProvider from "./store/context/SavedPlaceContext";
+import RouteContextProvider from "./store/context/RouteContext";
+import CurrentLocationContextProvider, {
+  CurrentLocationContext,
+} from "./store/context/CurrentLocationContext";
+import * as Location from "expo-location";
+import ErrorOverlay from "./components/ui/ErrorOverlay";
 
 function Navigation() {
   const authContext = useContext(AuthenticationContext);
@@ -23,8 +29,11 @@ function Navigation() {
 }
 
 function Root() {
-  const [isTryingLogin, setIsTryingLogin] = useState(true);
   const authContext = useContext(AuthenticationContext);
+  const currentLocationContext = useContext(CurrentLocationContext);
+
+  const [isTryingLogin, setIsTryingLogin] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     async function fetchToken() {
@@ -34,6 +43,16 @@ function Root() {
       if (storedToken) {
         authContext.setAuthToken(storedToken);
       }
+
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        setError("Permission to access location was denied");
+        return;
+      }
+
+      let currentLocation = await Location.getCurrentPositionAsync({});
+      currentLocationContext.setLocation(currentLocation.coords);
+
       await new Promise((resolve) => setTimeout(resolve, 3000));
       setIsTryingLogin(false);
     }
@@ -43,6 +62,14 @@ function Root() {
 
   if (isTryingLogin) {
     return <SplashScreen />;
+  }
+
+  function dismissError() {
+    setError(null);
+  }
+
+  if (error) {
+    return <ErrorOverlay message={error} onConfirm={dismissError} />;
   }
 
   return <Navigation />;
@@ -359,9 +386,13 @@ export default function App() {
 
   return (
     <AuthenticationContextProvider>
-      <SavedPlaceContextProvider>
-        <Root />
-      </SavedPlaceContextProvider>
+      <CurrentLocationContextProvider>
+        <SavedPlaceContextProvider>
+          <RouteContextProvider>
+            <Root />
+          </RouteContextProvider>
+        </SavedPlaceContextProvider>
+      </CurrentLocationContextProvider>
     </AuthenticationContextProvider>
   );
 }

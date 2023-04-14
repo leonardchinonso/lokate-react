@@ -42,6 +42,8 @@ export const ScreenNameConstants = {
   HomepageScreenName: "homepage_screen",
   PickStartLocationScreenName: "pick_start_location_screen",
   PickEndLocationScreenName: "pick_end_location_screen",
+  JourneyResultScreen: "journey_result_screen",
+  SearchResultScreenName: "search_result_screen",
   SavedPlacesScreenName: "saved_places_screen",
   AddSavedPlaceScreen: "add_saved_place_screen",
   EditSavedPlaceScreen: "edit_saved_place_screen",
@@ -58,9 +60,11 @@ export const NavigatorNameConstants = {
 };
 
 export const ServerUrlConstants = {
-  ServerBaseUrl: "http://192.168.0.144:8080/v1",
-  LoginUrl: "/auth/login",
-  SavedPlacesUrl: "/saved-places",
+  ServerBaseUrl: "http://192.168.0.144:8080/v1/",
+  LoginUrl: "auth/login/",
+  SavedPlacesUrl: "saved-places/",
+  LastVisitedPlacesUrl: "places/last/",
+  SearchPlacesUrl: "places/search?query=",
 };
 
 export const HttpStatusCodes = {

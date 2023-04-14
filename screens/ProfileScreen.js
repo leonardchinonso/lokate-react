@@ -3,7 +3,6 @@ import Colors from "../styles/colors";
 import IconButtonLink from "../components/ui/IconButtonLink";
 import { ProfileConstants, ScreenNameConstants } from "../models/constants";
 import TextString from "../components/ui/TextString";
-import { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 
 function ProfileScreen() {
@@ -74,7 +73,7 @@ const rootStyles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: Colors.primaryGrey,
+    backgroundColor: Colors.primaryWhite,
   },
 });
 

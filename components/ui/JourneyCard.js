@@ -2,6 +2,7 @@ import { FlatList, Image, Pressable, StyleSheet, View } from "react-native";
 import ItemCard from "./ItemCard";
 import TextString from "./TextString";
 import { AntDesign, FontAwesome5 } from "@expo/vector-icons";
+import Colors from "../../styles/colors";
 
 function JourneyCard({ transportModes, journeyTime }) {
   return (
@@ -15,18 +16,28 @@ function JourneyCard({ transportModes, journeyTime }) {
             renderItem={(itemData) => (
               <View style={{ flexDirection: "row" }}>
                 <View style={transportModesStyle.singleMode}>
-                  <FontAwesome5 name={itemData.item} size={24} color="black" />
+                  <FontAwesome5
+                    name={itemData.item}
+                    size={24}
+                    color={Colors.primaryWhite}
+                  />
                 </View>
                 {itemData.index < transportModes.length - 1 ? (
                   <View style={transportModesStyle.caret}>
-                    <AntDesign name="caretright" size={15} color="black" />
+                    <AntDesign
+                      name="caretright"
+                      size={15}
+                      color={Colors.primaryWhite}
+                    />
                   </View>
                 ) : null}
               </View>
             )}
           />
         </View>
-        <TextString textStyle={{ fontSize: 15 }}>{journeyTime}</TextString>
+        <TextString textStyle={{ fontSize: 15, color: Colors.primaryWhite }}>
+          {journeyTime}
+        </TextString>
       </ItemCard>
     </Pressable>
   );
@@ -40,6 +51,7 @@ const itemCardCustomStyles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     paddingHorizontal: 20,
+    backgroundColor: Colors.primaryPurple,
   },
   vehicleSection: {
     width: "80%",

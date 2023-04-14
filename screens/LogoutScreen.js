@@ -80,7 +80,7 @@ const logoutSectionStyles = StyleSheet.create({
     shadowOpacity: 0.25,
   },
   areYouSureText: {
-    color: Colors.primaryDarkBlue,
+    color: Colors.primaryDarkPurple,
     fontSize: 20,
   },
 });

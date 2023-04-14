@@ -1,72 +1,75 @@
-import { Image, Pressable, StyleSheet, View } from "react-native";
+import {
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import ItemCard from "./ItemCard";
 import TextString from "./TextString";
 import { useNavigation } from "@react-navigation/native";
 import { ScreenNameConstants } from "../../models/constants";
+import { Entypo, MaterialIcons } from "@expo/vector-icons";
+import Colors from "../../styles/colors";
 
 function SavedPlaceCard({ children }) {
   const navigation = useNavigation();
 
+  function onEdit() {
+    navigation.navigate(ScreenNameConstants.EditSavedPlaceScreen, {
+      savedPlaceId: children.id,
+      formerName: children.name,
+    });
+  }
+
+  function onDelete() {
+    console.log("UNIMPLEMENTED!");
+  }
+
   return (
-    <View>
-      <ItemCard customStyles={itemCardCustomStyles.container}>
-        <View style={textStyles.container}>
-          <TextString textStyle={{ fontSize: 20 }}>{children.name}</TextString>
-        </View>
-        <View style={imageGroupStyles.container}>
-          <Pressable
-            style={({ pressed }) => (pressed ? imageGroupStyles.pressed : null)}
-            onPress={() =>
-              navigation.navigate(ScreenNameConstants.EditSavedPlaceScreen, {
-                savedPlaceId: children.id,
-              })
-            }
+    <ItemCard customStyles={itemCardCustomStyles.container}>
+      <TextString
+        textStyle={{ fontWeight: "normal", color: Colors.primaryWhite }}
+      >
+        {children.name}
+      </TextString>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-around",
+          // backgroundColor: Colors.primaryBlack,
+        }}
+      >
+        <TouchableOpacity onPress={onEdit} style={{ paddingRight: "3%" }}>
+          <TextString
+            textStyle={{ color: Colors.primaryWhite, fontWeight: "normal" }}
           >
-            <Image
-              style={imageGroupStyles.image}
-              source={require("../../assets/images/edit_icon.png")}
-            />
-          </Pressable>
-          <Pressable
-            style={({ pressed }) => (pressed ? imageGroupStyles.pressed : null)}
-            // onPress={}
+            Edit
+          </TextString>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={onDelete} style={{ paddingLeft: "3%" }}>
+          <TextString
+            textStyle={{ color: Colors.primaryWhite, fontWeight: "normal" }}
           >
-            <Image
-              style={imageGroupStyles.image}
-              source={require("../../assets/images/delete_icon.png")}
-            />
-          </Pressable>
-        </View>
-      </ItemCard>
-    </View>
+            Delete
+          </TextString>
+        </TouchableOpacity>
+      </View>
+    </ItemCard>
   );
 }
 
 export default SavedPlaceCard;
 
-const textStyles = StyleSheet.create({
-  container: {
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-});
-
-const imageGroupStyles = StyleSheet.create({
-  container: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "flex-start",
-    width: "20%",
-  },
-  pressed: {
-    opacity: 0.5,
-  },
-});
-
 const itemCardCustomStyles = StyleSheet.create({
   container: {
+    marginVertical: "2%",
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingHorizontal: 20,
+    paddingHorizontal: "5%",
+    backgroundColor: Colors.primaryPurple,
+    alignItems: "center",
+    paddingVertical: "5%",
   },
 });

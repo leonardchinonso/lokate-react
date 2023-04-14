@@ -1,7 +1,7 @@
 import PickLocation from "./PickLocationScreen";
 
 function PickEndLocation() {
-  return <PickLocation position={"end"} />;
+  return <PickLocation action={"end"} />;
 }
 
 export default PickEndLocation;

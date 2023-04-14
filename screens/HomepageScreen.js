@@ -1,93 +1,76 @@
-import {
-  FlatList,
-  Image,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
-import Logo from "../components/ui/Logo";
-import Card from "../components/ui/Card";
-import TextString from "../components/ui/TextString";
-import PrimaryButtonLink from "../components/ui/PrimaryButtonLink";
+import { SafeAreaView, StyleSheet, Text, View } from "react-native";
+import { ScreenNameConstants } from "../models/constants";
+import MapView, { Callout, Circle, Marker } from "react-native-maps";
+import PrimaryButton from "../components/ui/PrimaryButton";
+import { useContext, useState } from "react";
+import ErrorOverlay from "../components/ui/ErrorOverlay";
+import { CurrentLocationContext } from "../store/context/CurrentLocationContext";
 import Colors from "../styles/colors";
-import IconButtonLink from "../components/ui/IconButtonLink";
-import {
-  HomepageDestinationConstants,
-  NavigatorNameConstants,
-  ScreenNameConstants,
-} from "../models/constants";
-import savedPlacesScreen from "./SavedPlacesScreen";
 
 function HomepageScreen({ navigation }) {
-  function fetchRecentlyVisited() {
-    return ["Bull Ring", "Birmingham New Street", "Curzon Building"];
-  }
+  const currentLocationContext = useContext(CurrentLocationContext);
+
+  const [location, setLocation] = useState(currentLocationContext.location);
+  const [error, setError] = useState("");
 
   function goSomewhereHandler() {
     navigation.navigate(ScreenNameConstants.PickStartLocationScreenName);
   }
 
-  function goToSavedPlacesHandler() {
-    navigation.navigate(NavigatorNameConstants.PlacesNavigatorName);
+  function dismissError() {
+    setError(null);
+  }
+
+  if (error) {
+    return <ErrorOverlay message={error} onConfirm={dismissError} />;
   }
 
   return (
-    <View style={rootStyles.container}>
-      <Logo />
-
-      <View style={cardStyles.container}>
-        <Card style={{ backgroundColor: Colors.primaryWhite }}>
-          <View style={textStyles.getStartedContainer}>
-            <TextString textStyle={textStyles.getStartedText}>
-              Need Directions?
-            </TextString>
-          </View>
-
-          <View style={destinationGroupStyles.container}>
-            <IconButtonLink
-              name={HomepageDestinationConstants.GoSomewhere}
-              children={"Go Somewhere"}
-              onPress={goSomewhereHandler}
-            />
-            <IconButtonLink
-              name={HomepageDestinationConstants.GoHome}
-              children={"Go Home"}
-            />
-            <IconButtonLink
-              name={HomepageDestinationConstants.GoToWork}
-              children={"Go To Work"}
-            />
-          </View>
-
-          <View style={recentlyVisitedStyles.container}>
-            <TextString textStyle={{ fontSize: 20 }}>
-              You recently visited...
-            </TextString>
-            <View>
-              <FlatList
-                data={fetchRecentlyVisited()}
-                renderItem={(itemData) => (
-                  <View style={recentlyVisitedStyles.singleItem}>
-                    <PrimaryButtonLink
-                      textStyle={textStyles.singleRecentlyVisitedItemText}
-                    >
-                      {itemData.item}
-                    </PrimaryButtonLink>
-                  </View>
-                )}
-              />
-            </View>
-          </View>
-
-          <View style={seeMoreStyles.container}>
-            <PrimaryButtonLink textStyle={textStyles.seeMore}>
-              ...see more
-            </PrimaryButtonLink>
-          </View>
-        </Card>
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={rootStyles.container}>
+        <MapView
+          style={mapStyles.map}
+          initialRegion={{
+            latitude: location.latitude,
+            longitude: location.longitude,
+            latitudeDelta: 0.004757,
+            longitudeDelta: 0.006866,
+          }}
+        >
+          <Marker
+            coordinate={{
+              latitude: location.latitude,
+              longitude: location.longitude,
+            }}
+            pinColor={Colors.primaryPurple}
+          >
+            <Callout>
+              <Text>You are here</Text>
+            </Callout>
+          </Marker>
+          <Circle
+            center={{
+              latitude: location.latitude,
+              longitude: location.longitude,
+            }}
+            radius={1000}
+          />
+        </MapView>
+        <View
+          style={{
+            position: "absolute",
+            bottom: "6%",
+            marginHorizontal: 20,
+            width: "90%",
+            height: 70,
+          }}
+        >
+          <PrimaryButton onPress={goSomewhereHandler}>
+            GO SOMEWHERE
+          </PrimaryButton>
+        </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -95,68 +78,13 @@ export default HomepageScreen;
 
 const rootStyles = StyleSheet.create({
   container: {
-    flex: 1,
     justifyContent: "flex-end",
-    alignItems: "center",
-    backgroundColor: Colors.primaryLightBlue,
   },
 });
 
-const cardStyles = StyleSheet.create({
-  container: {
+const mapStyles = StyleSheet.create({
+  map: {
     width: "100%",
-    height: "60%",
-  },
-});
-
-const textStyles = StyleSheet.create({
-  getStartedText: {
-    color: Colors.primaryDarkBlue,
-    fontWeight: "bold",
-    fontSize: 50,
-  },
-  getStartedContainer: {
-    position: "absolute",
-    top: "5%",
-  },
-  seeMore: {
-    color: Colors.primaryDarkBlue,
-  },
-  singleRecentlyVisitedItemText: {
-    color: Colors.primaryDarkBlue,
-    fontSize: 16,
-  },
-});
-
-const recentlyVisitedStyles = StyleSheet.create({
-  container: {
-    position: "absolute",
-    top: "65%",
-    left: "15%",
-    height: "20%",
-  },
-  singleItem: {
-    marginTop: "5%",
-    marginLeft: "5%",
-    alignItems: "flex-start",
-  },
-});
-
-const seeMoreStyles = StyleSheet.create({
-  container: {
-    position: "absolute",
-    top: "90%",
-    right: "10%",
-  },
-});
-
-const destinationGroupStyles = StyleSheet.create({
-  container: {
-    justifyContent: "space-around",
-    position: "absolute",
-    top: "20%",
-    width: "80%",
-    height: "40%",
-    paddingLeft: "10%",
+    height: "100%",
   },
 });

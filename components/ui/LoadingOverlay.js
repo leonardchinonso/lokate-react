@@ -4,7 +4,7 @@ import Colors from "../../styles/colors";
 function LoadingOverlay() {
   return (
     <View style={styles.container}>
-      <ActivityIndicator size={"large"} color={Colors.primaryLightBlue} />
+      <ActivityIndicator size={"large"} color={Colors.primaryPurple} />
     </View>
   );
 }

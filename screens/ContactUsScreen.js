@@ -28,7 +28,7 @@ function ContactUsScreen() {
           <TextString
             textStyle={[
               emailSectionStyles.emailText,
-              { color: Colors.primaryDarkBlue },
+              { color: Colors.primaryDarkPurple },
             ]}
           >
             Email
@@ -41,7 +41,7 @@ function ContactUsScreen() {
           <TextString
             textStyle={[
               messageSectionStyles.messageText,
-              { color: Colors.primaryDarkBlue },
+              { color: Colors.primaryDarkPurple },
             ]}
           >
             Message

@@ -7,22 +7,21 @@ import { SelectList } from "react-native-dropdown-select-list/index";
 import {
   ConfigConstants,
   HttpStatusCodes,
+  NavigatorNameConstants,
   ScreenNameConstants,
   UseAsConstants,
 } from "../models/constants";
 import PrimaryButton from "../components/ui/PrimaryButton";
 import { Header } from "../styles/text";
-import { EditSavedPlace, SavePlace } from "../http/Place";
+import { editSavedPlace } from "../services/placeService";
 import { AuthenticationContext } from "../store/context/AuthenticationContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ErrorConstants } from "../models/errors";
 import { useNavigation } from "@react-navigation/native";
 import ErrorOverlay from "../components/ui/ErrorOverlay";
-import { SavedPlaceContext } from "../store/context/SavedPlaceContext";
+import { savePlace } from "../services/placeService";
 
 function ModifyPlaceScreen({ action, route }) {
   const navigation = useNavigation();
-  const savedPlaceContext = useContext(SavedPlaceContext);
 
   const renderDetails = {
     headerText: "Add",
@@ -35,6 +34,8 @@ function ModifyPlaceScreen({ action, route }) {
     renderDetails.onClick = handleEdit;
     renderDetails.buttonText = "SAVE";
     renderDetails.savePlaceId = route.params.savedPlaceId;
+  } else {
+    renderDetails.placeId = route.params.placeId;
   }
 
   const authContext = useContext(AuthenticationContext);
@@ -54,49 +55,52 @@ function ModifyPlaceScreen({ action, route }) {
     setName(nameText);
   }
 
-  function processResponse(response) {
-    if (response.serverError) {
-      setError(ErrorConstants.ServerErrMsg);
+  function processResponse(response, action) {
+    // if it comes back with a server error, display the error view
+    if (response.error) {
+      setError(response.error);
       return;
     }
-    if (response.data) {
-      console.log(response.data);
-      switch (response.data.status) {
-        case HttpStatusCodes.StatusUnauthorized:
-          authContext.unsetAuthToken();
-          AsyncStorage.removeItem(ConfigConstants.StorageTokenKey).then();
-          break;
-        case HttpStatusCodes.StatusBadRequest: // if the request is invalid
-          Alert.alert("Invalid Request", response.data.message);
-          break;
-        case HttpStatusCodes.StatusOk:
-          const sp = {
-            id: response.data.data.id,
-            name: response.data.data.name,
-            place_alias: response.data.data.place_alias,
-          };
-          savedPlaceContext.editSavedPlace(sp);
-          navigation.navigate(ScreenNameConstants.SavedPlacesScreenName);
-          break;
-        default: // return an error on any other outcome
-          setError(ErrorConstants.ServerErrMsg);
+
+    // if the request comes back with a 401, log user out
+    if (response.status === HttpStatusCodes.StatusUnauthorized) {
+      authContext.unsetAuthToken();
+      AsyncStorage.removeItem(ConfigConstants.StorageTokenKey).then();
+      return;
+    }
+
+    // if the request comes back with a 400, show pop up
+    if (response.status === HttpStatusCodes.StatusBadRequest) {
+      Alert.alert("Invalid Request", response.message);
+      return;
+    }
+
+    // if the request comes back with a 200
+    if (response.status === HttpStatusCodes.StatusOk) {
+      if (action !== "edit") {
+        Alert.alert("Successful!", "Place added to saved places successfully");
       }
+      navigation.navigate(ScreenNameConstants.SavedPlacesScreenName, {
+        render: true,
+      });
     }
   }
 
   async function handleAdd() {
-    const response = await SavePlace(token, name, alias);
-    processResponse(response);
+    // call the place service to save the place
+    const response = await savePlace(token, name, alias, renderDetails.placeId);
+    // process the response from the service
+    processResponse(response, action);
   }
 
   async function handleEdit() {
-    const response = await EditSavedPlace(
+    const response = await editSavedPlace(
       token,
       name,
       alias,
       renderDetails.savePlaceId
     );
-    processResponse(response);
+    processResponse(response, action);
   }
 
   function dismissError() {
@@ -118,7 +122,7 @@ function ModifyPlaceScreen({ action, route }) {
         <TextString textStyle={nameSectionStyles.nameText}>Name</TextString>
         <View style={nameSectionStyles.textInputBox}>
           <TextInputBox
-            placeholder={name}
+            placeholder={route.params.formerName}
             contentType={"name"}
             onChange={nameInputHandler}
             keyboardType={"default"}

@@ -17,6 +17,10 @@ import PickEndLocationScreen from "../screens/PickEndLocationScreen";
 import LogoutScreen from "../screens/LogoutScreen";
 import AddPlaceScreen from "../screens/AddPlaceScreen";
 import EditPlaceScreen from "../screens/EditPlaceScreen";
+import SearchResultScreen from "../screens/SearchResultScreen";
+import JourneyResultScreen from "../screens/JourneyResultScreen";
+import ProfileScreeenTwo from "../screens/ProfileScreeenTwo";
+import PlacesScreen from "../screens/PlacesScreen";
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -38,6 +42,14 @@ function HomepageStackNavigator() {
         component={PickEndLocationScreen}
       />
       <Stack.Screen
+        name={ScreenNameConstants.JourneyResultScreen}
+        component={JourneyResultScreen}
+      />
+      <Stack.Screen
+        name={ScreenNameConstants.SearchResultScreenName}
+        component={SearchResultScreen}
+      />
+      <Stack.Screen
         name={ScreenNameConstants.LogoutScreenName}
         component={LogoutScreen}
       />
@@ -53,44 +65,12 @@ function HomepageStackNavigator() {
   );
 }
 
-function PlacesDrawerNavigator() {
-  return (
-    <Drawer.Navigator
-      screenOptions={{
-        headerStyle: { backgroundColor: Colors.primaryLightBlue },
-        headerTintColor: Colors.primaryWhite,
-      }}
-    >
-      <Drawer.Screen
-        name={ScreenNameConstants.SavedPlacesScreenName}
-        component={SavedPlacesScreen}
-        options={{
-          title: "Saved Places",
-          drawerIcon: ({ color, size }) => (
-            <AntDesign name="pushpino" size={size} color={color} />
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name={ScreenNameConstants.LastVisitedScreenName}
-        component={LastVisitedScreen}
-        options={{
-          title: "Last Visited Places",
-          drawerIcon: ({ color, size }) => (
-            <Ionicons name="location-outline" size={size} color={color} />
-          ),
-        }}
-      />
-    </Drawer.Navigator>
-  );
-}
-
 function LandingBottomTabNavigator() {
   return (
     <BottomTab.Navigator
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: Colors.primaryLightBlue,
+        tabBarActiveTintColor: Colors.primaryPurple,
       }}
     >
       <BottomTab.Screen
@@ -105,19 +85,22 @@ function LandingBottomTabNavigator() {
         }}
       />
       <BottomTab.Screen
-        name={NavigatorNameConstants.PlacesNavigatorName}
-        component={PlacesDrawerNavigator}
+        name={ScreenNameConstants.SavedPlacesScreenName}
+        component={PlacesScreen}
         options={{
           title: "Places",
           tabBarIcon: ({ color, size }) => (
             <FontAwesome5 name="road" size={size} color={color} />
           ),
+          headerShown: true,
+          headerStyle: { backgroundColor: Colors.primaryPurple },
+          headerTintColor: Colors.primaryWhite,
           tabBarShowLabel: false,
         }}
       />
       <BottomTab.Screen
         name={ScreenNameConstants.ProfileScreenName}
-        component={ProfileScreen}
+        component={ProfileScreeenTwo}
         options={{
           title: "Profile",
           tabBarIcon: ({ color, size }) => (

@@ -21,7 +21,7 @@ export default PrimaryButton;
 const styles = StyleSheet.create({
   inner: {
     borderRadius: 10,
-    backgroundColor: Colors.primaryLightBlue,
+    backgroundColor: Colors.primaryPurple,
     // paddingVertical: "9%",
     // paddingHorizontal: "25%",
     height: "100%",

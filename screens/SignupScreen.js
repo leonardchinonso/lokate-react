@@ -96,7 +96,7 @@ const rootStyles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-end",
     alignItems: "center",
-    backgroundColor: Colors.primaryLightBlue,
+    backgroundColor: Colors.primaryPurple,
   },
 });
 
@@ -109,7 +109,7 @@ const cardStyles = StyleSheet.create({
 
 const textStyles = StyleSheet.create({
   needDirectionsText: {
-    color: Colors.primaryDarkBlue,
+    color: Colors.primaryDarkPurple,
     fontWeight: "bold",
     fontSize: 50,
   },
@@ -118,7 +118,7 @@ const textStyles = StyleSheet.create({
     top: "10%",
   },
   login: {
-    color: Colors.primaryDarkBlue,
+    color: Colors.primaryDarkPurple,
   },
 });
 
