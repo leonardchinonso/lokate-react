@@ -20,13 +20,15 @@ export default PrimaryButton;
 
 const styles = StyleSheet.create({
   inner: {
-    borderRadius: 8,
-    backgroundColor: Colors.primaryLightBlue,
-    paddingVertical: "9%",
-    paddingHorizontal: "25%",
+    borderRadius: 10,
+    backgroundColor: Colors.primaryPurple,
+    paddingVertical: "5%",
+    marginVertical: 20,
+    alignItems: "center",
+    justifyContent: "center",
     elevation: 3,
     shadowColor: "black",
-    shadowOffset: { width: 0, height: 3 },
+    shadowOffset: { width: 0, height: 4 },
     shadowRadius: 1,
     shadowOpacity: 0.25,
   },
@@ -34,9 +36,8 @@ const styles = StyleSheet.create({
     color: Colors.primaryWhite,
     textAlign: "center",
     fontStyle: "normal",
-    fontWeight: "900",
+    fontWeight: "800",
     fontSize: 12,
-    lineHeight: 16,
   },
   pressed: {
     opacity: 0.75,

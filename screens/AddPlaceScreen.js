@@ -1,7 +1,7 @@
 import ModifyPlaceScreen from "./ModifyPlaceScreen";
 
-function AddPlaceScreen() {
-  return <ModifyPlaceScreen action={"add"} />;
+function AddPlaceScreen({ route }) {
+  return <ModifyPlaceScreen action={"add"} route={route} />;
 }
 
 export default AddPlaceScreen;

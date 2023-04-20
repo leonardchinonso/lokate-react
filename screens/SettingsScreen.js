@@ -1,19 +1,21 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 
 import TextString from "../components/ui/TextString";
-import { StyleSheet, View } from "react-native";
+import { SafeAreaView, StyleSheet, View } from "react-native";
 import Colors from "../styles/colors";
-import { Header } from "../styles/text";
 import { SelectList } from "react-native-dropdown-select-list/index";
 import PrimaryButton from "../components/ui/PrimaryButton";
 import { AppearanceConstants, PrecisionConstants } from "../models/constants";
+import { SettingsContext } from "../store/context/SettingsContext";
 
 function SettingsScreen() {
+  const settingsContext = useContext(SettingsContext);
+
   const [selectedPrecision, setSelectedPrecision] = useState(
-    PrecisionConstants.Approximate
+    settingsContext.appAppearance
   );
   const [selectedAppearance, setSelectedAppearance] = useState(
-    AppearanceConstants.LightMode
+    settingsContext.appPrecision
   );
 
   const appearanceData = [
@@ -26,50 +28,68 @@ function SettingsScreen() {
     { key: "2", value: PrecisionConstants.Exact },
   ];
 
+  // onSave saves the user settings to the onDevice storage
+  function onSave() {
+    settingsContext.setAppAppearance(selectedAppearance);
+    settingsContext.setAppPrecision(selectedPrecision);
+  }
+
   return (
-    <View style={rootStyles.rootContainer}>
-      <View style={Header.container}>
-        <TextString textStyle={Header.text}>Settings</TextString>
-      </View>
-      <View style={appearanceSectionStyles.container}>
-        <TextString textStyle={appearanceSectionStyles.appearanceText}>
-          Appearance
-        </TextString>
-        <View style={appearanceSectionStyles.appearanceDropdownContainer}>
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={rootStyles.rootContainer}>
+        <View style={dropdownSectionStyles.container}>
+          <View
+            style={{
+              paddingLeft: "1%",
+              marginTop: "10%",
+              marginVertical: "1%",
+            }}
+          >
+            <TextString textStyle={textStyles.label}>Appearance</TextString>
+          </View>
           <View style={dropdownStyles.container}>
             <SelectList
               setSelected={(val) => setSelectedAppearance(val)}
               data={appearanceData}
               save={"value"}
               dropdownStyles={{ backgroundColor: "white" }}
-              dropdownTextStyles={{ fontSize: 17 }}
-              placeholder={"Appearance"}
+              dropdownTextStyles={{ fontSize: 14 }}
+              placeholder={settingsContext.appAppearance}
             />
           </View>
         </View>
-      </View>
-      <View style={precisionSectionStyles.container}>
-        <TextString textStyle={precisionSectionStyles.precisionText}>
-          Precision
-        </TextString>
-        <View style={precisionSectionStyles.precisionDropdownContainer}>
+
+        <View style={dropdownSectionStyles.container}>
+          <View
+            style={{ paddingLeft: "1%", marginTop: "5%", marginVertical: "1%" }}
+          >
+            <TextString textStyle={textStyles.label}>Precision</TextString>
+          </View>
           <View style={dropdownStyles.container}>
             <SelectList
               setSelected={(val) => setSelectedPrecision(val)}
               data={precisionData}
               save={"value"}
               dropdownStyles={{ backgroundColor: "white" }}
-              dropdownTextStyles={{ fontSize: 17 }}
-              placeholder={"Precision"}
+              dropdownTextStyles={{ fontSize: 14 }}
+              placeholder={settingsContext.appPrecision}
             />
           </View>
         </View>
-      </View>
 
-      <View style={buttonGroupStyles.container}>
-        <PrimaryButton>SAVE</PrimaryButton>
+        <PrimaryButton
+          customStyles={{
+            position: "absolute",
+            bottom: "1%",
+            width: "100%",
+            left: 14,
+          }}
+          onPress={onSave}
+        >
+          SAVE
+        </PrimaryButton>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -78,47 +98,29 @@ export default SettingsScreen;
 const rootStyles = StyleSheet.create({
   rootContainer: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: Colors.primaryGrey,
+    backgroundColor: Colors.primaryWhite,
+    paddingHorizontal: 14,
   },
 });
 
-const appearanceSectionStyles = StyleSheet.create({
+const textStyles = StyleSheet.create({
   container: {
-    position: "absolute",
-    top: "20%",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    width: "80%",
+    alignItems: "flex-start",
   },
-  appearanceText: {
+  label: {
     color: Colors.primaryBlack,
-    fontWeight: "bold",
-    fontSize: 20,
-  },
-  appearanceDropdownContainer: {
-    width: "70%",
+    fontSize: 14,
   },
 });
 
-const precisionSectionStyles = StyleSheet.create({
+const dropdownSectionStyles = StyleSheet.create({
   container: {
-    position: "absolute",
-    top: "30%",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    width: "80%",
+    alignItems: "flex-start",
   },
-  precisionText: {
+  useAsText: {
     color: Colors.primaryBlack,
     fontWeight: "bold",
     fontSize: 20,
-  },
-  precisionDropdownContainer: {
-    width: "70%",
   },
 });
 
@@ -127,14 +129,7 @@ const dropdownStyles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 1,
     borderColor: Colors.secondaryDarkGrey,
-    backgroundColor: "white",
-  },
-});
-
-const buttonGroupStyles = StyleSheet.create({
-  container: {
-    position: "absolute",
-    top: "80%",
-    height: "20%",
+    backgroundColor: Colors.primaryWhite,
+    width: "100%",
   },
 });

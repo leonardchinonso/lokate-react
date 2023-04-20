@@ -14,7 +14,10 @@ function ErrorOverlay({ message, onConfirm }) {
           justifyContent: "center",
         }}
       >
-        <PrimaryButton customStyles={{ paddingTop: "7%" }} onPress={onConfirm}>
+        <PrimaryButton
+          customStyles={{ paddingVertical: "7%", height: 30 }}
+          onPress={onConfirm}
+        >
           Okay
         </PrimaryButton>
       </View>
@@ -29,7 +32,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    padding: 24,
     backgroundColor: Colors.primaryWhite,
   },
   text: {

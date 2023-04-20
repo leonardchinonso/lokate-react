@@ -1,91 +1,215 @@
-import { KeyboardAvoidingView, Platform, StyleSheet, View } from "react-native";
+import { Alert, SafeAreaView, StyleSheet, View } from "react-native";
 import PrimaryButton from "../components/ui/PrimaryButton";
-import Card from "../components/ui/Card";
 import PrimaryButtonLink from "../components/ui/PrimaryButtonLink";
 import Colors from "../styles/colors";
 import TextString from "../components/ui/TextString";
 import TextInputBox from "../components/ui/TextInputBox";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import PasswordInputBox from "../components/ui/PasswordInputBox";
-import Logo from "../components/ui/Logo";
-import { ScreenNameConstants } from "../models/constants";
+import ErrorOverlay from "../components/ui/ErrorOverlay";
+import { signup } from "../services/authService";
+import { HttpStatusCodes } from "../models/constants";
+import { AuthenticationContext } from "../store/context/AuthenticationContext";
 
 function SignupScreen({ navigation }) {
-  const [enteredEmail, setEnteredEmail] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  // get the authentication context to manage the token
+  const authContext = useContext(AuthenticationContext);
 
+  // create a state variable to hold the server error if it occurs
+  const [error, setError] = useState("");
+
+  // create a state variable to hold the form details for signup
+  const [signupDetails, setSignupDetails] = useState({
+    firstName: "",
+    lastName: "",
+    email: {
+      value: "",
+      isValid: true,
+      errorText: "",
+    },
+    password: {
+      value: "",
+      isValid: true,
+      errorText: "",
+    },
+    confirmPassword: "",
+  });
+
+  // login navigates back to the login page
   function login() {
     navigation.goBack();
   }
 
-  function emailInputHandler(enteredText) {
-    setEnteredEmail(enteredText);
+  function inputHandler(key, val) {
+    setSignupDetails((prevState) => {
+      // set the value to modify for when email and password are set
+      let modifiedVal = { value: val, isValid: true, errorText: "" };
+      switch (key) {
+        case "email":
+          return {
+            ...prevState,
+            [key]: modifiedVal,
+          };
+        case "password":
+          return {
+            ...prevState,
+            [key]: modifiedVal,
+          };
+        default:
+          return {
+            ...prevState,
+            [key]: val,
+            // set the email and password error states to empty
+            email: {
+              value: prevState.email.value,
+              isValid: true,
+              errorText: "",
+            },
+            password: {
+              value: prevState.password.value,
+              isValid: true,
+              errorText: "",
+            },
+          };
+      }
+    });
   }
 
-  function firstNameInputHandler(enteredText) {
-    setFirstName(enteredText);
+  // signupHandler makes a call to the service to sign a user up
+  async function signupHandler() {
+    // call the signup service to handle the signup request
+    const response = await signup(
+      signupDetails.firstName,
+      signupDetails.lastName,
+      signupDetails.email.value,
+      signupDetails.password.value,
+      signupDetails.confirmPassword
+    );
+
+    if (response.emailError || response.passwordError) {
+      setSignupDetails((prevState) => {
+        return {
+          ...prevState,
+          email: {
+            value: prevState.email.value,
+            isValid: !response.emailError,
+            errorText: response.emailError,
+          },
+          password: {
+            value: prevState.password.value,
+            isValid: !response.passwordError,
+            errorText: response.passwordError,
+          },
+        };
+      });
+      return;
+    }
+
+    // if there is an error otherwise, set the error state to display the view
+    if (response.error) {
+      setError(response.error);
+      return;
+    }
+
+    // if the request comes back with a 400, show pop up
+    if (response.status === HttpStatusCodes.StatusBadRequest) {
+      Alert.alert("Invalid Request", response.message);
+      return;
+    }
+
+    // if the response is ok, set the access token
+    if (response.status === HttpStatusCodes.StatusOk) {
+      const data = {
+        userId: response.userId,
+        userEmail: response.userEmail,
+        userDisplayName: response.userDisplayName,
+        accessToken: response.accessToken,
+        refreshToken: response.refreshToken,
+      };
+      authContext.setAuthData(data);
+    }
   }
 
-  function lastNameInputHandler(enteredText) {
-    setLastName(enteredText);
+  function dismissError() {
+    setError(null);
+  }
+
+  if (error) {
+    return <ErrorOverlay message={error} onConfirm={dismissError} />;
   }
 
   return (
-    <KeyboardAvoidingView
-      style={rootStyles.container}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-    >
-      <Logo />
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={rootStyles.container}>
+        <TextString
+          textStyle={{
+            color: Colors.almostBlack,
+            fontSize: 40,
+            fontWeight: "bold",
+            marginVertical: "5%",
+          }}
+        >
+          Get Started
+        </TextString>
 
-      <View style={cardStyles.container}>
-        <Card>
-          <View style={textStyles.needDirectionsContainer}>
-            <TextString textStyle={textStyles.needDirectionsText}>
-              Get Started
-            </TextString>
-          </View>
+        <View style={textInputGroupStyles.nameContainer}>
+          <TextInputBox
+            placeholder={"First Name"}
+            contentType={"name"}
+            onChange={inputHandler.bind(this, "firstName")}
+            keyboardType={"default"}
+            containerStyle={{ width: "49%", marginVertical: "4%" }}
+          ></TextInputBox>
+          <TextInputBox
+            placeholder={"Last Name"}
+            contentType={"name"}
+            onChange={inputHandler.bind(this, "lastName")}
+            keyboardType={"default"}
+            containerStyle={{ width: "49%", marginVertical: "4%" }}
+          ></TextInputBox>
+        </View>
+        <TextInputBox
+          placeholder={"Email"}
+          contentType={"emailAddress"}
+          onChange={inputHandler.bind(this, "email")}
+          keyboardType={"email-address"}
+        ></TextInputBox>
+        <PasswordInputBox
+          customStyles={{ marginVertical: "4%" }}
+          placeholder={"Password"}
+          onChange={inputHandler.bind(this, "password")}
+        ></PasswordInputBox>
+        <PasswordInputBox
+          placeholder={"Confirm Password"}
+          onChange={inputHandler.bind(this, "confirmPassword")}
+          customStyles={{ marginBottom: "6%" }}
+        ></PasswordInputBox>
 
-          <View style={textInputGroupStyles.container}>
-            <View style={textInputGroupStyles.nameContainer}>
-              <TextInputBox
-                placeholder={"First Name"}
-                contentType={"name"}
-                onChange={firstNameInputHandler}
-                keyboardType={"default"}
-                containerStyle={{ width: "45%" }}
-              ></TextInputBox>
-              <TextInputBox
-                placeholder={"Last Name"}
-                contentType={"name"}
-                onChange={lastNameInputHandler}
-                keyboardType={"default"}
-                containerStyle={{ width: "45%" }}
-              ></TextInputBox>
-            </View>
-            <TextInputBox
-              placeholder={"Email"}
-              contentType={"emailAddress"}
-              onChange={emailInputHandler}
-              keyboardType={"email-address"}
-            ></TextInputBox>
-            <PasswordInputBox placeholder={"Password"}></PasswordInputBox>
-            <PasswordInputBox
-              placeholder={"Confirm Password"}
-            ></PasswordInputBox>
-          </View>
+        {!signupDetails.email.isValid && (
+          <TextString textStyle={invalidInputStyle.text}>
+            {signupDetails.email.errorText}
+          </TextString>
+        )}
+        {!signupDetails.password.isValid && (
+          <TextString textStyle={invalidInputStyle.text}>
+            {signupDetails.password.errorText}
+          </TextString>
+        )}
 
-          <View style={buttonGroupStyles.container}>
-            <PrimaryButton>SIGN UP</PrimaryButton>
-            <View style={buttonLinkStyles.login}>
-              <PrimaryButtonLink onPress={login} textStyle={textStyles.login}>
-                Already have an account? Login
-              </PrimaryButtonLink>
-            </View>
-          </View>
-        </Card>
+        <PrimaryButton
+          onPress={signupHandler}
+          customStyles={{ width: "100%", marginTop: "5%" }}
+        >
+          SIGN UP
+        </PrimaryButton>
+        <PrimaryButtonLink
+          onPress={login}
+          textStyle={{ color: Colors.primaryPurple }}
+        >
+          Already have an account? Login
+        </PrimaryButtonLink>
       </View>
-    </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
@@ -94,55 +218,10 @@ export default SignupScreen;
 const rootStyles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "flex-end",
     alignItems: "center",
-    backgroundColor: Colors.primaryLightBlue,
-  },
-});
-
-const cardStyles = StyleSheet.create({
-  container: {
-    width: "100%",
-    height: "65%",
-  },
-});
-
-const textStyles = StyleSheet.create({
-  needDirectionsText: {
-    color: Colors.primaryDarkBlue,
-    fontWeight: "bold",
-    fontSize: 50,
-  },
-  needDirectionsContainer: {
-    position: "absolute",
-    top: "10%",
-  },
-  login: {
-    color: Colors.primaryDarkBlue,
-  },
-});
-
-const buttonGroupStyles = StyleSheet.create({
-  container: {
-    position: "absolute",
-    top: "70%",
-    height: "20%",
-  },
-});
-
-const buttonLinkStyles = StyleSheet.create({
-  forgotPassAndSignupContainer: {
-    flexDirection: "row",
-    position: "absolute",
-    top: "80%",
-  },
-  forgotPassword: {
-    marginRight: "15%",
-    position: "absolute",
-    top: "90%",
-  },
-  login: {
-    marginTop: "15%",
+    justifyContent: "center",
+    backgroundColor: Colors.primaryWhite,
+    paddingHorizontal: 14,
   },
 });
 
@@ -150,12 +229,15 @@ const textInputGroupStyles = StyleSheet.create({
   nameContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: "center",
+    width: "100%",
   },
-  container: {
-    justifyContent: "space-around",
-    position: "absolute",
-    top: "20%",
-    width: "80%",
-    height: "50%",
+});
+
+const invalidInputStyle = StyleSheet.create({
+  text: {
+    textAlign: "center",
+    color: Colors.primaryRed,
+    fontSize: 14,
   },
 });

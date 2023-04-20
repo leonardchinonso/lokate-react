@@ -41,17 +41,16 @@ export default TextInputBox;
 
 const rootStyles = StyleSheet.create({
   container: {
-    width: "100%",
     borderRadius: 8,
     borderWidth: 2,
     borderColor: Colors.secondaryDarkGrey,
+    width: "100%",
   },
   input: {
     backgroundColor: Colors.primaryWhite,
     borderRadius: 8,
-    width: "100%",
     padding: 14,
-    fontSize: 20,
+    fontSize: 14,
     fontWeight: "normal",
     textAlign: "left",
     color: Colors.almostBlack,

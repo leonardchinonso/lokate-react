@@ -10,11 +10,10 @@ export default Card;
 const styles = StyleSheet.create({
   container: {
     flex: 1, // always wrap a view around the card to allow it to fill the view container
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: Colors.primaryGrey,
+    // justifyContent: "center",
+    // alignItems: "center",
     borderStyle: "solid",
-    borderTopColor: Colors.primaryDarkBlue,
+    borderTopColor: Colors.primaryDarkPurple,
     borderTopWidth: 3,
   },
 });

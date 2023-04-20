@@ -1,67 +1,163 @@
-import { StyleSheet, View } from "react-native";
+import { Alert, SafeAreaView, StyleSheet, View } from "react-native";
 import Colors from "../styles/colors";
 import { Header } from "../styles/text";
 import TextString from "../components/ui/TextString";
 import PrimaryButton from "../components/ui/PrimaryButton";
 import TextInputBox from "../components/ui/TextInputBox";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { AuthenticationContext } from "../store/context/AuthenticationContext";
+import {
+  ConfigConstants,
+  EmailSubjectConstants,
+  HttpStatusCodes,
+  ScreenNameConstants,
+} from "../models/constants";
+import { SelectList } from "react-native-dropdown-select-list/index";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { contactUs } from "../services/commsService";
+
+const subjectData = [
+  { key: "1", value: EmailSubjectConstants.BusinessProposal },
+  { key: "2", value: EmailSubjectConstants.FeatureRequest },
+  { key: "3", value: EmailSubjectConstants.IssuesAndComplaints },
+  { key: "4", value: EmailSubjectConstants.Other },
+];
 
 function ContactUsScreen() {
-  const [email, setEmail] = useState("");
+  const authContext = useContext(AuthenticationContext);
+
+  // create a state to manage the message input
   const [message, setMessage] = useState("");
 
+  // create a state to manage the dropdown selections
+  const [selectedSubject, setSelectedSubject] = useState(
+    EmailSubjectConstants.Other
+  );
+
+  // create a state to manage the server error if any
+  const [error, setError] = useState("");
+
+  // messageInputHandler handles input into the message text box
   function messageInputHandler(enteredText) {
     setMessage(enteredText);
   }
 
-  useEffect(() => {
-    setEmail("johnsmith@mail.bcu.ac.uk");
-  }, []);
+  // process response handles the response from the service
+  function processResponse(response) {
+    // if it comes back with a server error, display the error view
+    if (response.error) {
+      setError(response.error);
+      return;
+    }
+
+    // if the request comes back with a 401, log user out
+    if (response.status === HttpStatusCodes.StatusUnauthorized) {
+      authContext.unSetAuthData();
+      AsyncStorage.removeItem(ConfigConstants.StorageAccessToken).then();
+      return;
+    }
+
+    // if the request comes back with a 400, show error pop up
+    if (response.status === HttpStatusCodes.StatusBadRequest) {
+      Alert.alert("Invalid Request", response.message);
+      return;
+    }
+
+    // if the request comes back with a 200
+    if (response.status === HttpStatusCodes.StatusOk) {
+      Alert.alert("Successful!", "Message sent successfully");
+    }
+  }
+
+  async function onSend() {
+    // call the organization service to contact the organization
+    const response = await contactUs(
+      authContext.authData.accessToken,
+      selectedSubject,
+      message
+    );
+
+    // process the response from the service
+    processResponse(response);
+  }
 
   return (
-    <View style={rootStyles.rootContainer}>
-      <View style={Header.container}>
-        <TextString textStyle={Header.text}>Contact Us</TextString>
-      </View>
-      <View style={sectionStyles.container}>
-        <View style={emailSectionStyles.container}>
-          <TextString
-            textStyle={[
-              emailSectionStyles.emailText,
-              { color: Colors.primaryDarkBlue },
-            ]}
-          >
-            Email
-          </TextString>
-          <TextString textStyle={emailSectionStyles.emailText}>
-            {email}
-          </TextString>
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={rootStyles.rootContainer}>
+        <View
+          style={{
+            paddingLeft: "1%",
+            marginTop: "5%",
+            marginVertical: "1%",
+            width: "100%",
+            alignItems: "flex-start",
+          }}
+        >
+          <TextString textStyle={nameSectionStyles.nameText}>Email</TextString>
         </View>
-        <View style={messageSectionStyles.container}>
-          <TextString
-            textStyle={[
-              messageSectionStyles.messageText,
-              { color: Colors.primaryDarkBlue },
-            ]}
-          >
+        <TextInputBox
+          editable={false}
+          placeholder={authContext.authData.userEmail}
+          contentType={"name"}
+          inputStyle={{ backgroundColor: Colors.almostWhite }}
+        />
+
+        <View
+          style={{
+            paddingLeft: "1%",
+            marginTop: "5%",
+            marginVertical: "1%",
+            width: "100%",
+            alignItems: "flex-start",
+          }}
+        >
+          <TextString textStyle={nameSectionStyles.nameText}>Title</TextString>
+        </View>
+        <View style={dropdownStyles.container}>
+          <SelectList
+            setSelected={(val) => setSelectedSubject(val)}
+            data={subjectData}
+            save={"value"}
+            dropdownStyles={{ backgroundColor: "white" }}
+            dropdownTextStyles={{ fontSize: 14 }}
+            placeholder={selectedSubject}
+          />
+        </View>
+
+        <View
+          style={{
+            paddingLeft: "1%",
+            marginTop: "5%",
+            marginVertical: "1%",
+            width: "100%",
+            alignItems: "flex-start",
+          }}
+        >
+          <TextString textStyle={nameSectionStyles.nameText}>
             Message
           </TextString>
-          <View style={{ width: "70%", height: "100%" }}>
-            <TextInputBox
-              multiline={true}
-              autoCorrect={false}
-              contentType={"organizationName"}
-              onChange={messageInputHandler}
-              keyboardType={"default"}
-            />
-          </View>
         </View>
-      </View>
+        <TextInputBox
+          placeholder={"Type your message here"}
+          contentType={"name"}
+          inputStyle={{ height: "30%" }}
+          multiline={true}
+          onChange={messageInputHandler}
+        />
 
-      <View style={buttonGroupStyles.container}>
-        <PrimaryButton>SEND</PrimaryButton>
+        <PrimaryButton
+          customStyles={{
+            position: "absolute",
+            bottom: "1%",
+            width: "100%",
+            left: 14,
+          }}
+          onPress={onSend}
+        >
+          SEND
+        </PrimaryButton>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -70,56 +166,25 @@ export default ContactUsScreen;
 const rootStyles = StyleSheet.create({
   rootContainer: {
     flex: 1,
-    justifyContent: "center",
     alignItems: "center",
-    backgroundColor: Colors.primaryGrey,
+    backgroundColor: Colors.primaryWhite,
+    paddingHorizontal: 14,
   },
 });
 
-const sectionStyles = StyleSheet.create({
-  container: {
-    position: "absolute",
-    top: "25%",
-    width: "80%",
-    height: "50%",
+const nameSectionStyles = StyleSheet.create({
+  nameText: {
+    color: Colors.primaryBlack,
+    fontSize: 14,
   },
 });
 
-const buttonGroupStyles = StyleSheet.create({
+const dropdownStyles = StyleSheet.create({
   container: {
-    position: "absolute",
-    top: "85%",
-    height: "20%",
-  },
-});
-
-const emailSectionStyles = StyleSheet.create({
-  container: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: Colors.secondaryDarkGrey,
+    backgroundColor: Colors.primaryWhite,
     width: "100%",
-  },
-  emailText: {
-    color: Colors.secondaryDarkGrey,
-    fontWeight: "bold",
-    fontSize: 20,
-  },
-});
-
-const messageSectionStyles = StyleSheet.create({
-  container: {
-    position: "absolute",
-    top: "15%",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "flex-start",
-    width: "100%",
-    height: "80%",
-  },
-  messageText: {
-    color: Colors.secondaryDarkGrey,
-    fontWeight: "bold",
-    fontSize: 20,
   },
 });

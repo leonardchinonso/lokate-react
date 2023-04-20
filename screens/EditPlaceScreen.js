@@ -1,7 +1,7 @@
 import ModifyPlaceScreen from "./ModifyPlaceScreen";
 
-function EditPlaceScreen() {
-  return <ModifyPlaceScreen action={"edit"} />;
+function EditPlaceScreen({ route }) {
+  return <ModifyPlaceScreen action={"edit"} route={route} />;
 }
 
 export default EditPlaceScreen;
