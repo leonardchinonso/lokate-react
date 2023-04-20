@@ -8,7 +8,7 @@ export const Header = StyleSheet.create({
   },
   text: {
     color: Colors.primaryBlack,
-    fontWeight: "bold",
-    fontSize: 30,
+    fontWeight: "normal",
+    fontSize: 20,
   },
 });

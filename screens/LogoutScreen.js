@@ -14,8 +14,9 @@ function LogoutScreen() {
   const navigation = useNavigation();
 
   function onClickYes() {
-    authContext.unsetAuthToken();
-    AsyncStorage.removeItem(ConfigConstants.StorageTokenKey).then();
+    AsyncStorage.removeItem(ConfigConstants.StorageAccessToken).then();
+    AsyncStorage.removeItem(ConfigConstants.StorageRefreshToken).then();
+    authContext.unSetAuthData();
   }
 
   function onClickNo() {
@@ -24,9 +25,6 @@ function LogoutScreen() {
 
   return (
     <View style={rootStyles.rootContainer}>
-      <View style={Header.container}>
-        <TextString textStyle={Header.text}>Logout</TextString>
-      </View>
       <View style={logoutSectionStyles.container}>
         <TextString textStyle={logoutSectionStyles.areYouSureText}>
           Are You Sure?
@@ -61,7 +59,7 @@ const rootStyles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: Colors.primaryGrey,
+    backgroundColor: Colors.primaryWhite,
   },
 });
 

@@ -30,7 +30,7 @@ function SavedPlacesScreen({ route }) {
 
   async function retrieveSavedPlaces() {
     // get the saved places from the savedPlaces service using the auth token
-    const response = await getSavedPlaces(authContext.authToken);
+    const response = await getSavedPlaces(authContext.authData.accessToken);
 
     // if it comes back with a server error, display the error view
     if (response.error) {
@@ -40,8 +40,8 @@ function SavedPlacesScreen({ route }) {
 
     // if the request comes back with a 401, log user out
     if (response.status === HttpStatusCodes.StatusUnauthorized) {
-      authContext.unsetAuthToken();
-      AsyncStorage.removeItem(ConfigConstants.StorageTokenKey).then();
+      authContext.unSetAuthData();
+      AsyncStorage.removeItem(ConfigConstants.StorageAccessToken).then();
       return;
     }
 

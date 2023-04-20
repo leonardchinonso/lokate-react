@@ -12,7 +12,6 @@ import {
   UseAsConstants,
 } from "../models/constants";
 import PrimaryButton from "../components/ui/PrimaryButton";
-import { Header } from "../styles/text";
 import { editSavedPlace } from "../services/placeService";
 import { AuthenticationContext } from "../store/context/AuthenticationContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -39,7 +38,7 @@ function ModifyPlaceScreen({ action, route }) {
   }
 
   const authContext = useContext(AuthenticationContext);
-  const token = authContext.authToken;
+  const token = authContext.authData.accessToken;
 
   const [name, setName] = useState("");
   const [alias, setAlias] = useState(UseAsConstants.None);
@@ -64,8 +63,8 @@ function ModifyPlaceScreen({ action, route }) {
 
     // if the request comes back with a 401, log user out
     if (response.status === HttpStatusCodes.StatusUnauthorized) {
-      authContext.unsetAuthToken();
-      AsyncStorage.removeItem(ConfigConstants.StorageTokenKey).then();
+      authContext.unSetAuthData();
+      AsyncStorage.removeItem(ConfigConstants.StorageAccessToken).then();
       return;
     }
 
@@ -103,6 +102,7 @@ function ModifyPlaceScreen({ action, route }) {
     processResponse(response, action);
   }
 
+  // dismissError discards the error screen
   function dismissError() {
     setError(null);
   }
@@ -113,43 +113,43 @@ function ModifyPlaceScreen({ action, route }) {
 
   return (
     <View style={rootStyles.rootContainer}>
-      <View style={Header.container}>
-        <TextString textStyle={Header.text}>
-          {renderDetails.headerText}
-        </TextString>
-      </View>
       <View style={nameSectionStyles.container}>
-        <TextString textStyle={nameSectionStyles.nameText}>Name</TextString>
-        <View style={nameSectionStyles.textInputBox}>
-          <TextInputBox
-            placeholder={route.params.formerName}
-            contentType={"name"}
-            onChange={nameInputHandler}
-            keyboardType={"default"}
+        <View
+          style={{ paddingLeft: "1%", marginTop: "5%", marginVertical: "1%" }}
+        >
+          <TextString textStyle={nameSectionStyles.nameText}>Name</TextString>
+        </View>
+        <TextInputBox
+          placeholder={route.params.formerName}
+          contentType={"name"}
+          onChange={nameInputHandler}
+          keyboardType={"default"}
+        />
+      </View>
+      <View style={useAsSectionStyles.container}>
+        <View
+          style={{ paddingLeft: "1%", marginTop: "5%", marginVertical: "1%" }}
+        >
+          <TextString textStyle={nameSectionStyles.nameText}>Use As</TextString>
+        </View>
+        <View style={dropdownStyles.container}>
+          <SelectList
+            setSelected={(val) => setAlias(val)}
+            data={data}
+            save={"value"}
+            dropdownStyles={{ backgroundColor: "white" }}
+            dropdownTextStyles={{ fontSize: 17 }}
+            placeholder={"Use as"}
           />
         </View>
       </View>
-      <View style={useAsSectionStyles.container}>
-        <TextString textStyle={useAsSectionStyles.useAsText}>Use As</TextString>
-        <View style={useAsSectionStyles.useAsDropdownContainer}>
-          <View style={dropdownStyles.container}>
-            <SelectList
-              setSelected={(val) => setAlias(val)}
-              data={data}
-              save={"value"}
-              dropdownStyles={{ backgroundColor: "white" }}
-              dropdownTextStyles={{ fontSize: 17 }}
-              placeholder={"Use as"}
-            />
-          </View>
-        </View>
-      </View>
 
-      <View style={buttonGroupStyles.container}>
-        <PrimaryButton onPress={renderDetails.onClick}>
-          {renderDetails.buttonText}
-        </PrimaryButton>
-      </View>
+      <PrimaryButton
+        customStyles={{ marginTop: "10%" }}
+        onPress={renderDetails.onClick}
+      >
+        {renderDetails.buttonText}
+      </PrimaryButton>
     </View>
   );
 }
@@ -159,47 +159,29 @@ export default ModifyPlaceScreen;
 const rootStyles = StyleSheet.create({
   rootContainer: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: Colors.primaryGrey,
+    backgroundColor: Colors.primaryWhite,
+    paddingHorizontal: 14,
   },
 });
 
 const nameSectionStyles = StyleSheet.create({
   container: {
-    position: "absolute",
-    top: "20%",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    width: "80%",
+    alignItems: "flex-start",
   },
   nameText: {
     color: Colors.primaryBlack,
-    fontWeight: "bold",
-    fontSize: 20,
-  },
-  textInputBox: {
-    width: "70%",
+    fontSize: 14,
   },
 });
 
 const useAsSectionStyles = StyleSheet.create({
   container: {
-    position: "absolute",
-    top: "30%",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    width: "80%",
+    alignItems: "flex-start",
   },
   useAsText: {
     color: Colors.primaryBlack,
     fontWeight: "bold",
     fontSize: 20,
-  },
-  useAsDropdownContainer: {
-    width: "70%",
   },
 });
 
@@ -208,14 +190,7 @@ const dropdownStyles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 1,
     borderColor: Colors.secondaryDarkGrey,
-    backgroundColor: "white",
-  },
-});
-
-const buttonGroupStyles = StyleSheet.create({
-  container: {
-    position: "absolute",
-    top: "80%",
-    height: "20%",
+    backgroundColor: Colors.primaryWhite,
+    width: "100%",
   },
 });

@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
     color: Colors.primaryWhite,
     textAlign: "center",
     fontStyle: "normal",
-    fontWeight: "800",
+    fontWeight: "normal",
     fontSize: 14,
   },
   pressed: {

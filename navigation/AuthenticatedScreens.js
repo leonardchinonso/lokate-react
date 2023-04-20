@@ -1,16 +1,12 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { AntDesign, FontAwesome5, Ionicons } from "@expo/vector-icons";
+import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 
 import Colors from "../styles/colors";
 import {
   NavigatorNameConstants,
   ScreenNameConstants,
 } from "../models/constants";
-import SavedPlacesScreen from "../screens/SavedPlacesScreen";
-import LastVisitedScreen from "../screens/LastVisitedScreen";
-import ProfileScreen from "../screens/ProfileScreen";
 import HomepageScreen from "../screens/HomepageScreen";
 import PickStartLocationScreen from "../screens/PickStartLocationScreen";
 import PickEndLocationScreen from "../screens/PickEndLocationScreen";
@@ -19,47 +15,143 @@ import AddPlaceScreen from "../screens/AddPlaceScreen";
 import EditPlaceScreen from "../screens/EditPlaceScreen";
 import SearchResultScreen from "../screens/SearchResultScreen";
 import JourneyResultScreen from "../screens/JourneyResultScreen";
-import ProfileScreeenTwo from "../screens/ProfileScreeenTwo";
+import ProfileScreen from "../screens/ProfileScreen";
 import PlacesScreen from "../screens/PlacesScreen";
+import RouteResultScreen from "../screens/RouteResultScreen";
+import EditProfileScreen from "../screens/EditProfileScreen";
+import ContactUsScreen from "../screens/ContactUsScreen";
+import AboutScreen from "../screens/AboutScreen";
+import { Settings } from "react-native";
+import SettingsScreen from "../screens/SettingsScreen";
 
 const Stack = createNativeStackNavigator();
-const Drawer = createDrawerNavigator();
 const BottomTab = createBottomTabNavigator();
 
 function HomepageStackNavigator() {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator>
       <Stack.Screen
         name={ScreenNameConstants.HomepageScreenName}
         component={HomepageScreen}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
-        name={ScreenNameConstants.PickStartLocationScreenName}
-        component={PickStartLocationScreen}
+        name={NavigatorNameConstants.StartLocationNavigatorName}
+        component={StartLocationStackNavigator}
+        options={{ title: "Pick a start location" }}
       />
       <Stack.Screen
-        name={ScreenNameConstants.PickEndLocationScreenName}
-        component={PickEndLocationScreen}
+        name={NavigatorNameConstants.EndLocationNavigatorName}
+        component={EndLocationStackNavigator}
+        options={{ title: "Pick an end location" }}
       />
       <Stack.Screen
         name={ScreenNameConstants.JourneyResultScreen}
         component={JourneyResultScreen}
+        options={{ headerShown: true, title: "Plan your journey" }}
       />
       <Stack.Screen
-        name={ScreenNameConstants.SearchResultScreenName}
-        component={SearchResultScreen}
+        name={ScreenNameConstants.RouteResultScreenName}
+        component={RouteResultScreen}
+        options={{ headerShown: true, title: "Route" }}
       />
       <Stack.Screen
         name={ScreenNameConstants.LogoutScreenName}
         component={LogoutScreen}
+        options={{ headerShown: true, title: "Logout" }}
+      />
+    </Stack.Navigator>
+  );
+}
+
+function StartLocationStackNavigator({ route }) {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen
+        name={ScreenNameConstants.PickStartLocationScreenName}
+        component={PickStartLocationScreen}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
-        name={ScreenNameConstants.AddSavedPlaceScreen}
-        component={AddPlaceScreen}
+        name={ScreenNameConstants.SearchResultScreenName}
+        component={SearchResultScreen}
+        initialParams={route.params}
+        options={{ headerShown: false }}
+      />
+    </Stack.Navigator>
+  );
+}
+
+function EndLocationStackNavigator({ route }) {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name={ScreenNameConstants.PickEndLocationScreenName}
+        component={PickEndLocationScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={ScreenNameConstants.SearchResultScreenName}
+        component={SearchResultScreen}
+        initialParams={route.params}
+        options={{ headerShown: false }}
+      />
+    </Stack.Navigator>
+  );
+}
+
+function PlacesStackNavigator({ route }) {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name={ScreenNameConstants.SavedPlacesScreenName}
+        component={PlacesScreen}
+        options={{ headerShown: false, title: "Edit Place" }}
       />
       <Stack.Screen
         name={ScreenNameConstants.EditSavedPlaceScreen}
         component={EditPlaceScreen}
+        initialParams={route.params}
+        options={{ title: "Edit Place" }}
+      />
+      <Stack.Screen
+        name={ScreenNameConstants.AddSavedPlaceScreen}
+        component={AddPlaceScreen}
+        initialParams={route.params}
+        options={{ title: "Add Place" }}
+      />
+    </Stack.Navigator>
+  );
+}
+
+// ProfileStackNavigator is the stack navigator for all profile actions
+function ProfileStackNavigator() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name={ScreenNameConstants.ProfileScreenName}
+        component={ProfileScreen}
+        options={{ headerShown: false, title: "Profile" }}
+      />
+      <Stack.Screen
+        name={ScreenNameConstants.EditProfileScreenName}
+        component={EditProfileScreen}
+        options={{ title: "Edit Profile" }}
+      />
+      <Stack.Screen
+        name={ScreenNameConstants.ContactUsScreenName}
+        component={ContactUsScreen}
+        options={{ title: "Contact Us" }}
+      />
+      <Stack.Screen
+        name={ScreenNameConstants.AboutScreenName}
+        component={AboutScreen}
+        options={{ title: "About" }}
+      />
+      <Stack.Screen
+        name={ScreenNameConstants.SettingsScreenName}
+        component={SettingsScreen}
+        options={{ title: "Settings" }}
       />
     </Stack.Navigator>
   );
@@ -81,12 +173,11 @@ function LandingBottomTabNavigator() {
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="home" size={size} color={color} />
           ),
-          tabBarShowLabel: false,
         }}
       />
       <BottomTab.Screen
-        name={ScreenNameConstants.SavedPlacesScreenName}
-        component={PlacesScreen}
+        name={NavigatorNameConstants.PlacesNavigatorName}
+        component={PlacesStackNavigator}
         options={{
           title: "Places",
           tabBarIcon: ({ color, size }) => (
@@ -99,14 +190,13 @@ function LandingBottomTabNavigator() {
         }}
       />
       <BottomTab.Screen
-        name={ScreenNameConstants.ProfileScreenName}
-        component={ProfileScreeenTwo}
+        name={NavigatorNameConstants.ProfileNavigatorName}
+        component={ProfileStackNavigator}
         options={{
           title: "Profile",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="person" size={size} color={color} />
           ),
-          tabBarShowLabel: false,
         }}
       />
     </BottomTab.Navigator>

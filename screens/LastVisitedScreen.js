@@ -27,7 +27,10 @@ function LastVisitedScreen() {
 
   async function retrieveLastVisitedPlaces() {
     // get the last visited places from the savedPlaces service using the auth token
-    const response = await getLastVisitedPlaces(authContext.authToken, 10);
+    const response = await getLastVisitedPlaces(
+      authContext.authData.accessToken,
+      10
+    );
 
     // if it comes back with a server error, display the error view
     if (response.error) {
@@ -37,8 +40,9 @@ function LastVisitedScreen() {
 
     // if the request comes back with a 401, log user out
     if (response.status === HttpStatusCodes.StatusUnauthorized) {
-      authContext.unsetAuthToken();
-      AsyncStorage.removeItem(ConfigConstants.StorageTokenKey).then();
+      authContext.unSetAuthData();
+      AsyncStorage.removeItem(ConfigConstants.StorageAccessToken).then();
+      AsyncStorage.removeItem(ConfigConstants.StorageRefreshToken).then();
       return;
     }
 

@@ -1,60 +1,95 @@
-import { StyleSheet, View } from "react-native";
+import { Alert, Dimensions, ScrollView, StyleSheet, View } from "react-native";
 import { Header } from "../styles/text";
 import TextString from "../components/ui/TextString";
 import Colors from "../styles/colors";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { CommsContext } from "../store/context/CommsContext";
+import { about } from "../services/commsService";
+import { HttpStatusCodes } from "../models/constants";
+import ErrorOverlay from "../components/ui/ErrorOverlay";
+import LoadingOverlay from "../components/ui/LoadingOverlay";
+
+const { width, height } = Dimensions.get("window");
 
 function AboutScreen() {
+  // use the context for the about text field to avoid multiple API requests
+  // const commsContext = useContext(CommsContext);
+
+  // create a state to hold the value for the about text
   const [aboutText, setAboutText] = useState("");
 
+  // create a state to hold the value for the error state
+  const [error, setError] = useState("");
+
+  // create a state to hold the loading state of the screen
+  const [isLoading, setIsLoading] = useState(false);
+
+  // processResponse processes the response from the API
+  function processResponse(response) {
+    // if it comes back with a server error, display the error view
+    if (response.error) {
+      setError(response.error);
+      return;
+    }
+
+    // if the request comes back with a 400, show pop up
+    if (response.status === HttpStatusCodes.StatusBadRequest) {
+      Alert.alert("Invalid Request", response.message);
+      return;
+    }
+
+    // if the request comes back with a 200
+    if (response.status === HttpStatusCodes.StatusOk) {
+      setAboutText(response.details);
+    }
+  }
+
+  // fetchAboutInformation makes a call to fetch the information from the service
+  async function fetchAboutInformation() {
+    // call the comms service to get the about information
+    const response = await about();
+
+    // process the response from the service
+    processResponse(response);
+  }
+
   useEffect(() => {
-    setAboutText(
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia,\n" +
-        "molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum\n" +
-        "numquam blanditiis harum quisquam eius sed odit fugiat iusto fuga praesentium\n" +
-        "optio, eaque rerum! Provident similique accusantium nemo autem. Veritatis\n" +
-        "obcaecati tenetur iure eius earum ut molestias architecto voluptate aliquam\n" +
-        "nihil, eveniet aliquid culpa officia aut! Impedit sit sunt quaerat, odit,\n" +
-        "tenetur error, harum nesciunt ipsum debitis quas aliquid. Reprehenderit,\n" +
-        "quia. Quo neque error repudiandae fuga? Ipsa laudantium molestias eos \n" +
-        "sapiente officiis modi at sunt excepturi expedita sint? Sed quibusdam\n" +
-        "recusandae alias error harum maxime adipisci amet laborum. Perspiciatis \n" +
-        "minima nesciunt dolorem! Officiis iure rerum voluptates a cumque velit \n" +
-        "quibusdam sed amet tempora. Sit laborum ab, eius fugit doloribus tenetur \n" +
-        "fugiat, temporibus enim commodi iusto libero magni deleniti quod quam \n" +
-        "consequuntur! Commodi minima excepturi repudiandae velit hic maxime\n" +
-        "doloremque. Quaerat provident commodi consectetur veniam similique ad \n" +
-        "earum omnis ipsum saepe, voluptas, hic voluptates pariatur est explicabo \n" +
-        "fugiat, dolorum eligendi quam cupiditate excepturi mollitia maiores labore \n" +
-        "suscipit quas? Nulla, placeat. Voluptatem quaerat non architecto ab laudantium\n" +
-        "modi minima sunt esse temporibus sint culpa, recusandae aliquam numquam \n" +
-        "totam ratione voluptas quod exercitationem fuga. Possimus quis earum veniam \n" +
-        "quasi aliquam eligendi, placeat qui corporis!"
-    );
-  });
+    if (!aboutText) {
+      setIsLoading(true);
+      // when the call is done, whether successful or not, set the loading screen state to false
+      fetchAboutInformation().then(() => setIsLoading(false));
+    }
+
+    return () => {};
+  }, []);
+
+  // if the about information is being fetched, display the loading screen
+  if (isLoading) {
+    return <LoadingOverlay />;
+  }
+
+  // dismissError discards the error screen
+  function dismissError() {
+    setError(null);
+  }
+
+  if (error) {
+    return <ErrorOverlay message={error} onConfirm={dismissError} />;
+  }
 
   return (
-    <View style={rootStyles.rootContainer}>
-      <View style={Header.container}>
-        <TextString textStyle={Header.text}>About</TextString>
+    <ScrollView contentContainerStyle={rootStyles.rootContainer}>
+      <View style={aboutSectionStyles.content}>
+        <TextString textStyle={{ color: Colors.primaryBlack }}>
+          {aboutText}
+        </TextString>
       </View>
-      <View style={aboutSectionStyles.container}>
-        <View style={aboutSectionStyles.lokateText}>
-          <TextString
-            textStyle={{ color: Colors.primaryDarkPurple, fontSize: 30 }}
-          >
-            LOKATE
-          </TextString>
-        </View>
-        <View style={aboutSectionStyles.content}>
-          <TextString
-            textStyle={{ color: Colors.primaryBlack, flexWrap: "wrap" }}
-          >
-            {aboutText}
-          </TextString>
-        </View>
+      <View style={{ position: "absolute", bottom: "3%", right: 14 }}>
+        <TextString textStyle={{ fontSize: 10 }}>
+          - heavily lifted from Starbucks' company profile
+        </TextString>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -63,31 +98,16 @@ export default AboutScreen;
 const rootStyles = StyleSheet.create({
   rootContainer: {
     flex: 1,
-    justifyContent: "center",
     alignItems: "center",
-    backgroundColor: Colors.primaryGrey,
+    justifyContent: "center",
+    backgroundColor: Colors.primaryWhite,
+    paddingHorizontal: 14,
   },
 });
 
 const aboutSectionStyles = StyleSheet.create({
-  container: {
-    position: "absolute",
-    top: "20%",
-    width: "80%",
-    height: "70%",
-    backgroundColor: Colors.primaryWhite,
-  },
   content: {
-    position: "absolute",
-    top: "25%",
     padding: "5%",
-    flexWrap: "wrap",
-  },
-  lokateText: {
-    position: "absolute",
-    top: "10%",
-    left: "40%",
-    justifyContent: "center",
-    alignItems: "center",
+    width: width,
   },
 });

@@ -1,44 +1,98 @@
-import { FlatList, SafeAreaView, StyleSheet, View } from "react-native";
-import { Header } from "../styles/text";
-import TextString from "../components/ui/TextString";
+import {
+  Alert,
+  FlatList,
+  SafeAreaView,
+  Pressable,
+  StyleSheet,
+  View,
+} from "react-native";
 import Colors from "../styles/colors";
 import TextInputBox from "../components/ui/TextInputBox";
 import { useContext, useEffect, useState } from "react";
 import JourneyCard from "../components/ui/JourneyCard";
 import { RouteContext } from "../store/context/RouteContext";
+import { HttpStatusCodes, ScreenNameConstants } from "../models/constants";
+import { getJourney, modifyRouteInfo } from "../services/journeyService";
+import ErrorOverlay from "../components/ui/ErrorOverlay";
+import { useNavigation } from "@react-navigation/native";
+import LoadingOverlay from "../components/ui/LoadingOverlay";
 
 function JourneyResultScreen() {
   const routeContext = useContext(RouteContext);
+  const startLocation = routeContext.startLocation;
+  const endLocation = routeContext.endLocation;
 
-  const [startLocText, setStartLocText] = useState("");
-  const [endLocText, setEndLocText] = useState("");
+  const navigation = useNavigation();
+
+  const [isLoading, setIsLoading] = useState(true);
+  const [routesData, setRoutes] = useState({
+    routes: [],
+  });
+  const [error, setError] = useState("");
+
+  function setRoutesHandler(routes) {
+    setRoutes(() => {
+      return {
+        routes: routes,
+      };
+    });
+  }
+
+  function onSelectRoute(route) {
+    navigation.navigate(ScreenNameConstants.RouteResultScreenName, {
+      singleRoute: route,
+      transportModes: route.transportModes,
+      journeyTime: route.journeyTime,
+    });
+  }
+
+  async function retrieveJourney(startLocation, endLocation) {
+    // get the journey results from the journeyService
+    const response = await getJourney(startLocation, endLocation);
+    // const response = {};
+
+    // if it comes back with a server error, display the error view
+    if (response.error) {
+      setError(response.error);
+      return;
+    }
+
+    // if the request comes back with a 400, show pop up
+    if (response.status === HttpStatusCodes.StatusBadRequest) {
+      Alert.alert("Invalid Request", response.message);
+      return;
+    }
+
+    // if the request comes back with a 200
+    if (response.status === HttpStatusCodes.StatusOk) {
+      let routes = modifyRouteInfo(response.journeyResults.routes);
+      setRoutesHandler(routes);
+    }
+  }
 
   useEffect(() => {
-    const startLocation = routeContext.startLocation;
-    const endLocation = routeContext.endLocation;
+    // query the journey service for the journey results between the points
+    retrieveJourney(routeContext.startLocation, routeContext.endLocation).then(
+      () => {
+        setIsLoading(false);
+      }
+    );
 
-    setStartLocText(startLocation.name);
-    setEndLocText(endLocation.name);
-  });
+    // reset the useEffect cache
+    return () => {};
+  }, []);
 
-  const data = [
-    {
-      transportModes: ["walking", "train", "bus", "walking"],
-      journeyTime: "28 mins",
-    },
-    {
-      transportModes: ["bus", "train", "bus", "walking"],
-      journeyTime: "29 mins",
-    },
-    {
-      transportModes: ["walking", "train", "walking"],
-      journeyTime: "32 mins",
-    },
-    {
-      transportModes: ["walking", "bus", "walking", "bus", "walking"],
-      journeyTime: "41 mins",
-    },
-  ];
+  if (isLoading) {
+    return <LoadingOverlay />;
+  }
+
+  function dismissError() {
+    setError(null);
+  }
+
+  if (error) {
+    return <ErrorOverlay message={error} onConfirm={dismissError} />;
+  }
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -46,15 +100,15 @@ function JourneyResultScreen() {
         <View style={textBoxStyles.container}>
           <TextInputBox
             editable={false}
-            placeholder={startLocText}
+            placeholder={startLocation.name}
             contentType={"none"}
             keyboardType={"default"}
             inputStyle={{ backgroundColor: Colors.almostWhite }}
-            containerStyle={{ marginTop: "20%", marginBottom: "3%" }}
+            containerStyle={{ marginTop: "10%", marginBottom: "3%" }}
           ></TextInputBox>
           <TextInputBox
             editable={false}
-            placeholder={endLocText}
+            placeholder={endLocation.name}
             contentType={"none"}
             keyboardType={"default"}
             inputStyle={{ backgroundColor: Colors.almostWhite }}
@@ -62,13 +116,20 @@ function JourneyResultScreen() {
         </View>
         <View>
           <FlatList
-            data={data}
+            data={routesData.routes}
             renderItem={(itemData) => (
               <View style={journeyGroupStyles.journeyCard}>
-                <JourneyCard
-                  transportModes={itemData.item.transportModes}
-                  journeyTime={itemData.item.journeyTime}
-                />
+                <Pressable
+                  style={({ pressed }) =>
+                    pressed ? journeyGroupStyles.pressed : null
+                  }
+                  onPress={onSelectRoute.bind(this, itemData.item)}
+                >
+                  <JourneyCard
+                    transportModes={itemData.item.transportModes}
+                    journeyTime={itemData.item.journeyTime}
+                  />
+                </Pressable>
               </View>
             )}
           />
@@ -82,6 +143,7 @@ export default JourneyResultScreen;
 
 const rootStyles = StyleSheet.create({
   rootContainer: {
+    flex: 1,
     paddingHorizontal: 14,
     backgroundColor: Colors.primaryWhite,
   },
@@ -96,5 +158,8 @@ const textBoxStyles = StyleSheet.create({
 const journeyGroupStyles = StyleSheet.create({
   journeyCard: {
     marginVertical: "4%",
+  },
+  pressed: {
+    opacity: 0.5,
   },
 });

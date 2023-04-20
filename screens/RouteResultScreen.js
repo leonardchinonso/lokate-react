@@ -1,79 +1,74 @@
-import { FlatList, StyleSheet, View } from "react-native";
-import { Header } from "../styles/text";
-import TextString from "../components/ui/TextString";
+import { FlatList, SafeAreaView, StyleSheet, View } from "react-native";
 import Colors from "../styles/colors";
 import JourneyCard from "../components/ui/JourneyCard";
-import { useEffect, useState } from "react";
-import {
-  GetMinutesFromColonTimeFormat,
-  GetTimeInMeridian,
-} from "../utils/utils";
+import { useContext, useEffect, useState } from "react";
+import { getHoursAndMinutes, getTimeInMeridian } from "../utils/utils";
 import JourneyDescriptionCard from "../components/ui/JourneyDescriptionCard";
+import { transportModeConversionMap } from "../services/journeyService";
+import { RouteContext } from "../store/context/RouteContext";
+import TextString from "../components/ui/TextString";
+import { Header } from "../styles/text";
 
-function RouteResultScreen({ routeData }) {
-  const [transportModes, setTransportModes] = useState([]);
+function RouteResultScreen({ route }) {
+  const { singleRoute, transportModes, journeyTime } = route.params;
+
+  const routeContext = useContext(RouteContext);
+
   const [routeParts, setRouteParts] = useState([]);
 
-  let parts = routeData.route_parts;
+  let parts = singleRoute.route_parts;
 
   useEffect(() => {
-    handleSetTransportModes();
+    // handleSetTransportModes();
     handleSetRouteParts();
   }, []);
 
   function handleSetRouteParts() {
     let details = [];
-    for (let route of parts) {
+    for (let part of parts) {
       let detail = {
-        transportMode: route.mode,
-        transportDuration: GetMinutesFromColonTimeFormat(route.duration),
-        toPointName: route.to_point_name,
-        departsAt: GetTimeInMeridian(route.departure_time),
+        transportMode: transportModeConversionMap[part.mode],
+        transportDuration: getHoursAndMinutes(part.duration),
+        toPointName: part.to_point_name,
+        departsAt: getTimeInMeridian(part.departure_time),
       };
       details.push(detail);
     }
     setRouteParts(details);
   }
 
-  function handleSetTransportModes() {
-    let modes = [];
-    for (let route of parts) {
-      modes.push(route.mode);
-    }
-    setTransportModes(modes);
-  }
-
   return (
-    <View style={rootStyles.rootContainer}>
-      <View style={Header.container}>
-        <TextString textStyle={Header.text}>Go Somewhere</TextString>
-      </View>
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={rootStyles.rootContainer}>
+        <View style={{ marginTop: "5%" }}>
+          <TextString textStyle={Header.text}>
+            {routeContext.startLocation.name} to {routeContext.endLocation.name}
+          </TextString>
+        </View>
 
-      <View style={mainResult.container}>
-        <JourneyCard
-          transportModes={transportModes}
-          journeyTime={
-            GetMinutesFromColonTimeFormat(routeData.duration) + " mins"
-          }
-        />
-      </View>
+        <View style={mainResult.container}>
+          <JourneyCard
+            transportModes={transportModes}
+            journeyTime={journeyTime}
+            pressable={false}
+          />
+        </View>
 
-      <View style={resultDescriptionStyles.container}>
-        <FlatList
-          data={routeParts}
-          renderItem={(itemData) => (
-            <View style={{ marginVertical: "3%" }}>
+        <View style={resultDescriptionStyles.container}>
+          <FlatList
+            data={routeParts}
+            renderItem={({ item }) => (
               <JourneyDescriptionCard
-                transportMode={itemData.item.transportMode}
-                departsAt={itemData.item.departsAt}
-                toPointName={itemData.item.toPointName}
-                transportDuration={itemData.item.transportDuration}
+                transportMode={item.transportMode}
+                departsAt={item.departsAt}
+                toPointName={item.toPointName}
+                transportDuration={item.transportDuration}
               />
-            </View>
-          )}
-        />
+            )}
+          />
+        </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -82,24 +77,22 @@ export default RouteResultScreen;
 const rootStyles = StyleSheet.create({
   rootContainer: {
     flex: 1,
-    justifyContent: "center",
     alignItems: "center",
-    backgroundColor: Colors.primaryGrey,
+    backgroundColor: Colors.primaryWhite,
+    paddingHorizontal: 14,
   },
 });
 
 const mainResult = StyleSheet.create({
   container: {
-    width: "80%",
-    position: "absolute",
-    top: "20%",
+    marginTop: "3%",
+    width: "100%",
   },
 });
 
 const resultDescriptionStyles = StyleSheet.create({
   container: {
-    width: "80%",
-    position: "absolute",
-    top: "40%",
+    width: "100%",
+    marginTop: "20%",
   },
 });

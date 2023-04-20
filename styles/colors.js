@@ -8,7 +8,7 @@ const Colors = {
   primaryWhite: "#FFFFFF",
   primaryGrey: "#C7C7C7",
   primaryBlack: "#000000",
-  primaryRed: "#fd1010",
+  primaryRed: "#FF0000",
 
   // secondary colours
   secondaryDarkGrey: "#919191",

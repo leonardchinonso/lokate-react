@@ -1,7 +1,7 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import Colors from "../../styles/colors";
 
-function IconButtonLink({ name, children, onPress, icon }) {
+function IconButtonLink({ children, onPress, icon }) {
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>{icon}</View>

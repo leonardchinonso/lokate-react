@@ -9,15 +9,20 @@ import {
 import ItemCard from "./ItemCard";
 import TextString from "./TextString";
 import { useNavigation } from "@react-navigation/native";
-import { ScreenNameConstants } from "../../models/constants";
+import {
+  NavigatorNameConstants,
+  ScreenNameConstants,
+} from "../../models/constants";
 import { Entypo, MaterialIcons } from "@expo/vector-icons";
 import Colors from "../../styles/colors";
+import { getIcon } from "../../utils/utils";
 
 function SavedPlaceCard({ children }) {
   const navigation = useNavigation();
 
   function onEdit() {
-    navigation.navigate(ScreenNameConstants.EditSavedPlaceScreen, {
+    navigation.navigate(NavigatorNameConstants.PlacesNavigatorName, {
+      screen: ScreenNameConstants.EditSavedPlaceScreen,
       savedPlaceId: children.id,
       formerName: children.name,
     });
@@ -29,6 +34,7 @@ function SavedPlaceCard({ children }) {
 
   return (
     <ItemCard customStyles={itemCardCustomStyles.container}>
+      <View>{getIcon(children.place_alias)}</View>
       <TextString
         textStyle={{ fontWeight: "normal", color: Colors.primaryWhite }}
       >
@@ -38,7 +44,6 @@ function SavedPlaceCard({ children }) {
         style={{
           flexDirection: "row",
           justifyContent: "space-around",
-          // backgroundColor: Colors.primaryBlack,
         }}
       >
         <TouchableOpacity onPress={onEdit} style={{ paddingRight: "3%" }}>

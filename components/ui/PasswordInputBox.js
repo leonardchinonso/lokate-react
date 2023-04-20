@@ -5,12 +5,12 @@ import TextInputBox from "./TextInputBox";
 import { useTogglePasswordVisibility } from "../../hooks/useTogglePasswordVisibility";
 import Colors from "../../styles/colors";
 
-function PasswordInputBox({ placeholder, onChange, value }) {
+function PasswordInputBox({ placeholder, onChange, value, customStyles }) {
   const { showPassword, rightIcon, handlePasswordVisibility } =
     useTogglePasswordVisibility();
 
   return (
-    <View style={styles.inputContainer}>
+    <View style={[styles.inputContainer, customStyles]}>
       <TextInputBox
         name={"password"}
         placeholder={placeholder}

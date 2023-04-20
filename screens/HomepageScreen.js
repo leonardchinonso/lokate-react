@@ -1,5 +1,5 @@
 import { SafeAreaView, StyleSheet, Text, View } from "react-native";
-import { ScreenNameConstants } from "../models/constants";
+import { NavigatorNameConstants } from "../models/constants";
 import MapView, { Callout, Circle, Marker } from "react-native-maps";
 import PrimaryButton from "../components/ui/PrimaryButton";
 import { useContext, useState } from "react";
@@ -14,7 +14,7 @@ function HomepageScreen({ navigation }) {
   const [error, setError] = useState("");
 
   function goSomewhereHandler() {
-    navigation.navigate(ScreenNameConstants.PickStartLocationScreenName);
+    navigation.navigate(NavigatorNameConstants.StartLocationNavigatorName);
   }
 
   function dismissError() {
@@ -59,10 +59,9 @@ function HomepageScreen({ navigation }) {
         <View
           style={{
             position: "absolute",
-            bottom: "6%",
             marginHorizontal: 20,
             width: "90%",
-            height: 70,
+            height: 100,
           }}
         >
           <PrimaryButton onPress={goSomewhereHandler}>

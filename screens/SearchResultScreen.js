@@ -7,9 +7,12 @@ import { useEffect, useState } from "react";
 import ErrorOverlay from "../components/ui/ErrorOverlay";
 import { HttpStatusCodes } from "../models/constants";
 import { searchPlaces } from "../services/placeService";
+import LoadingOverlay from "../components/ui/LoadingOverlay";
 
 function SearchResultScreen({ route }) {
   const { searchQuery, action } = route.params;
+
+  const [isLoading, setIsLoading] = useState(true);
 
   const [results, setResults] = useState({
     places: [],
@@ -48,8 +51,14 @@ function SearchResultScreen({ route }) {
   }
 
   useEffect(() => {
-    retrieveSearchedPlaces();
+    retrieveSearchedPlaces().then(() => {
+      setIsLoading(false);
+    });
   }, [route]);
+
+  if (isLoading) {
+    return <LoadingOverlay />;
+  }
 
   function dismissError() {
     setError(null);
@@ -96,7 +105,6 @@ const rootStyles = StyleSheet.create({
     height: "100%",
     paddingHorizontal: 14,
     backgroundColor: Colors.primaryWhite,
-    // marginBottom: 50,
   },
 });
 

@@ -1,102 +1,10 @@
-import axios from "axios";
 import { ServerUrlConstants } from "../models/constants";
-import { BuildUrl } from "../utils/utils";
-import { catchErr } from "../utils/errors";
+import { buildUrl } from "../utils/utils";
+import { get, post, put } from "./requests";
 
-// get makes a get request to the given url
-async function get(url, headers) {
-  console.log(`Making a GET request to url: ${url} with headers: ${headers}`);
-
-  const response = {
-    data: null,
-    serverError: null,
-  };
-
-  let [err, resp] = await catchErr(
-    axios.get(url, {
-      validateStatus: function (status) {
-        return status < 500;
-      },
-      headers,
-    })
-  );
-
-  if (err) {
-    console.log("Error fetching request with url: ", url, ". Error: ", err);
-    response.serverError = err;
-    return response;
-  }
-
-  console.log("Request hit server successfully");
-  response.data = resp.data;
-  return response;
-}
-
-// post makes a POST request to the given url
-async function post(url, headers, body) {
-  console.log(
-    `Making a POST request to url: ${url} with headers: ${headers} and body: ${body}`
-  );
-
-  const response = {
-    data: null,
-    serverError: null,
-  };
-
-  body = body ? body : null;
-
-  let [err, resp] = await catchErr(
-    axios.post(url, body, {
-      validateStatus: function (status) {
-        return status < 500;
-      },
-      headers,
-    })
-  );
-
-  if (err) {
-    console.log("Error fetching request with url: ", url, ". Error: ", err);
-    response.serverError = err;
-    return response;
-  }
-
-  console.log("Request hit server successfully");
-  response.data = resp.data;
-  return response;
-}
-
-// put makes a PUT request to the given url
-async function put(url, headers, body) {
-  console.log(
-    `Making a PUT request to url: ${url} with headers: ${headers} and body: ${body}`
-  );
-  const response = {
-    data: null,
-    serverError: null,
-  };
-
-  let [err, resp] = await catchErr(
-    axios.put(url, body, {
-      validateStatus: function (status) {
-        return status < 500;
-      },
-      headers,
-    })
-  );
-
-  if (err) {
-    console.log("Error fetching request with url: ", url, ". Error: ", err);
-    response.serverError = err;
-    return response;
-  }
-
-  console.log("Request hit server successfully");
-  response.data = resp.data;
-  return response;
-}
-
+// getSavedPlacesRequest makes a http request to get saved places
 export async function getSavedPlacesRequest(token) {
-  const url = BuildUrl(
+  const url = buildUrl(
     ServerUrlConstants.ServerBaseUrl,
     ServerUrlConstants.SavedPlacesUrl
   );
@@ -109,7 +17,7 @@ export async function getSavedPlacesRequest(token) {
 }
 
 export async function savePlaceRequest(token, name, alias, placeId) {
-  const url = BuildUrl(
+  const url = buildUrl(
     ServerUrlConstants.ServerBaseUrl,
     ServerUrlConstants.SavedPlacesUrl,
     `${placeId}`
@@ -127,8 +35,9 @@ export async function savePlaceRequest(token, name, alias, placeId) {
   return await post(url, headers, body);
 }
 
+// editSavedPlaceRequest calls the server endpoint to edit the saved place
 export async function editSavedPlaceRequest(token, name, alias, placeId) {
-  const url = BuildUrl(
+  const url = buildUrl(
     ServerUrlConstants.ServerBaseUrl,
     ServerUrlConstants.SavedPlacesUrl,
     `${placeId}`
@@ -146,8 +55,9 @@ export async function editSavedPlaceRequest(token, name, alias, placeId) {
   return await put(url, headers, body);
 }
 
+// getLastVisitedPlacesRequest calls the server endpoint to get the last visited places
 export async function getLastVisitedPlacesRequest(token, numberOfResults) {
-  const url = BuildUrl(
+  const url = buildUrl(
     ServerUrlConstants.ServerBaseUrl,
     ServerUrlConstants.LastVisitedPlacesUrl,
     `${numberOfResults}`
@@ -160,8 +70,9 @@ export async function getLastVisitedPlacesRequest(token, numberOfResults) {
   return await get(url, headers);
 }
 
+// searchPlacesRequest calls the server endpoint to search places
 export async function searchPlacesRequest(query) {
-  const url = BuildUrl(
+  const url = buildUrl(
     ServerUrlConstants.ServerBaseUrl,
     ServerUrlConstants.SearchPlacesUrl,
     `${encodeURIComponent(query)}`
