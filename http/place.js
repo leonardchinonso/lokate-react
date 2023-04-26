@@ -1,6 +1,6 @@
 import { ServerUrlConstants } from "../models/constants";
 import { buildUrl } from "../utils/utils";
-import { get, post, put } from "./requests";
+import { del, get, post, put } from "./requests";
 
 // getSavedPlacesRequest makes a http request to get saved places
 export async function getSavedPlacesRequest(token) {
@@ -53,6 +53,21 @@ export async function editSavedPlaceRequest(token, name, alias, placeId) {
   };
 
   return await put(url, headers, body);
+}
+
+// deleteSavedPlaceRequest calls the server endpoint to delete the saved place
+export async function deleteSavedPlaceRequest(token, savedPlaceId) {
+  const url = buildUrl(
+    ServerUrlConstants.ServerBaseUrl,
+    ServerUrlConstants.SavedPlacesUrl,
+    `${savedPlaceId}`
+  );
+
+  const headers = {
+    token: `Bearer ${token}`,
+  };
+
+  return await del(url, headers);
 }
 
 // getLastVisitedPlacesRequest calls the server endpoint to get the last visited places

@@ -106,7 +106,6 @@ function PickLocation({ action }) {
   ];
 
   function onSelectLocation(placeAlias) {
-    console.log("Place Alias: ", placeAlias);
     const location = {
       name: "",
       lon: null,

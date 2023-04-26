@@ -20,13 +20,11 @@ export async function editProfileRequest(
   };
 
   const body = {
-    firstName,
-    lastName,
+    first_name: firstName,
+    last_name: lastName,
     email,
-    phoneNumber,
+    phone_number: phoneNumber,
   };
-
-  console.log("Nothing so far");
 
   return await put(url, headers, body);
 }

@@ -17,62 +17,92 @@ import ErrorOverlay from "./components/ui/ErrorOverlay";
 import SettingsContextProvider, {
   SettingsContext,
 } from "./store/context/SettingsContext";
-import { getItemFromAsyncStorage } from "./store/asyncStorage/main";
+import { STORAGE } from "./models/constants";
+import { getItemsFromStorage } from "./store/on_device/main";
 
 function Navigation() {
   const authContext = useContext(AuthenticationContext);
 
   return (
     <NavigationContainer>
-      {authContext.isAuthenticated && <AuthenticationStackNavigation />}
-      {!authContext.isAuthenticated && <LandingBottomTabNavigator />}
+      {!authContext.authData.isAuthenticated && (
+        <AuthenticationStackNavigation />
+      )}
+      {authContext.authData.isAuthenticated && <LandingBottomTabNavigator />}
     </NavigationContainer>
   );
 }
 
 function Root() {
+  // get the authentication, settings and currentLocation contexts to store information in
   const authContext = useContext(AuthenticationContext);
   const settingsContext = useContext(SettingsContext);
-
   const currentLocationContext = useContext(CurrentLocationContext);
 
+  // create a state for when user is trying to log in to render splash screen
   const [isTryingLogin, setIsTryingLogin] = useState(true);
+
+  // create an error state to show error screen if there is a server error
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    async function fetchStorage() {
-      const storedItems = await getItemFromAsyncStorage();
+  // loadAuthenticationAndUserSettings loads all the configurations for a particular user
+  async function loadAuthenticationAndUserSettings(storageData) {
+    // build the authentication data to store in the context API for use throughout the app
+    const authData = {
+      userId: storageData.userId,
+      userFirstName: storageData.firstName,
+      userLastName: storageData.lastName,
+      userEmail: storageData.email,
+      userDisplayName: storageData.displayName,
+      userPhoneNumber: storageData.phoneNumber ? storageData.phoneNumber : "", // store empty if user does not have a phone yet
+      accessToken: storageData.accessToken,
+      refreshToken: storageData.refreshToken,
+    };
 
-      const authData = {
-        userId: storedItems.userId,
-        userEmail: storedItems.email,
-        userDisplayName: storedItems.displayName,
-        userPhoneNumber: storedItems.phoneNumber ? storedItems.phoneNumber : "", // store empty if user does not have a phone yet
-        accessToken: storedItems.accessToken,
-        refreshToken: storedItems.refreshToken,
-      };
+    // set the authentication data in the Authentication Context
+    authContext.setAuthData(authData, STORAGE);
 
-      const userSettingsData = {
-        appAppearance: storedItems.appAppearance,
-        appPrecision: storedItems.appPrecision,
-      };
+    // build the user settings data to store in the context API for use throughout the app
+    const userSettingsData = {
+      appAppearance: storageData.appAppearance,
+      appPrecision: storageData.appPrecision,
+    };
 
-      authContext.setAuthData(authData);
-      settingsContext.setAppAppearance(userSettingsData.appAppearance);
-      settingsContext.setAppPrecision(userSettingsData.appPrecision);
+    // set the settings data in the Settings Context
+    settingsContext.setAppAppearance(userSettingsData.appAppearance);
+    settingsContext.setAppPrecision(userSettingsData.appPrecision);
+  }
 
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        setError("Permission to access location was denied");
-        return;
-      }
+  // fetchStorage fetches stored on-Device information and loads them in the context
+  async function fetchStorage() {
+    // get the authentication details from the chosen on-Device storage
+    const storedItems = await getItemsFromStorage(STORAGE);
 
-      let currentLocation = await Location.getCurrentPositionAsync({});
-      currentLocationContext.setLocation(currentLocation.coords);
-
-      await new Promise((resolve) => setTimeout(resolve, 3000));
+    // if an access token is stored, it means logged in, configure authentication and app settings
+    if (storedItems.accessToken) {
+      await loadAuthenticationAndUserSettings(storedItems);
     }
 
+    // request the user's current location with the Location API
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== "granted") {
+      setError("Permission to access location was denied");
+      return;
+    }
+
+    // get the user's current position in lon/lat format
+    let currentLocation = await Location.getCurrentPositionAsync({});
+
+    // set the current position in the CurrentLocation Context for use throughout the app
+    currentLocationContext.setLocation(currentLocation.coords);
+
+    // simulate app loading and give time for promises to return
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+  }
+
+  useEffect(() => {
+    // once the storage is fetched and context is loaded,
+    // set the login trying state to false to mark the end of preprocessing
     fetchStorage().then(() => {
       setIsTryingLogin(false);
     });
@@ -100,9 +130,7 @@ export default function App() {
         <SavedPlaceContextProvider>
           <RouteContextProvider>
             <SettingsContextProvider>
-              {/*<CommsContextProvider>*/}
               <Root />
-              {/*</CommsContextProvider>*/}
             </SettingsContextProvider>
           </RouteContextProvider>
         </SavedPlaceContextProvider>

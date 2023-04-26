@@ -29,9 +29,7 @@ export function getTimeInMeridian(time) {
 }
 
 export function isValidEmail(emailAddress) {
-  console.log("Here 1A: ", emailAddress);
   let regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-  console.log("Here 1B");
   return !!emailAddress.match(regex);
 }
 

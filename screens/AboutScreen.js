@@ -3,7 +3,6 @@ import { Header } from "../styles/text";
 import TextString from "../components/ui/TextString";
 import Colors from "../styles/colors";
 import { useContext, useEffect, useState } from "react";
-import { CommsContext } from "../store/context/CommsContext";
 import { about } from "../services/commsService";
 import { HttpStatusCodes } from "../models/constants";
 import ErrorOverlay from "../components/ui/ErrorOverlay";

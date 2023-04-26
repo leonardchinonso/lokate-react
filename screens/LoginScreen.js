@@ -6,14 +6,22 @@ import Colors from "../styles/colors";
 import TextString from "../components/ui/TextString";
 import TextInputBox from "../components/ui/TextInputBox";
 import PasswordInputBox from "../components/ui/PasswordInputBox";
-import { HttpStatusCodes, ScreenNameConstants } from "../models/constants";
+import {
+  HttpStatusCodes,
+  ScreenNameConstants,
+  STORAGE,
+} from "../models/constants";
 import ErrorOverlay from "../components/ui/ErrorOverlay";
 import { AuthenticationContext } from "../store/context/AuthenticationContext";
 import { login } from "../services/authService";
+import LoadingOverlay from "../components/ui/LoadingOverlay";
 
 function LoginScreen({ navigation }) {
   // get the authentication context to manage the token
   const authContext = useContext(AuthenticationContext);
+
+  // create a state for the loading screen when logging in
+  const [isLoading, setIsLoading] = useState(false);
 
   const [error, setError] = useState("");
   const [loginDetails, setLoginDetails] = useState({
@@ -44,11 +52,15 @@ function LoginScreen({ navigation }) {
 
   // loginHandler handles the call to the login service
   async function loginHandler() {
+    setIsLoading(true);
+
     // call the login service to handle the login request
     const response = await login(
       loginDetails.email.value,
       loginDetails.password.value
     );
+
+    setIsLoading(false);
 
     // if the email or password have errors, update the state with the errors and return
     if (response.emailError || response.passwordError) {
@@ -89,12 +101,20 @@ function LoginScreen({ navigation }) {
       const data = {
         userId: response.userId,
         userEmail: response.userEmail,
+        userFirstName: response.userFirstName,
+        userLastName: response.userLastName,
         userDisplayName: response.userDisplayName,
+        userPhoneNumber: response.userPhoneNumber,
         accessToken: response.accessToken,
         refreshToken: response.refreshToken,
       };
-      authContext.setAuthData(data);
+      authContext.setAuthData(data, STORAGE);
     }
+  }
+
+  // show loading overlay when login is clicked
+  if (isLoading) {
+    return <LoadingOverlay />;
   }
 
   // dismissError dismisses the error view

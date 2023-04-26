@@ -10,11 +10,12 @@ import {
   ConfigConstants,
   EmailSubjectConstants,
   HttpStatusCodes,
-  ScreenNameConstants,
 } from "../models/constants";
 import { SelectList } from "react-native-dropdown-select-list/index";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { contactUs } from "../services/commsService";
+import LoadingOverlay from "../components/ui/LoadingOverlay";
+import { useNavigation } from "@react-navigation/native";
 
 const subjectData = [
   { key: "1", value: EmailSubjectConstants.BusinessProposal },
@@ -25,6 +26,10 @@ const subjectData = [
 
 function ContactUsScreen() {
   const authContext = useContext(AuthenticationContext);
+  const navigation = useNavigation();
+
+  // create a state to manage the loading state of the app
+  const [isLoading, setIsLoading] = useState(false);
 
   // create a state to manage the message input
   const [message, setMessage] = useState("");
@@ -40,6 +45,11 @@ function ContactUsScreen() {
   // messageInputHandler handles input into the message text box
   function messageInputHandler(enteredText) {
     setMessage(enteredText);
+  }
+
+  // onClick is called when user clicks OK on the alert box
+  function onClickOk() {
+    navigation.goBack();
   }
 
   // process response handles the response from the service
@@ -65,11 +75,14 @@ function ContactUsScreen() {
 
     // if the request comes back with a 200
     if (response.status === HttpStatusCodes.StatusOk) {
-      Alert.alert("Successful!", "Message sent successfully");
+      Alert.alert("Email sent", "", [{ text: "OK", onPress: onClickOk }]);
     }
   }
 
   async function onSend() {
+    // let the app load while message is being sent
+    setIsLoading(true);
+
     // call the organization service to contact the organization
     const response = await contactUs(
       authContext.authData.accessToken,
@@ -77,8 +90,16 @@ function ContactUsScreen() {
       message
     );
 
+    // set the loading screen to done when the response returns
+    setIsLoading(false);
+
     // process the response from the service
     processResponse(response);
+  }
+
+  // if the email is being sent, display the loading screen
+  if (isLoading) {
+    return <LoadingOverlay />;
   }
 
   return (

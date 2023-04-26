@@ -84,7 +84,7 @@ export const ServerUrlConstants = {
   LastVisitedPlacesUrl: "places/last/",
   SearchPlacesUrl: "places/search?query=",
   JourneyLonLatUrl: "journey/lonlat?",
-  EditProfileUrl: "user/edit-profile",
+  EditProfileUrl: "user/update-profile",
   ContactUsUrl: "comms/contact-us",
   AboutUrl: "comms/about",
 };
@@ -99,10 +99,16 @@ export const ConfigConstants = {
   StorageAccessToken: "access_token",
   StorageRefreshToken: "refresh_token",
   StorageUserId: "user_id",
+  StorageUserFirstName: "user_first_name",
+  StorageUserLastName: "user_last_name",
   StorageUserEmail: "user_email",
   StorageUserDisplayName: "user_display_name",
   StorageUserPhoneNumber: "user_phone_number",
   StorageAppAppearance: "app_appearance",
   StorageAppPrecision: "app_precision",
   StorageAboutText: "about_text",
+  MongoStorage: "mongo_storage",
+  AsyncStorage: "async_storage",
 };
+
+export const STORAGE = ConfigConstants.AsyncStorage; // can be AsyncStorage

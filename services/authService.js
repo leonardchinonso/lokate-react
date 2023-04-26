@@ -7,8 +7,11 @@ import { loginRequest, signupRequest } from "../http/authentication";
 export async function login(email, password) {
   const result = {
     userId: "",
+    userFirstName: "",
+    userLastName: "",
     userEmail: "",
     userDisplayName: "",
+    userPhoneNumber: "",
     accessToken: "",
     refreshToken: "",
     error: "",
@@ -51,10 +54,13 @@ export async function login(email, password) {
         result.status = HttpStatusCodes.StatusOk;
         result.userId = response.data.data.user.id;
         result.userEmail = response.data.data.user.email;
+        result.userFirstName = response.data.data.user.first_name;
+        result.userLastName = response.data.data.user.last_name;
         result.userDisplayName =
           response.data.data.user.first_name +
           " " +
           response.data.data.user.last_name;
+        result.userPhoneNumber = response.data.data.user.phone_number;
         result.accessToken = response.data.data.access_token;
         result.refreshToken = response.data.data.refresh_token;
         return result;
@@ -75,6 +81,8 @@ export async function signup(
 ) {
   const result = {
     userId: "",
+    userFirstName: "",
+    userLastName: "",
     userEmail: "",
     userDisplayName: "",
     accessToken: "",
@@ -132,6 +140,8 @@ export async function signup(
         result.status = HttpStatusCodes.StatusOk;
         result.userId = response.data.data.user.id;
         result.userEmail = response.data.data.user.email;
+        result.userFirstName = response.data.data.user.first_name;
+        result.userLastName = response.data.data.user.last_name;
         result.userDisplayName =
           response.data.data.user.first_name +
           " " +

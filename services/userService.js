@@ -12,6 +12,12 @@ export async function editProfile(
   phoneNumber
 ) {
   const result = {
+    userId: "",
+    userFirstName: "",
+    userLastName: "",
+    userEmail: "",
+    userDisplayName: "",
+    userPhoneNumber: "",
     error: "",
     emailError: "",
     status: 0,
@@ -51,6 +57,13 @@ export async function editProfile(
         return result;
       case HttpStatusCodes.StatusOk: // if the request is successful
         result.status = HttpStatusCodes.StatusOk;
+        result.userId = response.data.data.id;
+        result.userEmail = response.data.data.email;
+        result.userFirstName = response.data.data.first_name;
+        result.userLastName = response.data.data.last_name;
+        result.userDisplayName =
+          response.data.data.first_name + " " + response.data.data.last_name;
+        result.userPhoneNumber = response.data.data.phone_number;
         return result;
       case HttpStatusCodes.StatusBadRequest:
         result.status = HttpStatusCodes.StatusBadRequest;
@@ -61,6 +74,4 @@ export async function editProfile(
         return result;
     }
   }
-
-  console.log("Leaving: ", response);
 }

@@ -1,20 +1,22 @@
 import { useContext, useState } from "react";
 
 import TextString from "../components/ui/TextString";
-import { SafeAreaView, StyleSheet, View } from "react-native";
+import { Alert, SafeAreaView, StyleSheet, View } from "react-native";
 import Colors from "../styles/colors";
 import { SelectList } from "react-native-dropdown-select-list/index";
 import PrimaryButton from "../components/ui/PrimaryButton";
 import { AppearanceConstants, PrecisionConstants } from "../models/constants";
 import { SettingsContext } from "../store/context/SettingsContext";
+import { useNavigation } from "@react-navigation/native";
 
 function SettingsScreen() {
   const settingsContext = useContext(SettingsContext);
+  const navigation = useNavigation();
 
-  const [selectedPrecision, setSelectedPrecision] = useState(
+  const [selectedAppearance, setSelectedAppearance] = useState(
     settingsContext.appAppearance
   );
-  const [selectedAppearance, setSelectedAppearance] = useState(
+  const [selectedPrecision, setSelectedPrecision] = useState(
     settingsContext.appPrecision
   );
 
@@ -28,10 +30,17 @@ function SettingsScreen() {
     { key: "2", value: PrecisionConstants.Exact },
   ];
 
+  function onClickOk() {
+    navigation.goBack();
+  }
+
   // onSave saves the user settings to the onDevice storage
   function onSave() {
     settingsContext.setAppAppearance(selectedAppearance);
     settingsContext.setAppPrecision(selectedPrecision);
+    Alert.alert("Settings saved successfully", "", [
+      { text: "OK", onPress: onClickOk },
+    ]);
   }
 
   return (

@@ -64,7 +64,6 @@ function ModifyPlaceScreen({ action, route }) {
     // if the request comes back with a 401, log user out
     if (response.status === HttpStatusCodes.StatusUnauthorized) {
       authContext.unSetAuthData();
-      AsyncStorage.removeItem(ConfigConstants.StorageAccessToken).then();
       return;
     }
 

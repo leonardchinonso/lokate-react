@@ -1,4 +1,3 @@
-import { Header } from "../styles/text";
 import TextString from "../components/ui/TextString";
 import { StyleSheet, View } from "react-native";
 import Colors from "../styles/colors";
@@ -6,16 +5,12 @@ import PrimaryButton from "../components/ui/PrimaryButton";
 import { useNavigation } from "@react-navigation/native";
 import { useContext } from "react";
 import { AuthenticationContext } from "../store/context/AuthenticationContext";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ConfigConstants } from "../models/constants";
 
 function LogoutScreen() {
   const authContext = useContext(AuthenticationContext);
   const navigation = useNavigation();
 
   function onClickYes() {
-    AsyncStorage.removeItem(ConfigConstants.StorageAccessToken).then();
-    AsyncStorage.removeItem(ConfigConstants.StorageRefreshToken).then();
     authContext.unSetAuthData();
   }
 

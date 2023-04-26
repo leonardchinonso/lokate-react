@@ -72,14 +72,17 @@ function ProfileScreen() {
           <View style={styles.textContainer}>
             <Title>{authContext.authData.userDisplayName}</Title>
             <Caption>{authContext.authData.userEmail}</Caption>
+            {authContext.authData.userPhoneNumber && (
+              <Caption>{authContext.authData.userPhoneNumber}</Caption>
+            )}
           </View>
         </View>
 
         <View
           style={{
             marginLeft: "10%",
-            marginVertical: "10%",
-            marginBottom: "20%",
+            marginTop: "10%",
+            marginBottom: "10%",
           }}
         >
           {profileActions.map((datum, index) => (
@@ -108,7 +111,6 @@ function ProfileScreen() {
             profileActionHandler(ScreenNameConstants.LogoutScreenName)
           }
           customStyles={{
-            marginTop: "5%",
             marginHorizontal: "30%",
             backgroundColor: Colors.primaryRed,
           }}

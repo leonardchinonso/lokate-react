@@ -1,10 +1,13 @@
 import { createContext, useState } from "react";
 import {
   AppearanceConstants,
-  ConfigConstants,
   PrecisionConstants,
+  STORAGE,
 } from "../../models/constants";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import {
+  setAppearanceDataInStorage,
+  setPrecisionDataInStorage,
+} from "../on_device/main";
 
 export const SettingsContext = createContext({
   appAppearance: AppearanceConstants.LightMode,
@@ -25,19 +28,19 @@ function SettingsContextProvider({ children }) {
   function setAppearanceHandler(appearance) {
     setAppearance(appearance);
     // save the set appearance to the on device storage
-    AsyncStorage.setItem(ConfigConstants.StorageAppAppearance, appearance);
+    setAppearanceDataInStorage(appearance, STORAGE);
   }
 
   // setPrecisionHandler handles setting the precision state
   function setPrecisionHandler(precision) {
     setPrecision(precision);
     // save the set precision to the on device storage
-    AsyncStorage.setItem(ConfigConstants.StorageAppPrecision, precision);
+    setPrecisionDataInStorage(precision, STORAGE);
   }
 
   const value = {
-    appearance: appearance,
-    precision: precision,
+    appAppearance: appearance,
+    appPrecision: precision,
     setAppAppearance: setAppearanceHandler,
     setAppPrecision: setPrecisionHandler,
   };

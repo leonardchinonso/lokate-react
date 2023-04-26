@@ -6,11 +6,7 @@ import PrimaryButton from "../components/ui/PrimaryButton";
 import { useContext, useState } from "react";
 import { AuthenticationContext } from "../store/context/AuthenticationContext";
 import { editProfile } from "../services/userService";
-import {
-  ConfigConstants,
-  HttpStatusCodes,
-  ScreenNameConstants,
-} from "../models/constants";
+import { ConfigConstants, HttpStatusCodes, STORAGE } from "../models/constants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import ErrorOverlay from "../components/ui/ErrorOverlay";
@@ -22,14 +18,10 @@ function EditProfileScreen() {
   // create a state for the server error display
   const [error, setError] = useState("");
 
-  // get the user first name and last name
-  const [currentFirstName, currentLastName] =
-    authContext.authData.userDisplayName.split(" ");
-
   // create a state variable to hold the form details for the user profile
   const [profileDetails, setProfileDetails] = useState({
-    firstName: currentFirstName,
-    lastName: currentLastName,
+    firstName: authContext.authData.userFirstName,
+    lastName: authContext.authData.userLastName,
     phoneNumber: authContext.authData.userPhoneNumber,
     email: {
       value: authContext.authData.userEmail,
@@ -74,7 +66,6 @@ function EditProfileScreen() {
     // if the request comes back with a 401, log user out
     if (response.status === HttpStatusCodes.StatusUnauthorized) {
       authContext.unSetAuthData();
-      AsyncStorage.removeItem(ConfigConstants.StorageAccessToken).then();
       return;
     }
 
@@ -86,6 +77,17 @@ function EditProfileScreen() {
 
     // if the request comes back with a 200
     if (response.status === HttpStatusCodes.StatusOk) {
+      const data = {
+        userId: response.userId,
+        userEmail: response.userEmail,
+        userFirstName: response.userFirstName,
+        userLastName: response.userLastName,
+        userDisplayName: response.userDisplayName,
+        userPhoneNumber: response.userPhoneNumber,
+        accessToken: authContext.authData.accessToken,
+        refreshToken: authContext.authData.refreshToken,
+      };
+      authContext.setAuthData(data, STORAGE);
       Alert.alert("Successful!", "Profile updated successfully");
       navigation.goBack();
     }
@@ -179,7 +181,7 @@ function EditProfileScreen() {
           </TextString>
           <TextInputBox
             placeholder={
-              profileDetails.phoneNumber ? "phone" : profileDetails.phoneNumber
+              profileDetails.phoneNumber ? profileDetails.phoneNumber : "phone"
             }
             contentType={"telephoneNumber"}
             onChange={inputHandler.bind(this, "phoneNumber")}

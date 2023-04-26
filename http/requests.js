@@ -92,3 +92,32 @@ export async function put(url, headers, body) {
   response.data = resp.data;
   return response;
 }
+
+// del makes a DELETE request to the given url
+export async function del(url, headers) {
+  console.log(
+    `Making a DELETE request to url: ${url} with headers: ${headers}`
+  );
+  const response = {
+    serverError: null,
+  };
+
+  let [err, resp] = await catchErr(
+    axios.delete(url, {
+      validateStatus: function (status) {
+        return status < 500;
+      },
+      headers,
+    })
+  );
+
+  if (err) {
+    console.log("Error fetching request with url: ", url, ". Error: ", err);
+    response.serverError = err;
+    return response;
+  }
+
+  console.log("Request hit server successfully");
+  response.data = resp.data;
+  return response;
+}

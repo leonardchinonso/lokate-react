@@ -5,13 +5,20 @@ import TextString from "../components/ui/TextString";
 import SavedPlaceCard from "../components/ui/SavedPlaceCard";
 import { useContext, useEffect, useState } from "react";
 import { AuthenticationContext } from "../store/context/AuthenticationContext";
-import { ConfigConstants, HttpStatusCodes } from "../models/constants";
+import {
+  ConfigConstants,
+  HttpStatusCodes,
+  ScreenNameConstants,
+} from "../models/constants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ErrorOverlay from "../components/ui/ErrorOverlay";
 import { getSavedPlaces } from "../services/placeService";
 import { SavedPlaceContext } from "../store/context/SavedPlaceContext";
+import { useNavigation } from "@react-navigation/native";
 
 function SavedPlacesScreen({ route }) {
+  const navigation = useNavigation();
+
   const authContext = useContext(AuthenticationContext);
   const savedPlaceContext = useContext(SavedPlaceContext);
 
@@ -41,7 +48,8 @@ function SavedPlacesScreen({ route }) {
     // if the request comes back with a 401, log user out
     if (response.status === HttpStatusCodes.StatusUnauthorized) {
       authContext.unSetAuthData();
-      AsyncStorage.removeItem(ConfigConstants.StorageAccessToken).then();
+      // AsyncStorage.removeItem(ConfigConstants.StorageAccessToken).then();
+      // navigation.navigate(ScreenNameConstants.LoginScreenName);
       return;
     }
 

@@ -8,7 +8,7 @@ import { useContext, useState } from "react";
 import PasswordInputBox from "../components/ui/PasswordInputBox";
 import ErrorOverlay from "../components/ui/ErrorOverlay";
 import { signup } from "../services/authService";
-import { HttpStatusCodes } from "../models/constants";
+import { HttpStatusCodes, STORAGE } from "../models/constants";
 import { AuthenticationContext } from "../store/context/AuthenticationContext";
 
 function SignupScreen({ navigation }) {
@@ -121,12 +121,14 @@ function SignupScreen({ navigation }) {
     if (response.status === HttpStatusCodes.StatusOk) {
       const data = {
         userId: response.userId,
+        userFirstName: response.userFirstName,
+        userLastName: response.userLastName,
         userEmail: response.userEmail,
         userDisplayName: response.userDisplayName,
         accessToken: response.accessToken,
         refreshToken: response.refreshToken,
       };
-      authContext.setAuthData(data);
+      authContext.setAuthData(data, STORAGE);
     }
   }
 
