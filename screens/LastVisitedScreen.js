@@ -9,6 +9,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import ErrorOverlay from "../components/ui/ErrorOverlay";
 
 function LastVisitedScreen() {
+  // get the authentication context for auth information
   const authContext = useContext(AuthenticationContext);
 
   const [lastVisitedPlaces, setLastVisitedPlaces] = useState({

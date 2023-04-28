@@ -11,6 +11,8 @@ import { useNavigation } from "@react-navigation/native";
 
 function SettingsScreen() {
   const settingsContext = useContext(SettingsContext);
+
+  // get the navigation hook instance for moving through components
   const navigation = useNavigation();
 
   const [selectedAppearance, setSelectedAppearance] = useState(

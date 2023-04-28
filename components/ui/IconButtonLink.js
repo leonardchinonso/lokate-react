@@ -1,3 +1,7 @@
+/**
+ * IconButtonLink is the custom component for rendering clickable links
+ **/
+
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import Colors from "../../styles/colors";
 
@@ -17,6 +21,7 @@ function IconButtonLink({ children, onPress, icon }) {
 
 export default IconButtonLink;
 
+// styles is the general stylesheet
 const styles = StyleSheet.create({
   container: {
     marginVertical: 5,

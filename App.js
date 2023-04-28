@@ -21,6 +21,7 @@ import { STORAGE } from "./models/constants";
 import { getItemsFromStorage } from "./store/on_device/main";
 
 function Navigation() {
+  // get the authentication context for auth information
   const authContext = useContext(AuthenticationContext);
 
   return (

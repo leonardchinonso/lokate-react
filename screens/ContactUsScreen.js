@@ -25,7 +25,10 @@ const subjectData = [
 ];
 
 function ContactUsScreen() {
+  // get the authentication context for auth information
   const authContext = useContext(AuthenticationContext);
+
+  // get the navigation hook instance for moving through components
   const navigation = useNavigation();
 
   // create a state to manage the loading state of the app

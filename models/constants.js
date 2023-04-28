@@ -1,3 +1,8 @@
+/**
+ * This file holds on constants that are reused throughout the app
+ * */
+
+// HomepageDestinationConstants holds the constants for the homepage
 export const HomepageDestinationConstants = {
   GoSomewhere: "go_somewhere",
   GoHome: "go_home",
@@ -7,6 +12,7 @@ export const HomepageDestinationConstants = {
   Location: "location",
 };
 
+// ProfileConstants holds the constants for the profile
 export const ProfileConstants = {
   EditProfile: "edit_profile",
   SavedPlaces: "saved_places",
@@ -16,22 +22,29 @@ export const ProfileConstants = {
   Logout: "logout",
 };
 
+// UseAsConstants holds constants for the place aliases
 export const UseAsConstants = {
   None: "NONE",
   Home: "HOME",
   Work: "WORK",
 };
 
+// AppearanceConstants holds constants for the
+// app appearance in user settings
 export const AppearanceConstants = {
   LightMode: "Light Mode",
   DarkMode: "Dark Mode",
 };
 
+// PrecisionConstants holds constants for the
+// app precision in user settings
 export const PrecisionConstants = {
   Approximate: "Approximate",
   Exact: "Exact",
 };
 
+// EmailSubjectConstants holds constants for the
+// reasons drop down in contactUs
 export const EmailSubjectConstants = {
   BusinessProposal: "Business Proposal",
   FeatureRequest: "Feature Request",
@@ -39,12 +52,16 @@ export const EmailSubjectConstants = {
   Other: "Other",
 };
 
+// TransportModeConstants holds constants for the
+// various transport modes
 export const TransportModeConstants = {
   Bus: "bus",
   Walk: "walking",
   Train: "train",
 };
 
+// ScreenNameConstants holds constants for the
+// screen names and their navigation
 export const ScreenNameConstants = {
   HomepageScreenName: "homepage_screen",
   PickStartLocationScreenName: "pick_start_location_screen",
@@ -67,6 +84,8 @@ export const ScreenNameConstants = {
   AboutScreenName: "about_screen_name",
 };
 
+// NavigatorNameConstants holds constants for the
+// navigator containers in the navigation screens
 export const NavigatorNameConstants = {
   PlacesNavigatorName: "places_navigator",
   ProfileNavigatorName: "profile_navigator",
@@ -76,6 +95,8 @@ export const NavigatorNameConstants = {
   AuthenticationNavigatorName: "authentication_navigator",
 };
 
+// ServerUrlConstants holds constants for the
+// urls for http requests
 export const ServerUrlConstants = {
   ServerBaseUrl: "http://192.168.0.144:8080/v1/",
   LoginUrl: "auth/login/",
@@ -89,12 +110,14 @@ export const ServerUrlConstants = {
   AboutUrl: "comms/about",
 };
 
+// HttpStatusCodes holds constants for status codes
 export const HttpStatusCodes = {
   StatusOk: 200,
   StatusBadRequest: 400,
   StatusUnauthorized: 401,
 };
 
+// ConfigConstants holds the configured storage constants
 export const ConfigConstants = {
   StorageAccessToken: "access_token",
   StorageRefreshToken: "refresh_token",
@@ -111,4 +134,5 @@ export const ConfigConstants = {
   AsyncStorage: "async_storage",
 };
 
+// STORAGE holds the current onDevice storage choice
 export const STORAGE = ConfigConstants.AsyncStorage; // can be AsyncStorage

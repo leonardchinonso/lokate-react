@@ -7,7 +7,10 @@ import { useContext } from "react";
 import { AuthenticationContext } from "../store/context/AuthenticationContext";
 
 function LogoutScreen() {
+  // get the authentication context for auth information
   const authContext = useContext(AuthenticationContext);
+
+  // get the navigation hook instance for moving through components
   const navigation = useNavigation();
 
   function onClickYes() {

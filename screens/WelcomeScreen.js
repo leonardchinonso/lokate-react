@@ -12,6 +12,7 @@ import Colors from "../styles/colors";
 import TextString from "../components/ui/TextString";
 
 function WelcomeScreen() {
+  // get the navigation hook instance for moving through components
   const navigation = useNavigation();
 
   function goToSignup() {

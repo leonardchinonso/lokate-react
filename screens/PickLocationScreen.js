@@ -3,14 +3,11 @@ import {
   SafeAreaView,
   ScrollView,
   StyleSheet,
-  Text,
   View,
 } from "react-native";
 import Colors from "../styles/colors";
 import TextInputBox from "../components/ui/TextInputBox";
 import { useContext, useState } from "react";
-import Card from "../components/ui/Card";
-import TextString from "../components/ui/TextString";
 import {
   HomepageDestinationConstants,
   NavigatorNameConstants,
@@ -31,6 +28,7 @@ function PickLocation({ action }) {
   const currentLocationContext = useContext(CurrentLocationContext);
   const savedPlacesContext = useContext(SavedPlaceContext);
 
+  // get the navigation hook instance for moving through components
   const navigation = useNavigation();
 
   const [searchQuery, setSearchQuery] = useState("");

@@ -5,9 +5,12 @@ import { useNavigation } from "@react-navigation/native";
 import { ScreenNameConstants } from "../../models/constants";
 import Colors from "../../styles/colors";
 
+// LastVisitedCard is the component for holding a single last visited place
 function LastVisitedCard({ children }) {
+  // get the navigation hook to route to another component
   const navigation = useNavigation();
 
+  // onAdd is a function to handle saving a place
   function onAdd() {
     navigation.navigate(ScreenNameConstants.AddSavedPlaceScreen, {
       placeId: children.id,
@@ -16,7 +19,7 @@ function LastVisitedCard({ children }) {
   }
 
   return (
-    <ItemCard customStyles={itemCardCustomStyles.container}>
+    <ItemCard customStyles={styles.container}>
       <TextString textStyle={{ color: Colors.primaryWhite }}>
         {children.name}
       </TextString>
@@ -29,7 +32,8 @@ function LastVisitedCard({ children }) {
 
 export default LastVisitedCard;
 
-const itemCardCustomStyles = StyleSheet.create({
+// style sheet for the component
+const styles = StyleSheet.create({
   container: {
     marginVertical: "2%",
     flexDirection: "row",

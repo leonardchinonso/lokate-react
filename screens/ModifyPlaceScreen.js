@@ -20,6 +20,7 @@ import ErrorOverlay from "../components/ui/ErrorOverlay";
 import { savePlace } from "../services/placeService";
 
 function ModifyPlaceScreen({ action, route }) {
+  // get the navigation hook instance for moving through components
   const navigation = useNavigation();
 
   const renderDetails = {
@@ -37,6 +38,7 @@ function ModifyPlaceScreen({ action, route }) {
     renderDetails.placeId = route.params.placeId;
   }
 
+  // get the authentication context for auth information
   const authContext = useContext(AuthenticationContext);
   const token = authContext.authData.accessToken;
 

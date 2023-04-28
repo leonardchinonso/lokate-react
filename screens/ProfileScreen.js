@@ -48,7 +48,10 @@ function imagePick() {
 }
 
 function ProfileScreen() {
+  // get the authentication context for auth information
   const authContext = useContext(AuthenticationContext);
+
+  // get the navigation hook instance for moving through components
   const navigation = useNavigation();
 
   // profileActionHandler navigates to the provided route

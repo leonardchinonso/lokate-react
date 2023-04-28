@@ -22,6 +22,7 @@ function JourneyResultScreen() {
   const startLocation = routeContext.startLocation;
   const endLocation = routeContext.endLocation;
 
+  // get the navigation hook instance for moving through components
   const navigation = useNavigation();
 
   const [isLoading, setIsLoading] = useState(true);

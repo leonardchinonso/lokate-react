@@ -12,7 +12,10 @@ import { useNavigation } from "@react-navigation/native";
 import ErrorOverlay from "../components/ui/ErrorOverlay";
 
 function EditProfileScreen() {
+  // get the authentication context for auth information
   const authContext = useContext(AuthenticationContext);
+
+  // get the navigation hook instance for moving through components
   const navigation = useNavigation();
 
   // create a state for the server error display

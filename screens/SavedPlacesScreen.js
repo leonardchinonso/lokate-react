@@ -17,8 +17,7 @@ import { SavedPlaceContext } from "../store/context/SavedPlaceContext";
 import { useNavigation } from "@react-navigation/native";
 
 function SavedPlacesScreen({ route }) {
-  const navigation = useNavigation();
-
+  // get the authentication context for auth information
   const authContext = useContext(AuthenticationContext);
   const savedPlaceContext = useContext(SavedPlaceContext);
 

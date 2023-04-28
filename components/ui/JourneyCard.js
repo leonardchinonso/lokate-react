@@ -4,6 +4,7 @@ import TextString from "./TextString";
 import { AntDesign, FontAwesome5, Ionicons } from "@expo/vector-icons";
 import Colors from "../../styles/colors";
 
+// JourneyCard is the component for holding a route information
 function JourneyCard({ transportModes, journeyTime, pressable }) {
   return (
     <ItemCard
@@ -12,13 +13,7 @@ function JourneyCard({ transportModes, journeyTime, pressable }) {
     >
       <View style={itemCardCustomStyles.vehicleSection}>
         {transportModes.map((mode, index) => (
-          <View
-            style={{
-              flexDirection: "row",
-              // backgroundColor: Colors.primaryWhite,
-            }}
-            key={index}
-          >
+          <View style={{ flexDirection: "row" }} key={index}>
             {mode === "tube" ? (
               <Ionicons name={"subway"} size={24} color={Colors.primaryWhite} />
             ) : (
@@ -50,6 +45,7 @@ function JourneyCard({ transportModes, journeyTime, pressable }) {
 
 export default JourneyCard;
 
+// style sheet for journey card component
 const itemCardCustomStyles = StyleSheet.create({
   container: {
     flexDirection: "row",

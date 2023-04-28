@@ -1,6 +1,7 @@
 import { Pressable, Text, StyleSheet, View } from "react-native";
 import Colors from "../../styles/colors";
 
+// PrimaryButtonLink is the component for clickable links throughout the application
 function PrimaryButtonLink({ children, style, textStyle, onPress }) {
   return (
     <Pressable
@@ -14,6 +15,7 @@ function PrimaryButtonLink({ children, style, textStyle, onPress }) {
 
 export default PrimaryButtonLink;
 
+// style sheet for the component
 const styles = StyleSheet.create({
   buttonText: {
     color: Colors.primaryWhite,
