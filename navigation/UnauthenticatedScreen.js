@@ -4,8 +4,11 @@ import LoginScreen from "../screens/LoginScreen";
 import SignupScreen from "../screens/SignupScreen";
 import WelcomeScreen from "../screens/WelcomeScreen";
 
+// create a stack navigator
 const Stack = createNativeStackNavigator();
 
+// AuthenticationStackNavigation is the stack navigator for the
+// authentication screens
 export function AuthenticationStackNavigation() {
   return (
     <Stack.Navigator>

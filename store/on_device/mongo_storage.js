@@ -1,3 +1,7 @@
+/**
+ * This file holds the implementation for accessing MongoStorage
+ * */
+
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Datastore from "react-native-local-mongodb";
 

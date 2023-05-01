@@ -5,9 +5,12 @@ import { useState } from "react";
 import SavedPlacesScreen from "./SavedPlacesScreen";
 import LastVisitedScreen from "./LastVisitedScreen";
 
+// PlacesScreen component renders the places screen
 function PlacesScreen({ route }) {
+  // create a state to determine the screen to render; saved screen or last visited
   const [isSaved, setIsSaved] = useState(true);
 
+  // onToggle switches between the last visited screen and saved places screen
   function onToggle() {
     setIsSaved(!isSaved);
   }
@@ -57,6 +60,7 @@ function PlacesScreen({ route }) {
 
 export default PlacesScreen;
 
+// rootStyles is the style sheet for the main component
 const rootStyles = StyleSheet.create({
   container: {
     flex: 1,
@@ -65,6 +69,7 @@ const rootStyles = StyleSheet.create({
   },
 });
 
+// box is the stylesheet for the contained screen
 const box = StyleSheet.create({
   container: {
     flexDirection: "row",
@@ -95,6 +100,7 @@ const box = StyleSheet.create({
   buttonText: { color: Colors.primaryBlack, fontWeight: "normal" },
 });
 
+// content is the stylesheet for the content in the sub screen
 const content = StyleSheet.create({
   container: {
     paddingTop: 20,

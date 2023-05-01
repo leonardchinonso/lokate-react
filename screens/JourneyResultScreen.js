@@ -12,25 +12,34 @@ import { useContext, useEffect, useState } from "react";
 import JourneyCard from "../components/ui/JourneyCard";
 import { RouteContext } from "../store/context/RouteContext";
 import { HttpStatusCodes, ScreenNameConstants } from "../models/constants";
-import { getJourney, modifyRouteInfo } from "../services/journeyService";
+import { getJourney, formatRouteData } from "../services/journeyService";
 import ErrorOverlay from "../components/ui/ErrorOverlay";
 import { useNavigation } from "@react-navigation/native";
 import LoadingOverlay from "../components/ui/LoadingOverlay";
 
+// JourneyResultScreen is the component for rendering journey results
 function JourneyResultScreen() {
-  const routeContext = useContext(RouteContext);
-  const startLocation = routeContext.startLocation;
-  const endLocation = routeContext.endLocation;
-
   // get the navigation hook instance for moving through components
   const navigation = useNavigation();
 
+  // get the route context to use stored route data
+  const routeContext = useContext(RouteContext);
+
+  // get the start and end locations from the route context
+  const { startLocation, endLocation } = routeContext;
+
+  // create a state to monitor the loading state of the app
   const [isLoading, setIsLoading] = useState(true);
+
+  // create a state to manage the route information
   const [routesData, setRoutes] = useState({
     routes: [],
   });
+
+  // create an error state to manage unexpected errors
   const [error, setError] = useState("");
 
+  // setRoutesHandler sets the route information
   function setRoutesHandler(routes) {
     setRoutes(() => {
       return {
@@ -39,7 +48,9 @@ function JourneyResultScreen() {
     });
   }
 
+  // onSelectRoute handles clicking on a single route item
   function onSelectRoute(route) {
+    // navigate to the route result screen of the selected route
     navigation.navigate(ScreenNameConstants.RouteResultScreenName, {
       singleRoute: route,
       transportModes: route.transportModes,
@@ -47,10 +58,10 @@ function JourneyResultScreen() {
     });
   }
 
+  // retrieveJourney retrieves a journey given the start and end locations
   async function retrieveJourney(startLocation, endLocation) {
     // get the journey results from the journeyService
     const response = await getJourney(startLocation, endLocation);
-    // const response = {};
 
     // if it comes back with a server error, display the error view
     if (response.error) {
@@ -66,7 +77,9 @@ function JourneyResultScreen() {
 
     // if the request comes back with a 200
     if (response.status === HttpStatusCodes.StatusOk) {
-      let routes = modifyRouteInfo(response.journeyResults.routes);
+      // clean up the route data
+      let routes = formatRouteData(response.journeyResults.routes);
+      // set the routes in the state
       setRoutesHandler(routes);
     }
   }
@@ -75,6 +88,7 @@ function JourneyResultScreen() {
     // query the journey service for the journey results between the points
     retrieveJourney(routeContext.startLocation, routeContext.endLocation).then(
       () => {
+        // set the loading state to false when result is returned
         setIsLoading(false);
       }
     );
@@ -83,14 +97,17 @@ function JourneyResultScreen() {
     return () => {};
   }, []);
 
+  // if the loading state is true, show the loading overlay
   if (isLoading) {
     return <LoadingOverlay />;
   }
 
+  // dismissError dismisses the error overlay
   function dismissError() {
     setError(null);
   }
 
+  // if there is an error, show the loading overlay
   if (error) {
     return <ErrorOverlay message={error} onConfirm={dismissError} />;
   }
@@ -98,7 +115,7 @@ function JourneyResultScreen() {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={rootStyles.rootContainer}>
-        <View style={textBoxStyles.container}>
+        <View style={{ marginBottom: "20%" }}>
           <TextInputBox
             editable={false}
             placeholder={startLocation.name}
@@ -142,6 +159,7 @@ function JourneyResultScreen() {
 
 export default JourneyResultScreen;
 
+// rootStyles is the style sheet for the main component
 const rootStyles = StyleSheet.create({
   rootContainer: {
     flex: 1,
@@ -150,12 +168,7 @@ const rootStyles = StyleSheet.create({
   },
 });
 
-const textBoxStyles = StyleSheet.create({
-  container: {
-    marginBottom: "20%",
-  },
-});
-
+// journeyGroupStyles is the style sheet for the journey routes
 const journeyGroupStyles = StyleSheet.create({
   journeyCard: {
     marginVertical: "4%",

@@ -6,11 +6,11 @@ import PrimaryButton from "../components/ui/PrimaryButton";
 import { useContext, useState } from "react";
 import { AuthenticationContext } from "../store/context/AuthenticationContext";
 import { editProfile } from "../services/userService";
-import { ConfigConstants, HttpStatusCodes, STORAGE } from "../models/constants";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { HttpStatusCodes, STORAGE } from "../models/constants";
 import { useNavigation } from "@react-navigation/native";
 import ErrorOverlay from "../components/ui/ErrorOverlay";
 
+// EditProfileScreen is the component for editing the profile screen
 function EditProfileScreen() {
   // get the authentication context for auth information
   const authContext = useContext(AuthenticationContext);
@@ -33,17 +33,20 @@ function EditProfileScreen() {
     },
   });
 
-  // login navigates back to the login page
+  // inputHandler handles the form input depending on the
+  // key and value of the text input
   function inputHandler(key, val) {
     setProfileDetails((prevState) => {
-      // set the values appropriately
+      // set the values depending on the key
       switch (key) {
         case "email":
+          // on email case, modify the email field and keep the remaining fields intact
           return {
             ...prevState,
             email: { value: val, isValid: true, errorText: "" },
           };
         default:
+          // on any other key, set the value and clean up the email error field
           return {
             ...prevState,
             [key]: val,
@@ -80,6 +83,7 @@ function EditProfileScreen() {
 
     // if the request comes back with a 200
     if (response.status === HttpStatusCodes.StatusOk) {
+      // build data object to hold all response values
       const data = {
         userId: response.userId,
         userEmail: response.userEmail,
@@ -90,8 +94,11 @@ function EditProfileScreen() {
         accessToken: authContext.authData.accessToken,
         refreshToken: authContext.authData.refreshToken,
       };
+      // set the authentication data in the context and current storage choice
       authContext.setAuthData(data, STORAGE);
+      // show a successful dialog box to the user
       Alert.alert("Successful!", "Profile updated successfully");
+      // go back to the saved places page and reload the contents
       navigation.goBack();
     }
   }
@@ -111,10 +118,12 @@ function EditProfileScreen() {
     processResponse(response);
   }
 
+  // dismissError dismisses the error view
   function dismissError() {
     setError(null);
   }
 
+  // if there is an error, show the error overlay
   if (error) {
     return <ErrorOverlay message={error} onConfirm={dismissError} />;
   }
@@ -216,6 +225,7 @@ function EditProfileScreen() {
 
 export default EditProfileScreen;
 
+// rootStyles is the styles sheet for the main view
 const rootStyles = StyleSheet.create({
   container: {
     flex: 1,
@@ -225,6 +235,7 @@ const rootStyles = StyleSheet.create({
   },
 });
 
+// textInputGroupStyles is the style sheet for the text input section
 const textInputGroupStyles = StyleSheet.create({
   nameContainer: {
     flexDirection: "row",
@@ -236,6 +247,7 @@ const textInputGroupStyles = StyleSheet.create({
   },
 });
 
+// invalidInputStyle is the style sheet for an invalid input
 const invalidInputStyle = StyleSheet.create({
   text: {
     textAlign: "center",

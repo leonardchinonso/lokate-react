@@ -3,6 +3,8 @@ import { HttpStatusCodes } from "../models/constants";
 import { getJourneyLatLonRequest } from "../http/journey";
 import { getHoursAndMinutes } from "../utils/utils";
 
+// transportModeConversionMap is the conversion map for transport modes
+// it returns action names for the icons to use
 export const transportModeConversionMap = {
   foot: "walking",
   bus: "bus",
@@ -46,8 +48,10 @@ export async function getJourney(startLocation, endLocation) {
   }
 }
 
-export function modifyRouteInfo(routes) {
+// formatRouteData formats the route information into readable formats
+export function formatRouteData(routes) {
   for (let route of routes) {
+    // convert the duration to hours and minutes
     route.journeyTime = getHoursAndMinutes(route.duration);
     route.transportModes = [];
     for (let route_part of route.route_parts) {

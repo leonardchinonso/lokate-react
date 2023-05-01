@@ -11,14 +11,18 @@ import { ScreenNameConstants } from "../models/constants";
 import Colors from "../styles/colors";
 import TextString from "../components/ui/TextString";
 
+// WelcomeScreen renders the welcome screen.
+// It is the landing page screen
 function WelcomeScreen() {
   // get the navigation hook instance for moving through components
   const navigation = useNavigation();
 
+  // goToSignup navigates the user to the signup page
   function goToSignup() {
     navigation.navigate(ScreenNameConstants.SignupScreenName);
   }
 
+  // goToLogin navigates the user to the login page
   function goToLogin() {
     navigation.navigate(ScreenNameConstants.LoginScreenName);
   }
@@ -60,6 +64,7 @@ function WelcomeScreen() {
 
 export default WelcomeScreen;
 
+// rootStyles is the style sheet for the main component
 const rootStyles = StyleSheet.create({
   container: {
     flex: 1,
@@ -68,6 +73,7 @@ const rootStyles = StyleSheet.create({
   },
 });
 
+// imageStyles is the style sheet for the image component
 const imageStyles = StyleSheet.create({
   container: {
     marginTop: "10%",

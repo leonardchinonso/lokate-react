@@ -6,6 +6,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useContext } from "react";
 import { AuthenticationContext } from "../store/context/AuthenticationContext";
 
+// LogoutScreen is the component that renders the logout screen
 function LogoutScreen() {
   // get the authentication context for auth information
   const authContext = useContext(AuthenticationContext);
@@ -13,10 +14,12 @@ function LogoutScreen() {
   // get the navigation hook instance for moving through components
   const navigation = useNavigation();
 
+  // onClickYes handles the use case of a user clicking yes
   function onClickYes() {
     authContext.unSetAuthData();
   }
 
+  // onClickNo handlers the use case of a user clicking no
   function onClickNo() {
     navigation.goBack();
   }
@@ -52,6 +55,7 @@ function LogoutScreen() {
 
 export default LogoutScreen;
 
+// rootStyles is the stylesheet for the main component
 const rootStyles = StyleSheet.create({
   rootContainer: {
     flex: 1,
@@ -61,6 +65,7 @@ const rootStyles = StyleSheet.create({
   },
 });
 
+// logoutSectionStyles is the stylesheet for the logout section
 const logoutSectionStyles = StyleSheet.create({
   container: {
     width: "80%",
@@ -81,6 +86,7 @@ const logoutSectionStyles = StyleSheet.create({
   },
 });
 
+// buttonGroupStyles is the stylesheet for the button group
 const buttonGroupStyles = StyleSheet.create({
   container: {
     justifyContent: "space-between",

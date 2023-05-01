@@ -1,5 +1,4 @@
 import { useContext, useEffect, useState } from "react";
-
 import { NavigationContainer } from "@react-navigation/native";
 import { AuthenticationStackNavigation } from "./navigation/UnauthenticatedScreen";
 import LandingBottomTabNavigator from "./navigation/AuthenticatedScreens";
@@ -20,6 +19,7 @@ import SettingsContextProvider, {
 import { STORAGE } from "./models/constants";
 import { getItemsFromStorage } from "./store/on_device/main";
 
+// Navigation renders the navigation based on the authentication of the user
 function Navigation() {
   // get the authentication context for auth information
   const authContext = useContext(AuthenticationContext);
@@ -34,6 +34,7 @@ function Navigation() {
   );
 }
 
+// Root renders the main app screens
 function Root() {
   // get the authentication, settings and currentLocation contexts to store information in
   const authContext = useContext(AuthenticationContext);
@@ -41,7 +42,7 @@ function Root() {
   const currentLocationContext = useContext(CurrentLocationContext);
 
   // create a state for when user is trying to log in to render splash screen
-  const [isTryingLogin, setIsTryingLogin] = useState(true);
+  const [isLoadingAppData, setIsLoadingAppData] = useState(true);
 
   // create an error state to show error screen if there is a server error
   const [error, setError] = useState("");
@@ -74,8 +75,9 @@ function Root() {
     settingsContext.setAppPrecision(userSettingsData.appPrecision);
   }
 
-  // fetchStorage fetches stored on-Device information and loads them in the context
-  async function fetchStorage() {
+  // loadAppFeatures fetches stored on-Device information, user's authentication,
+  // user's settings and user's location and loads them in the context
+  async function loadAppFeatures() {
     // get the authentication details from the chosen on-Device storage
     const storedItems = await getItemsFromStorage(STORAGE);
 
@@ -102,21 +104,25 @@ function Root() {
   }
 
   useEffect(() => {
-    // once the storage is fetched and context is loaded,
-    // set the login trying state to false to mark the end of preprocessing
-    fetchStorage().then(() => {
-      setIsTryingLogin(false);
+    // make a function call to load all app dependencies
+    loadAppFeatures().then(() => {
+      // once the storage is fetched and context is loaded,
+      // set the login trying state to false to mark the end of preprocessing
+      setIsLoadingAppData(false);
     });
   }, []);
 
-  if (isTryingLogin) {
+  // if the app is still trying to set things up, show the splash screen
+  if (isLoadingAppData) {
     return <SplashScreen />;
   }
 
+  // dismissError dismisses the error view
   function dismissError() {
     setError(null);
   }
 
+  // if there is an unexpected error, show the error display
   if (error) {
     return <ErrorOverlay message={error} onConfirm={dismissError} />;
   }
@@ -125,6 +131,7 @@ function Root() {
 }
 
 export default function App() {
+  // embed the context in order of usage
   return (
     <AuthenticationContextProvider>
       <CurrentLocationContextProvider>

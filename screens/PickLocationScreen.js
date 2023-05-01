@@ -16,24 +16,38 @@ import {
 import IconButtonLink from "../components/ui/IconButtonLink";
 import { SelectList } from "react-native-dropdown-select-list/index";
 import PrimaryButton from "../components/ui/PrimaryButton";
-import { Header } from "../styles/text";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { RouteContext } from "../store/context/RouteContext";
 import { CurrentLocationContext } from "../store/context/CurrentLocationContext";
 import { SavedPlaceContext } from "../store/context/SavedPlaceContext";
 
+// PickLocation is the component for picking the place to visit
 function PickLocation({ action }) {
+  // get the routeContext to set the routes globally
   const routeContext = useContext(RouteContext);
-  const currentLocationContext = useContext(CurrentLocationContext);
-  const savedPlacesContext = useContext(SavedPlaceContext);
 
   // get the navigation hook instance for moving through components
   const navigation = useNavigation();
 
+  // get the currentLocationContext to retrieve the current location
+  const currentLocationContext = useContext(CurrentLocationContext);
+
+  // get the savedPlacesContext to retrieve saved places
+  const savedPlacesContext = useContext(SavedPlaceContext);
+
+  // create a state for the search input
   const [searchQuery, setSearchQuery] = useState("");
+
+  // create a state for the selected dropdown menu
   const [selected, setSelected] = useState("");
 
+  // searchInputHandler sets the input for the search query
+  function searchInputHandler(enteredText) {
+    setSearchQuery(enteredText);
+  }
+
+  // searchPlaces is a list of places to pick from as destinations or start positions
   const searchPlaces = [
     {
       name: HomepageDestinationConstants.CurrentLocation,
@@ -62,6 +76,7 @@ function PickLocation({ action }) {
     },
   ];
 
+  // savedPlaces is a list of places saved by the user, it is a mock
   const savedPlaces = [
     {
       name: HomepageDestinationConstants.Location,
@@ -98,11 +113,13 @@ function PickLocation({ action }) {
     },
   ];
 
-  const data = [
+  // placeTypeData is the data holding the type of place tor render
+  const placeTypeData = [
     { key: "1", value: "Last Visited" },
     { key: "2", value: "Saved Places" },
   ];
 
+  // onSelectLocation handles the event of clicking a location
   function onSelectLocation(placeAlias) {
     const location = {
       name: "",
@@ -117,6 +134,7 @@ function PickLocation({ action }) {
       location.name = "Current Location";
       location.lon = currentLocationContext.location.longitude;
       location.lat = currentLocationContext.location.latitude;
+      // handle what happens with the location
       locationHandler(location);
       return;
     }
@@ -144,6 +162,7 @@ function PickLocation({ action }) {
     locationHandler(location);
   }
 
+  // locationHandler handles the location depending on the action
   function locationHandler(location) {
     if (action === "start") {
       routeContext.setStartLocation(location);
@@ -154,18 +173,17 @@ function PickLocation({ action }) {
     }
   }
 
-  function searchInputHandler(enteredText) {
-    setSearchQuery(enteredText);
-  }
-
+  // submitButtonHandler handles event of the submit button when clicked
   function submitButtonHandler() {
     if (action === "start") {
+      // navigate to the search results screen of the start location
       navigation.navigate(NavigatorNameConstants.StartLocationNavigatorName, {
         screen: ScreenNameConstants.SearchResultScreenName,
         searchQuery,
         action,
       });
     } else {
+      // navigate to the search results screen of the end location
       navigation.navigate(NavigatorNameConstants.EndLocationNavigatorName, {
         screen: ScreenNameConstants.SearchResultScreenName,
         searchQuery,
@@ -201,7 +219,7 @@ function PickLocation({ action }) {
         <View style={dropdownStyles.container}>
           <SelectList
             setSelected={(val) => setSelected(val)}
-            data={data}
+            data={placeTypeData}
             save={"value"}
             dropdownStyles={{ backgroundColor: "white" }}
             dropdownTextStyles={{ fontSize: 17 }}
@@ -233,6 +251,7 @@ function PickLocation({ action }) {
 
 export default PickLocation;
 
+// rootStyles is the style sheet for the main component
 const rootStyles = StyleSheet.create({
   root: {
     flex: 1,
@@ -242,6 +261,7 @@ const rootStyles = StyleSheet.create({
   },
 });
 
+// searchFieldStyles is the style sheet for the search field
 const searchFieldStyles = StyleSheet.create({
   container: {
     marginTop: "5%",
@@ -249,18 +269,21 @@ const searchFieldStyles = StyleSheet.create({
   },
 });
 
+// startLocationGroupStyles is the style sheet for the start location group
 const startLocationGroupStyles = StyleSheet.create({
   topContainer: {
     marginBottom: "25%",
   },
 });
 
+// dropdownStyles is the style for the dropdown menu
 const dropdownStyles = StyleSheet.create({
   container: {
     marginBottom: "5%",
   },
 });
 
+// buttonStyles is the style for the buttons
 const buttonStyles = StyleSheet.create({
   container: {
     marginTop: "35%",

@@ -11,6 +11,7 @@ import { signup } from "../services/authService";
 import { HttpStatusCodes, STORAGE } from "../models/constants";
 import { AuthenticationContext } from "../store/context/AuthenticationContext";
 
+// SignupScreen renders the sign up screen
 function SignupScreen({ navigation }) {
   // get the authentication context to manage the token
   const authContext = useContext(AuthenticationContext);
@@ -46,16 +47,19 @@ function SignupScreen({ navigation }) {
       let modifiedVal = { value: val, isValid: true, errorText: "" };
       switch (key) {
         case "email":
+          // if email is set, keep other fields intact
           return {
             ...prevState,
             [key]: modifiedVal,
           };
         case "password":
+          // if password is set, keep other fields intact
           return {
             ...prevState,
             [key]: modifiedVal,
           };
         default:
+          // if any other field is set, ensure the email and password fields are reset to valid values
           return {
             ...prevState,
             [key]: val,
@@ -86,6 +90,8 @@ function SignupScreen({ navigation }) {
       signupDetails.confirmPassword
     );
 
+    // if there is an error with the email or password validation,
+    // set the state to reflect it
     if (response.emailError || response.passwordError) {
       setSignupDetails((prevState) => {
         return {
@@ -128,14 +134,17 @@ function SignupScreen({ navigation }) {
         accessToken: response.accessToken,
         refreshToken: response.refreshToken,
       };
+      // set the authentication data with the signup details
       authContext.setAuthData(data, STORAGE);
     }
   }
 
+  // dismissError dismisses the error view
   function dismissError() {
     setError(null);
   }
 
+  // if there is an error, return the error overlay
   if (error) {
     return <ErrorOverlay message={error} onConfirm={dismissError} />;
   }
@@ -217,6 +226,7 @@ function SignupScreen({ navigation }) {
 
 export default SignupScreen;
 
+// rootStyles is the style sheet for the main component
 const rootStyles = StyleSheet.create({
   container: {
     flex: 1,
@@ -227,6 +237,7 @@ const rootStyles = StyleSheet.create({
   },
 });
 
+// textInputGroupStyles is the style sheet for the text inputs
 const textInputGroupStyles = StyleSheet.create({
   nameContainer: {
     flexDirection: "row",
@@ -236,6 +247,7 @@ const textInputGroupStyles = StyleSheet.create({
   },
 });
 
+// invalidInputStyle is the style sheet for an invalid text field
 const invalidInputStyle = StyleSheet.create({
   text: {
     textAlign: "center",

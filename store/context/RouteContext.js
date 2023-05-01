@@ -1,5 +1,6 @@
 import { createContext, useState } from "react";
 
+// RouteContext holds all information about the route locations
 export const RouteContext = createContext({
   startLocation: null,
   setStartLocation: (location) => {},
@@ -7,10 +8,15 @@ export const RouteContext = createContext({
   setEndLocation: (location) => {},
 });
 
+// RouteContextProvider is the wrapper for the RouteContext
 function RouteContextProvider({ children }) {
+  // create a state for the start location
   const [startLoc, setStartLoc] = useState();
+
+  // create a state for the end location
   const [endLoc, setEndLoc] = useState();
 
+  // setStartLocation handles setting the start location state
   function setStartLocation(location) {
     setStartLoc(() => {
       return {
@@ -22,6 +28,7 @@ function RouteContextProvider({ children }) {
     });
   }
 
+  // setEndLocation handles setting the end location state
   function setEndLocation(location) {
     setEndLoc(() => {
       return {
@@ -33,6 +40,7 @@ function RouteContextProvider({ children }) {
     });
   }
 
+  // value is the prop to be passed when rendering child components
   const value = {
     startLocation: startLoc,
     setStartLocation: setStartLocation,

@@ -16,6 +16,7 @@ import { AuthenticationContext } from "../store/context/AuthenticationContext";
 import { login } from "../services/authService";
 import LoadingOverlay from "../components/ui/LoadingOverlay";
 
+// LoginScreen component renders the login screen
 function LoginScreen({ navigation }) {
   // get the authentication context to manage the token
   const authContext = useContext(AuthenticationContext);
@@ -23,7 +24,10 @@ function LoginScreen({ navigation }) {
   // create a state for the loading screen when logging in
   const [isLoading, setIsLoading] = useState(false);
 
+  // create an error state to handle unexpected errors
   const [error, setError] = useState("");
+
+  // create a state to manage the login details
   const [loginDetails, setLoginDetails] = useState({
     email: {
       value: "",
@@ -37,8 +41,11 @@ function LoginScreen({ navigation }) {
     },
   });
 
+  // inputHandler modifies the input for the login textboxes
   function inputHandler(id, val) {
     setLoginDetails((prevValues) => {
+      // modify the state by setting the email or password to the values depending
+      // on the key
       return {
         ...prevValues,
         [id]: { value: val, isValid: true, errorText: "" },
@@ -46,12 +53,14 @@ function LoginScreen({ navigation }) {
     });
   }
 
+  // signup navigates to the signup screen
   function signup() {
     navigation.navigate(ScreenNameConstants.SignupScreenName);
   }
 
   // loginHandler handles the call to the login service
   async function loginHandler() {
+    // set the loading state to true until login check is completed
     setIsLoading(true);
 
     // call the login service to handle the login request
@@ -60,11 +69,13 @@ function LoginScreen({ navigation }) {
       loginDetails.password.value
     );
 
+    // set the loading state to false once the check is complete
     setIsLoading(false);
 
     // if the email or password have errors, update the state with the errors and return
     if (response.emailError || response.passwordError) {
       setLoginDetails((prevValues) => {
+        // set validity fields and error fields depending on the error
         return {
           email: {
             value: prevValues.email.value,
@@ -89,6 +100,7 @@ function LoginScreen({ navigation }) {
 
     // if the response comes back unauthorized, show error alert
     if (response.status === HttpStatusCodes.StatusUnauthorized) {
+      // show an invalid alert box on error
       Alert.alert(
         "Invalid Login Credentials",
         "Check that your email and password are both correct"
@@ -122,6 +134,7 @@ function LoginScreen({ navigation }) {
     setError(null);
   }
 
+  // if there is an error, load the error overlay
   if (error) {
     return <ErrorOverlay message={error} onConfirm={dismissError} />;
   }
@@ -200,6 +213,7 @@ function LoginScreen({ navigation }) {
 
 export default LoginScreen;
 
+// rootStyles is the stylesheet for the main component
 const rootStyles = StyleSheet.create({
   container: {
     flex: 1,
@@ -209,6 +223,7 @@ const rootStyles = StyleSheet.create({
   },
 });
 
+// textStyles is the stylesheet for the texts
 const textStyles = StyleSheet.create({
   welcomeText: {
     color: Colors.primaryDarkPurple,
@@ -225,6 +240,7 @@ const textStyles = StyleSheet.create({
   },
 });
 
+// invalidInputStyle is the stylesheet for invalid inputs
 const invalidInputStyle = StyleSheet.create({
   text: {
     textAlign: "center",
@@ -233,6 +249,7 @@ const invalidInputStyle = StyleSheet.create({
   },
 });
 
+// imageStyles is the style for the image
 const imageStyles = StyleSheet.create({
   container: {
     justifyContent: "center",

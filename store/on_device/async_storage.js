@@ -1,3 +1,7 @@
+/**
+ * This file holds the implementation for accessing AsyncStorage
+ * */
+
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ConfigConstants } from "../../models/constants";
 

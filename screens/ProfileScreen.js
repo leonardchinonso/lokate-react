@@ -16,6 +16,7 @@ import { useNavigation } from "@react-navigation/native";
 import PrimaryButton from "../components/ui/PrimaryButton";
 import TextString from "../components/ui/TextString";
 
+// profileActions is a list of profile actions and their icons
 const profileActions = [
   {
     buttonName: "Edit Profile",
@@ -43,10 +44,13 @@ const profileActions = [
   },
 ];
 
+// imagePick handles the setting of user images
 function imagePick() {
+  // it is unimplemented at the moment
   console.log("UNIMPLEMENTED");
 }
 
+// ProfileScreen renders the profile screen for a user
 function ProfileScreen() {
   // get the authentication context for auth information
   const authContext = useContext(AuthenticationContext);
@@ -127,6 +131,7 @@ function ProfileScreen() {
 
 export default ProfileScreen;
 
+// styles holds the stylesheets for the main component
 const styles = StyleSheet.create({
   container: {
     flex: 1,

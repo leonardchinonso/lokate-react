@@ -1,10 +1,9 @@
 import { Alert, SafeAreaView, StyleSheet, View } from "react-native";
 import Colors from "../styles/colors";
-import { Header } from "../styles/text";
 import TextString from "../components/ui/TextString";
 import PrimaryButton from "../components/ui/PrimaryButton";
 import TextInputBox from "../components/ui/TextInputBox";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { AuthenticationContext } from "../store/context/AuthenticationContext";
 import {
   ConfigConstants,
@@ -16,7 +15,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { contactUs } from "../services/commsService";
 import LoadingOverlay from "../components/ui/LoadingOverlay";
 import { useNavigation } from "@react-navigation/native";
+import ErrorOverlay from "../components/ui/ErrorOverlay";
 
+// subjectData is the data holding the subjects for contact us
 const subjectData = [
   { key: "1", value: EmailSubjectConstants.BusinessProposal },
   { key: "2", value: EmailSubjectConstants.FeatureRequest },
@@ -24,6 +25,7 @@ const subjectData = [
   { key: "4", value: EmailSubjectConstants.Other },
 ];
 
+// ContactUsScreen is the component for the Contact
 function ContactUsScreen() {
   // get the authentication context for auth information
   const authContext = useContext(AuthenticationContext);
@@ -103,6 +105,16 @@ function ContactUsScreen() {
   // if the email is being sent, display the loading screen
   if (isLoading) {
     return <LoadingOverlay />;
+  }
+
+  // dismissError discards the error screen
+  function dismissError() {
+    setError(null);
+  }
+
+  // if an unexpected error exists, display the error screen
+  if (error) {
+    return <ErrorOverlay message={error} onConfirm={dismissError} />;
   }
 
   return (
@@ -187,6 +199,7 @@ function ContactUsScreen() {
 
 export default ContactUsScreen;
 
+// rootStyles is the style sheet for the root styles
 const rootStyles = StyleSheet.create({
   rootContainer: {
     flex: 1,
@@ -196,6 +209,7 @@ const rootStyles = StyleSheet.create({
   },
 });
 
+// nameSectionStyles is the style sheet for the name section styles
 const nameSectionStyles = StyleSheet.create({
   nameText: {
     color: Colors.primaryBlack,
@@ -203,6 +217,7 @@ const nameSectionStyles = StyleSheet.create({
   },
 });
 
+// dropdownStyles is the style sheet for the dropdown styles
 const dropdownStyles = StyleSheet.create({
   container: {
     borderRadius: 10,

@@ -1,19 +1,17 @@
 import { Alert, Dimensions, ScrollView, StyleSheet, View } from "react-native";
-import { Header } from "../styles/text";
 import TextString from "../components/ui/TextString";
 import Colors from "../styles/colors";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { about } from "../services/commsService";
 import { HttpStatusCodes } from "../models/constants";
 import ErrorOverlay from "../components/ui/ErrorOverlay";
 import LoadingOverlay from "../components/ui/LoadingOverlay";
 
-const { width, height } = Dimensions.get("window");
+// get the width dimensions for the window in focus
+const { width } = Dimensions.get("window");
 
+// AboutScreen is the component for the about information
 function AboutScreen() {
-  // use the context for the about text field to avoid multiple API requests
-  // const commsContext = useContext(CommsContext);
-
   // create a state to hold the value for the about text
   const [aboutText, setAboutText] = useState("");
 
@@ -54,6 +52,7 @@ function AboutScreen() {
 
   useEffect(() => {
     if (!aboutText) {
+      // if the about text has not gotten to the frontend, set the loading state to true
       setIsLoading(true);
       // when the call is done, whether successful or not, set the loading screen state to false
       fetchAboutInformation().then(() => setIsLoading(false));
@@ -72,6 +71,7 @@ function AboutScreen() {
     setError(null);
   }
 
+  // if an unexpected error exists, display the error screen
   if (error) {
     return <ErrorOverlay message={error} onConfirm={dismissError} />;
   }
@@ -94,6 +94,7 @@ function AboutScreen() {
 
 export default AboutScreen;
 
+// rootStyles is the style for the root component
 const rootStyles = StyleSheet.create({
   rootContainer: {
     flex: 1,
@@ -104,6 +105,7 @@ const rootStyles = StyleSheet.create({
   },
 });
 
+// aboutSectionStyles is the style sheet for the about section
 const aboutSectionStyles = StyleSheet.create({
   content: {
     padding: "5%",
