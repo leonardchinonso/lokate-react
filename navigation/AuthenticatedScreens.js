@@ -1,12 +1,12 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { FontAwesome5, Ionicons } from "@expo/vector-icons";
-
 import Colors from "../styles/colors";
 import {
   NavigatorNameConstants,
   ScreenNameConstants,
 } from "../models/constants";
+
 import HomepageScreen from "../screens/HomepageScreen";
 import PickStartLocationScreen from "../screens/PickStartLocationScreen";
 import PickEndLocationScreen from "../screens/PickEndLocationScreen";
@@ -21,12 +21,15 @@ import RouteResultScreen from "../screens/RouteResultScreen";
 import EditProfileScreen from "../screens/EditProfileScreen";
 import ContactUsScreen from "../screens/ContactUsScreen";
 import AboutScreen from "../screens/AboutScreen";
-import { Settings } from "react-native";
 import SettingsScreen from "../screens/SettingsScreen";
 
+// create a stack navigator
 const Stack = createNativeStackNavigator();
+
+// create a bottom tab navigator
 const BottomTab = createBottomTabNavigator();
 
+// HomepageStackNavigator is the stack navigator for the homepage
 function HomepageStackNavigator() {
   return (
     <Stack.Navigator>
@@ -64,6 +67,8 @@ function HomepageStackNavigator() {
   );
 }
 
+// StartLocationStackNavigator is the stack navigator for
+// the pick a location page (start page)
 function StartLocationStackNavigator({ route }) {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
@@ -82,6 +87,8 @@ function StartLocationStackNavigator({ route }) {
   );
 }
 
+// EndLocationStackNavigator is the stack navigator for
+// the pick a location page (end page)
 function EndLocationStackNavigator({ route }) {
   return (
     <Stack.Navigator>
@@ -100,6 +107,8 @@ function EndLocationStackNavigator({ route }) {
   );
 }
 
+// PlacesStackNavigator is the stack navigator for
+// the places page
 function PlacesStackNavigator({ route }) {
   return (
     <Stack.Navigator>
@@ -157,6 +166,7 @@ function ProfileStackNavigator() {
   );
 }
 
+// LandingBottomTabNavigator is the bottom tab navigator
 function LandingBottomTabNavigator() {
   return (
     <BottomTab.Navigator

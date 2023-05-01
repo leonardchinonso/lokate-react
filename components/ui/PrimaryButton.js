@@ -1,6 +1,7 @@
 import { Pressable, Text, StyleSheet } from "react-native";
 import Colors from "../../styles/colors";
 
+// PrimaryButton is the component for a custom button used throughout the application
 function PrimaryButton({ children, onPressStyle, customStyles, onPress }) {
   return (
     <Pressable
@@ -18,6 +19,7 @@ function PrimaryButton({ children, onPressStyle, customStyles, onPress }) {
 
 export default PrimaryButton;
 
+// style sheet for the component
 const styles = StyleSheet.create({
   inner: {
     borderRadius: 10,

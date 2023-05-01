@@ -9,6 +9,7 @@ import {
   setPrecisionDataInStorage,
 } from "../on_device/main";
 
+// SettingsContext is the context for saving user settings data
 export const SettingsContext = createContext({
   appAppearance: AppearanceConstants.LightMode,
   appPrecision: PrecisionConstants.Approximate,
@@ -38,6 +39,7 @@ function SettingsContextProvider({ children }) {
     setPrecisionDataInStorage(precision, STORAGE);
   }
 
+  // build the value props for the context wrapper
   const value = {
     appAppearance: appearance,
     appPrecision: precision,

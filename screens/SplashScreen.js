@@ -1,5 +1,6 @@
 import { Image, StyleSheet, View } from "react-native";
 
+// SplashScreen renders the splash screen on app initialization
 function SplashScreen() {
   return (
     <View style={styles.rootContainer}>
@@ -12,6 +13,7 @@ function SplashScreen() {
 }
 export default SplashScreen;
 
+// styles is the style sheet for the component
 const styles = StyleSheet.create({
   rootContainer: {
     justifyContent: "center",

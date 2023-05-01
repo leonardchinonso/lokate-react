@@ -13,7 +13,9 @@ const actions = {
   DELETE_SAVED_PLACE: "DELETE_SAVED_PLACE", // removes a saved place by the id
 };
 
+// savedPlaceReducer is the reducer function for the dispatch entities
 const savedPlaceReducer = (state, action) => {
+  // depending on the action type, dispatch the function call
   switch (action.type) {
     case actions.SET_SAVED_PLACES:
       return {
@@ -32,6 +34,7 @@ const savedPlaceReducer = (state, action) => {
         ],
       };
     case actions.EDIT_SAVED_PLACE:
+      // find the place to edit and replace it with the new data
       for (let i in state.savedPlaces) {
         if (state.savedPlaces[i].id === action.payload.id) {
           state.savedPlaces[i].name = action.payload.name;
@@ -40,6 +43,7 @@ const savedPlaceReducer = (state, action) => {
       }
       return state;
     case actions.DELETE_SAVED_PLACE:
+      // filter by the id to delete and remove it from the array
       return {
         savedPlaces: state.savedPlaces.filter(
           (place) => place.id !== action.payload.id
@@ -58,9 +62,11 @@ export const SavedPlaceContext = createContext({
   deleteSavedPlace: (savedPlace) => {},
 });
 
+// SavedPlaceContextProvider is the wrapper for the SavedPlaceContext
 const SavedPlaceContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(savedPlaceReducer, initialState);
 
+  // build the value for the savedPlaceContext
   const value = {
     savedPlaces: state.savedPlaces,
     setSavedPlaces: (savedPlaces) => {

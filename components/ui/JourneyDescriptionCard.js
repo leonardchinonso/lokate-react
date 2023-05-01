@@ -1,10 +1,11 @@
-import { Pressable, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import ItemCard from "./ItemCard";
 import TextString from "./TextString";
 import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { TransportModeConstants } from "../../models/constants";
 import Colors from "../../styles/colors";
 
+// JourneyDescriptionCard is the component for the description card of each route
 function JourneyDescriptionCard({
   transportMode,
   transportDuration,
@@ -12,7 +13,7 @@ function JourneyDescriptionCard({
   departsAt,
 }) {
   return (
-    <ItemCard customStyles={itemCardCustomStyles.container} pressable={false}>
+    <ItemCard customStyles={styles.container} pressable={false}>
       <View>
         {transportMode === "tube" ? (
           <Ionicons name={"subway"} size={24} color={Colors.primaryWhite} />
@@ -30,13 +31,13 @@ function JourneyDescriptionCard({
           width: "60%",
         }}
       >
-        <TextString textStyle={{ fontSize: 12, color: Colors.primaryWhite }}>
+        <TextString textStyle={styles.textStyle}>
           {transportMode === TransportModeConstants.Walk
             ? "Walk to "
             : "Get off at "}
           {toPointName}
         </TextString>
-        <TextString textStyle={{ fontSize: 12, color: Colors.primaryWhite }}>
+        <TextString textStyle={styles.textStyle}>
           {departsAt
             ? transportMode === TransportModeConstants.Walk
               ? "Start walking at " + departsAt
@@ -53,7 +54,8 @@ function JourneyDescriptionCard({
 
 export default JourneyDescriptionCard;
 
-const itemCardCustomStyles = StyleSheet.create({
+// style sheet for the journey card description component
+const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -64,9 +66,8 @@ const itemCardCustomStyles = StyleSheet.create({
     paddingVertical: "3%",
   },
   vehicleSection: {
-    // width: "80%",
-    // height: "200%",
     flexDirection: "row",
     alignItems: "center",
   },
+  textStyle: { fontSize: 12, color: Colors.primaryWhite },
 });

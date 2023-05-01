@@ -23,12 +23,20 @@ import { AuthenticationContext } from "../../store/context/AuthenticationContext
 import { useContext, useState } from "react";
 import ErrorOverlay from "./ErrorOverlay";
 
+// SavedPlaceCard is the component for rendering a single saved place card
 function SavedPlaceCard({ children }) {
-  const navigation = useNavigation();
+  // get the authentication context for auth information
   const authContext = useContext(AuthenticationContext);
+
+  // get the navigation hook instance for moving through components
+  const navigation = useNavigation();
+
+  // create a state for the error view
   const [error, setError] = useState("");
 
+  // onEdit handles user clicking the edit button
   function onEdit() {
+    // navigate to the edit saved place screen
     navigation.navigate(NavigatorNameConstants.PlacesNavigatorName, {
       screen: ScreenNameConstants.EditSavedPlaceScreen,
       savedPlaceId: children.id,
@@ -36,6 +44,28 @@ function SavedPlaceCard({ children }) {
     });
   }
 
+  // onDelete handles user clicking the delete button
+  function onDelete() {
+    // proceedToDelete handles the function to delete a savedPlace once its confirmed
+    async function proceedToDelete() {
+      // call the service to delete a place and get the response
+      const response = await deleteSavedPlace(
+        authContext.authData.accessToken,
+        children.id
+      );
+      // process the response
+      processResponse(response);
+    }
+
+    // show an alert box to ask to delete the savedPlace when clicked
+    // if yes, call the proceedToDelete function
+    Alert.alert(`Delete ${children.name}?`, "", [
+      { text: "No", style: "cancel" },
+      { text: "Yes", onPress: proceedToDelete },
+    ]);
+  }
+
+  // processResponse processes the response from the service
   function processResponse(response) {
     // if it comes back with a server error, display the error view
     if (response.error) {
@@ -49,7 +79,7 @@ function SavedPlaceCard({ children }) {
       return;
     }
 
-    // if the request comes back with a 400, show pop up
+    // if the request comes back with a 400, show error pop up
     if (response.status === HttpStatusCodes.StatusBadRequest) {
       Alert.alert("Invalid Request", response.message);
       return;
@@ -57,25 +87,11 @@ function SavedPlaceCard({ children }) {
 
     // if the request comes back with a 200
     if (response.status === HttpStatusCodes.StatusOk) {
+      // navigate to saved places list on success
       navigation.navigate(ScreenNameConstants.SavedPlacesScreenName, {
         render: true,
       });
     }
-  }
-
-  function onDelete() {
-    async function proceedToDelete() {
-      const response = await deleteSavedPlace(
-        authContext.authData.accessToken,
-        children.id
-      );
-      processResponse(response);
-    }
-
-    Alert.alert(`Delete ${children.name}?`, "", [
-      { text: "No", style: "cancel" },
-      { text: "Yes", onPress: proceedToDelete },
-    ]);
   }
 
   // dismissError discards the error screen
@@ -83,12 +99,13 @@ function SavedPlaceCard({ children }) {
     setError(null);
   }
 
+  // if there is an error, call the dismissError function
   if (error) {
     return <ErrorOverlay message={error} onConfirm={dismissError} />;
   }
 
   return (
-    <ItemCard customStyles={itemCardCustomStyles.container}>
+    <ItemCard customStyles={styles.container}>
       <View>{getIcon(children.place_alias)}</View>
       <TextString
         textStyle={{ fontWeight: "normal", color: Colors.primaryWhite }}
@@ -122,7 +139,8 @@ function SavedPlaceCard({ children }) {
 
 export default SavedPlaceCard;
 
-const itemCardCustomStyles = StyleSheet.create({
+// style sheet for the component
+const styles = StyleSheet.create({
   container: {
     marginVertical: "2%",
     flexDirection: "row",

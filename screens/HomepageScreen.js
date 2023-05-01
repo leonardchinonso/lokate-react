@@ -7,20 +7,28 @@ import ErrorOverlay from "../components/ui/ErrorOverlay";
 import { CurrentLocationContext } from "../store/context/CurrentLocationContext";
 import Colors from "../styles/colors";
 
+// HomepageScreen is the component for rendering the homepage
 function HomepageScreen({ navigation }) {
+  // get the location context
   const currentLocationContext = useContext(CurrentLocationContext);
 
-  const [location, setLocation] = useState(currentLocationContext.location);
+  // create a state to store unexpected error
   const [error, setError] = useState("");
 
+  // get the stored location in the user current context
+  const { location } = currentLocationContext;
+
+  // goSomewhereHandler navigates to the goSomewhere page
   function goSomewhereHandler() {
     navigation.navigate(NavigatorNameConstants.StartLocationNavigatorName);
   }
 
+  // dismissError dismisses the error overlay
   function dismissError() {
     setError(null);
   }
 
+  // if there is an unexpected error, show the error overlay
   if (error) {
     return <ErrorOverlay message={error} onConfirm={dismissError} />;
   }
@@ -75,12 +83,14 @@ function HomepageScreen({ navigation }) {
 
 export default HomepageScreen;
 
+// rootStyles is the style sheet for the main view
 const rootStyles = StyleSheet.create({
   container: {
     justifyContent: "flex-end",
   },
 });
 
+// mapStyles is the style sheet for the map view
 const mapStyles = StyleSheet.create({
   map: {
     width: "100%",

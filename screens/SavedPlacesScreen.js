@@ -1,33 +1,31 @@
-import { Alert, FlatList, ScrollView, StyleSheet, View } from "react-native";
-
-import Colors from "../styles/colors";
+import { Alert, FlatList, StyleSheet, View } from "react-native";
 import TextString from "../components/ui/TextString";
 import SavedPlaceCard from "../components/ui/SavedPlaceCard";
 import { useContext, useEffect, useState } from "react";
 import { AuthenticationContext } from "../store/context/AuthenticationContext";
-import {
-  ConfigConstants,
-  HttpStatusCodes,
-  ScreenNameConstants,
-} from "../models/constants";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { HttpStatusCodes } from "../models/constants";
 import ErrorOverlay from "../components/ui/ErrorOverlay";
 import { getSavedPlaces } from "../services/placeService";
 import { SavedPlaceContext } from "../store/context/SavedPlaceContext";
-import { useNavigation } from "@react-navigation/native";
 
+// SavedPlacesScreen renders the list of saved places by a user
 function SavedPlacesScreen({ route }) {
-  const navigation = useNavigation();
-
+  // get the authentication context for auth information
   const authContext = useContext(AuthenticationContext);
+
+  // get the savedPlaceContext for storing saved places on application lifetime
   const savedPlaceContext = useContext(SavedPlaceContext);
 
+  // create state to hold the saved places and initialize it with the context
   const [savedPlaces, setSavedPlaces] = useState({
     places: savedPlaceContext.savedPlaces,
   });
+
+  // create a state to hold unexpected errors
   const [error, setError] = useState("");
 
-  function placesHandler(places) {
+  // setPlacesHandler handles saving places to the state
+  function setPlacesHandler(places) {
     setSavedPlaces(() => {
       return {
         places: places,
@@ -35,6 +33,7 @@ function SavedPlacesScreen({ route }) {
     });
   }
 
+  // retrieveSavedPlaces retrieves saved places from the service
   async function retrieveSavedPlaces() {
     // get the saved places from the savedPlaces service using the auth token
     const response = await getSavedPlaces(authContext.authData.accessToken);
@@ -48,8 +47,6 @@ function SavedPlacesScreen({ route }) {
     // if the request comes back with a 401, log user out
     if (response.status === HttpStatusCodes.StatusUnauthorized) {
       authContext.unSetAuthData();
-      // AsyncStorage.removeItem(ConfigConstants.StorageAccessToken).then();
-      // navigation.navigate(ScreenNameConstants.LoginScreenName);
       return;
     }
 
@@ -63,22 +60,24 @@ function SavedPlacesScreen({ route }) {
     if (response.status === HttpStatusCodes.StatusOk) {
       // use the savedPlaceContext to update the savedPlace state
       savedPlaceContext.setSavedPlaces(response.savedPlaces);
-      placesHandler(response.savedPlaces);
+      setPlacesHandler(response.savedPlaces);
     }
   }
 
   useEffect(() => {
     // query the place service for the places
-    retrieveSavedPlaces();
+    retrieveSavedPlaces().then();
 
     // reset the useEffect cache
     return () => {};
   }, [route]);
 
+  // dismissError dismisses the error overlay
   function dismissError() {
     setError(null);
   }
 
+  // if there is an error, return the error view
   if (error) {
     return <ErrorOverlay message={error} onConfirm={dismissError} />;
   }
@@ -106,6 +105,7 @@ function SavedPlacesScreen({ route }) {
 
 export default SavedPlacesScreen;
 
+// rootStyles is the style sheet for the main component
 const rootStyles = StyleSheet.create({
   root: {
     flex: 1,

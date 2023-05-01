@@ -1,3 +1,7 @@
+/**
+ * Colors is the file for colors constant representation in HEX formats
+ * */
+
 const Colors = {
   primaryLightBlue: "#58BBDA",
   primaryLightPurple: "#c400e1",

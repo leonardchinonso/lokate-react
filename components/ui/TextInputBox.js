@@ -2,6 +2,7 @@ import { StyleSheet, TextInput, View } from "react-native";
 import Colors from "../../styles/colors";
 import React from "react";
 
+// TextInputBox is the component for rendering the text input box
 function TextInputBox({
   editable,
   placeholder,
@@ -39,6 +40,7 @@ function TextInputBox({
 
 export default TextInputBox;
 
+// rootStyles is the style sheet for the component
 const rootStyles = StyleSheet.create({
   container: {
     borderRadius: 8,

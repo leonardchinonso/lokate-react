@@ -11,12 +11,17 @@ import { useContext } from "react";
 import { RouteContext } from "../../store/context/RouteContext";
 import { getIcon } from "../../utils/utils";
 
+// SearchResultCard is the component of a single search card
 function SearchResultCard({ action, children }) {
+  // get the navigation hook instance for moving through components
   const navigation = useNavigation();
 
+  // get the routeContext for using route information
   const routeContext = useContext(RouteContext);
 
+  // onPress handles the event when the card is pressed
   function onPress() {
+    // get the location from the parent component
     const location = {
       name: children.name,
       lon: children.longitude,
@@ -24,12 +29,25 @@ function SearchResultCard({ action, children }) {
       type: children.type,
     };
 
-    if (action === "start") {
-      routeContext.setStartLocation(location);
-      navigation.navigate(NavigatorNameConstants.EndLocationNavigatorName);
-    } else if (action === "end") {
-      routeContext.setEndLocation(location);
-      navigation.navigate(ScreenNameConstants.JourneyResultScreen);
+    // based on the parent component, carry out an action
+    switch (action) {
+      // if parent component is the start location screen
+      case "start":
+        // set the location as the start location in the routeContext
+        routeContext.setStartLocation(location);
+        // navigate to the end location screen
+        navigation.navigate(NavigatorNameConstants.EndLocationNavigatorName);
+        break;
+      // if parent component is the end location screen
+      case "end":
+        // set the location as the end location in the routeContext
+        routeContext.setEndLocation(location);
+        // navigate to the journey result screen
+        navigation.navigate(ScreenNameConstants.JourneyResultScreen);
+        break;
+      // do nothing
+      default:
+        return;
     }
   }
 
@@ -54,6 +72,7 @@ function SearchResultCard({ action, children }) {
 
 export default SearchResultCard;
 
+// imageGroupStyles is the style sheet for the images
 const imageGroupStyles = StyleSheet.create({
   container: {
     flexDirection: "row",
@@ -65,6 +84,7 @@ const imageGroupStyles = StyleSheet.create({
   },
 });
 
+// itemCardCustomStyles is the style sheet for an item card
 const itemCardCustomStyles = StyleSheet.create({
   container: {
     flexDirection: "row",

@@ -9,23 +9,23 @@ import { RouteContext } from "../store/context/RouteContext";
 import TextString from "../components/ui/TextString";
 import { Header } from "../styles/text";
 
+// RouteResultScreen renders the results of the routes
 function RouteResultScreen({ route }) {
-  const { singleRoute, transportModes, journeyTime } = route.params;
-
+  // get the routeContext to retrieve the start and end locations
   const routeContext = useContext(RouteContext);
 
+  // get the route dependencies from the routes
+  const { singleRoute, transportModes, journeyTime } = route.params;
+
+  // create a state for the route parts
   const [routeParts, setRouteParts] = useState([]);
 
-  let parts = singleRoute.route_parts;
-
-  useEffect(() => {
-    // handleSetTransportModes();
-    handleSetRouteParts();
-  }, []);
-
-  function handleSetRouteParts() {
+  // setRoutePartsHandler handles setting the route parts in the state
+  function setRoutePartsHandler() {
     let details = [];
-    for (let part of parts) {
+    // for each route in the route parts
+    for (let part of singleRoute.route_parts) {
+      // create a route detail with the transport mode, destination name, departure time and duration
       let detail = {
         transportMode: transportModeConversionMap[part.mode],
         transportDuration: getHoursAndMinutes(part.duration),
@@ -36,6 +36,11 @@ function RouteResultScreen({ route }) {
     }
     setRouteParts(details);
   }
+
+  useEffect(() => {
+    // call the setRoutePartsHandler to handle setting the routes
+    setRoutePartsHandler();
+  }, []);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -74,6 +79,7 @@ function RouteResultScreen({ route }) {
 
 export default RouteResultScreen;
 
+// rootStyles is the style sheet for the main component
 const rootStyles = StyleSheet.create({
   rootContainer: {
     flex: 1,
@@ -83,6 +89,7 @@ const rootStyles = StyleSheet.create({
   },
 });
 
+// mainResult is the style sheet for the result list
 const mainResult = StyleSheet.create({
   container: {
     marginTop: "3%",
@@ -90,6 +97,7 @@ const mainResult = StyleSheet.create({
   },
 });
 
+// resultDescriptionStyles is the style for the result description cards
 const resultDescriptionStyles = StyleSheet.create({
   container: {
     width: "100%",

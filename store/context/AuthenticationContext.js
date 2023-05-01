@@ -24,6 +24,7 @@ export const AuthenticationContext = createContext({
 
 // AuthenticationContextProvider is the provider component for the AuthenticationContext storage
 function AuthenticationContextProvider({ children }) {
+  // create a state for storing the auth data being set
   const [data, setData] = useState({
     userId: "",
     userFirstName: "",
@@ -36,10 +37,13 @@ function AuthenticationContextProvider({ children }) {
     isAuthenticated: false,
   });
 
+  // setAuthData sets the authentication data in the state
   function setAuthData(data) {
+    // get the access token and refresh token from the authentication data
     const accessToken = data.accessToken ? data.accessToken : "";
     const refreshToken = data.refreshToken ? data.refreshToken : "";
 
+    // call the handler from the setData state to save the auth data
     setData(() => {
       return {
         userId: data.userId,
@@ -66,9 +70,11 @@ function AuthenticationContextProvider({ children }) {
       refreshToken: refreshToken,
     };
 
+    // set the data in async storage
     setAuthDataInStorage(item, STORAGE);
   }
 
+  // unset the authentication data
   function unsetAuthData() {
     setData(() => {
       return {
@@ -84,9 +90,11 @@ function AuthenticationContextProvider({ children }) {
       };
     });
 
+    // remove the data from the chosen onDevice storage
     unsetAuthDataInStorage(STORAGE);
   }
 
+  // build the value to return as a prop to the context
   const value = {
     authData: {
       userId: data.userId,

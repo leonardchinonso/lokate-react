@@ -1,5 +1,4 @@
 import { useContext, useState } from "react";
-
 import TextString from "../components/ui/TextString";
 import { Alert, SafeAreaView, StyleSheet, View } from "react-native";
 import Colors from "../styles/colors";
@@ -9,35 +8,49 @@ import { AppearanceConstants, PrecisionConstants } from "../models/constants";
 import { SettingsContext } from "../store/context/SettingsContext";
 import { useNavigation } from "@react-navigation/native";
 
+// SettingsScreen renders the settings screen for a user
 function SettingsScreen() {
+  // get the settings context to use the user settings
   const settingsContext = useContext(SettingsContext);
+
+  // get the navigation hook instance for moving through components
   const navigation = useNavigation();
 
+  // create a state to hold the app appearance
   const [selectedAppearance, setSelectedAppearance] = useState(
     settingsContext.appAppearance
   );
+
+  // create a state to hold the app precision
   const [selectedPrecision, setSelectedPrecision] = useState(
     settingsContext.appPrecision
   );
 
+  // appearanceData holds the values for the appearance dropdown
   const appearanceData = [
     { key: "1", value: AppearanceConstants.LightMode },
     { key: "2", value: AppearanceConstants.DarkMode },
   ];
 
+  // precisionData holds the values for the precision dropdown
   const precisionData = [
     { key: "1", value: PrecisionConstants.Approximate },
     { key: "2", value: PrecisionConstants.Exact },
   ];
 
+  // onClickOk handles the event when a user clicks OK on the alert box
   function onClickOk() {
+    // go back to the profile page
     navigation.goBack();
   }
 
   // onSave saves the user settings to the onDevice storage
   function onSave() {
+    // set the appearance and precision settings in the settings context
     settingsContext.setAppAppearance(selectedAppearance);
     settingsContext.setAppPrecision(selectedPrecision);
+
+    // show the alert for successful data saving
     Alert.alert("Settings saved successfully", "", [
       { text: "OK", onPress: onClickOk },
     ]);
@@ -104,6 +117,7 @@ function SettingsScreen() {
 
 export default SettingsScreen;
 
+// rootStyles is the style sheet for the main component
 const rootStyles = StyleSheet.create({
   rootContainer: {
     flex: 1,
@@ -112,6 +126,7 @@ const rootStyles = StyleSheet.create({
   },
 });
 
+// textStyles is the style sheet for the text containers and labels
 const textStyles = StyleSheet.create({
   container: {
     alignItems: "flex-start",
@@ -122,6 +137,7 @@ const textStyles = StyleSheet.create({
   },
 });
 
+// dropdownSectionStyles is the style sheet for the dropdown container
 const dropdownSectionStyles = StyleSheet.create({
   container: {
     alignItems: "flex-start",
@@ -133,6 +149,7 @@ const dropdownSectionStyles = StyleSheet.create({
   },
 });
 
+// dropdownStyles is the style sheet for the dropdown menu
 const dropdownStyles = StyleSheet.create({
   container: {
     borderRadius: 10,
